@@ -167,46 +167,6 @@ var svgEditorExtension_wcsmapediter = (function () {
             const x = opts.mouse_x / zoom;
             const y = opts.mouse_y / zoom;
   
-            const text = 'Hello World!\n\nYou clicked here: ' +
-              x + ', ' + y;
-  
-            // Show the text using the custom alert function
-            //$.alert(text);
-  
-            //svgdoc = S.svgroot.parentNode.ownerDocument,
-  
-            // S.addSvgElementFromJson("hellp ");
-  
-            //  S.addSvgElementFromJson({
-            //   element: 'text',
-            //   curStyles: true,
-            //   attr: {
-            //     x: x,
-            //     y: y,
-            //     id: S.getNextId(),
-            //     fill: curText.fill,
-            //     'stroke-width': curText.stroke_width,
-            //     'font-size': curText.font_size,
-            //     'font-family': curText.font_family,
-            //     'text-anchor': 'middle',
-            //     'xml:space': 'preserve',
-            //     opacity: curShape.opacity
-            //   }
-            // });
-  
-           /*    S.addSvgElementFromJson({
-                element: 'rect',
-                curStyles: true,
-                attr: {
-                  x: x,
-                  y: y,
-                  width: 100,
-                  height: 100,
-                  id: S.getNextId(),
-                  fill:'red'
-                }
-              }); */
-  
               var image1 = S.addSvgElementFromJson({
                 element: 'image',
                 attr: {
@@ -238,23 +198,6 @@ var svgEditorExtension_wcsmapediter = (function () {
               setHref(image2, 'data:image/png;svgedit_url=images%2Ficon-dot.png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABWElEQVQ4T62TOyxDURjHf6eNLk0tDAYdmEQl1YHdY2jjMXYxVWrwGDAjEeaWoRaNWixGKulA7Qw0cTGJxGJgoYg27ZHj5l63xfU82/l/3/fL9xRUvzXZioMokhDQ9GqWXOAgQ5kkw+LUGiLMz6Z08UAMGAUc78C6UAZWcTNFWDwpQQeo4Ed2kPR+ElgtZ3ETIiwKOiAlE8CY4dXvhWkfdNTpyuEtxDRIX1VwEkTEhGBd+pDkAKcyzwdgzv9xHos5mD0ybSUEfkFKxoFJJfc1QvqLIgb3YPstkyUFOANaFCAbhK4G+y7sX0N3xvQ5V4BnwKWkuyHw1NgD7otQu2H6FH4MyBfBYwAE+b+WoFU0ccALWz32JVQ1cVmQlG04OTbGuBCAme+OsUS77SJ11uvZHNxAXKsYn5JXiIjxf1pl4x5+fUzWvumrPQIEgWagAFwCu5RIEhUnVvcX53+ADevpyPcAAAAASUVORK5CYII=');
               //S.preventClickDefault(image2);
             
-              // var dAttr=(x+16)+','+y+' '+(x+100)+','+y+' ';
-              // S.addSvgElementFromJson({
-              //   element: 'polyline',
-              //   curStyles: true,
-              //   attr: {
-              //     points: dAttr,
-              //     id: S.getNextId(),
-              //     fill: 'none',
-              //     //opacity: curShape.opacity / 2,
-              //     'stroke-linecap': 'round',
-              //     style: 'pointer-events:none',
-              //     stroke:"#000000", 
-              //     'stroke-width':'5'
-              //   }
-              // });
-  
-  
               startX = opts.mouse_x;
               startY = opts.mouse_y;
   
