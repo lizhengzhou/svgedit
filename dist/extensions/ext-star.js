@@ -223,6 +223,9 @@ var svgEditorExtension_star = (function () {
           selElems = opts.elems;
 
           var i = selElems.length;
+          if(i==0){
+            showPanel(false);
+          }
           while (i--) {
             var elem = selElems[i];
             if (elem && elem.getAttributeNS(null, 'shape') === 'star') {
