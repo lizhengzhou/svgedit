@@ -32,6 +32,23 @@ var svgEditorExtension_wcsmapediter = (function () {
         connSel = '.se_connector';
 
       svgEditor.setCustomHandlers({
+        open(){
+          $.ajax({
+            url: svgEditor.curConfig.serverApi + '/open',
+            type: 'get',            
+            success: function (data) {
+                // alert(data);
+                if(data)
+                {
+                  svgCanvas.setSvgString(data);
+                }
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+         
+        },
         save(win, data) {
 
           var formData = new FormData();
@@ -46,8 +63,10 @@ var svgEditorExtension_wcsmapediter = (function () {
             contentType: false,
             processData: false,
             success: function (data) {
-              console.log("data:");
               console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
             }
           });
 
