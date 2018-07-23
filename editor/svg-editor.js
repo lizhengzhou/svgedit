@@ -1095,6 +1095,7 @@ editor.init = function () {
       '#aaffaa', '#aaffd4', '#aaffff', '#aad4ff',
       '#aaaaff', '#d4aaff', '#ffaaff', '#ffaad4'
     ],
+    modKey = (isMac() ? 'meta+' : 'ctrl+'), // ?
     path = svgCanvas.pathActions,
     {undoMgr} = svgCanvas,
     workarea = $('#workarea'),
