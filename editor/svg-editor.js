@@ -138,6 +138,7 @@ const callbacks = [],
     jspdfPath: 'jspdf/', // Default will be changed if this is a modular load
     extIconsPath: 'extensions/',
     jGraduatePath: 'jgraduate/images/',
+    serverApi:'', //Interact with server
     // DOCUMENT PROPERTIES
     // Change the following to a preference (already in the Document Properties dialog)?
     dimensions: [640, 480],
@@ -1094,7 +1095,6 @@ editor.init = function () {
       '#aaffaa', '#aaffd4', '#aaffff', '#aad4ff',
       '#aaaaff', '#d4aaff', '#ffaaff', '#ffaad4'
     ],
-    modKey = (isMac() ? 'meta+' : 'ctrl+'), // ⌘
     path = svgCanvas.pathActions,
     {undoMgr} = svgCanvas,
     workarea = $('#workarea'),

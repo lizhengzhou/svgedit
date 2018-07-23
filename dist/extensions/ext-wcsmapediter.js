@@ -1,3 +1,4 @@
+
 var svgEditorExtension_wcsmapediter = (function () {
   'use strict';
 
@@ -14,7 +15,6 @@ var svgEditorExtension_wcsmapediter = (function () {
   /*
       WCS Map Editer Plugin
   */
-
   var extWcsmapediter = {
     name: 'Wcs Map Editer',
     init(S) {
@@ -31,7 +31,33 @@ var svgEditorExtension_wcsmapediter = (function () {
         selManager = S.selectorManager,
         connSel = '.se_connector';
 
+      svgEditor.setCustomHandlers({
+        save(win, data) {
 
+          var formData = new FormData();
+          formData.append("svg", data);
+          // Save svg
+          $.ajax({
+            url: svgEditor.curConfig.serverApi + '/save',
+            type: "POST",
+            async: true,
+            dataType: "json",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+              console.log("data:");
+              console.log(data);
+            }
+          });
+
+          
+          var map=svgcontent;
+          //To Do gennerate Routes and Points
+
+
+        }
+      });
 
       return {
         name: 'Wcs Map Editer',
@@ -225,7 +251,7 @@ var svgEditorExtension_wcsmapediter = (function () {
         };
       }
 
-      //get Offset by elem¡®s Width
+      //get Offset by elem's Width
       function getOffset(side, line) {
         var giveOffset = !!line.getAttribute('marker-' + side);
         // const giveOffset = $(line).data(side+'_off');
