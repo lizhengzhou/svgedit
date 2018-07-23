@@ -28,16 +28,16 @@ var svgEditorExtension_wcsmapediter = (function () {
           selManager = S.selectorManager,
           connSel = '.se_connector',
           elData = $.data;
-      var startX = void 0,
-          startY = void 0,
-          curLine = void 0,
-          startElem = void 0,
-          endElem = void 0,
-          seNs = void 0,
-          svgcontent = S.svgcontent,
-          started = false,
-          connections = [],
-          selElems = [];
+      // var startX = void 0,
+      //     startY = void 0,
+          //curLine = void 0,
+          // startElem = void 0,
+          // endElem = void 0,
+          // seNs = void 0,
+       //var   svgcontent = S.svgcontent,
+          // started = false,
+          // connections = [],
+          // selElems = [];
   
       var setHref = function setHref(elem, val) {
         elem.setAttributeNS(S.NS.XLINK, 'xlink:href', val);
@@ -121,7 +121,7 @@ var svgEditorExtension_wcsmapediter = (function () {
         name: 'Wcs Map Editer',
         // For more notes on how to make an icon file, see the source of
         // the helloworld-icon.xml
-        svgicons: svgEditor.curConfig.extIconsPath + 'line-horizontal-icon.xml',
+        svgicons: svgEditor.curConfig.extIconsPath + 'wcs-map-editer-icon.xml',
   
         // Multiple buttons can be added in this array
         buttons: [{
@@ -144,15 +144,38 @@ var svgEditorExtension_wcsmapediter = (function () {
               svgCanvas.setMode('line_horizontal');
             }
           }
+        },
+        {
+          // Must match the icon ID in helloworld-icon.xml
+          id: 'line_vertical',
+  
+          // This indicates that the button will be added to the "mode"
+          // button panel on the left side
+          type: 'mode',
+  
+          // Tooltip text
+          title: "mode_lineV",
+  
+          // Events
+          events: {
+            click () {
+              // The action taken when the button is clicked on.
+              // For "mode" buttons, any other button will
+              // automatically be de-pressed.
+              svgCanvas.setMode('line_vertical');
+            }
+          }
         }],
         // This is triggered when the main mouse button is pressed down
         // on the editor canvas (not the tool panels)
-        mouseDown () {
+        mouseDown (opts) {
           // Check the mode on mousedown
           if (svgCanvas.getMode() === 'line_horizontal') {
             // The returned object must include "started" with
             // a value of true in order for mouseUp to be triggered
-            return {started: true};
+            //∫·œﬂ
+            drawLineHoriaontal(opts);
+            //return {started: true};
           }
         },
   
@@ -161,92 +184,101 @@ var svgEditorExtension_wcsmapediter = (function () {
         mouseUp (opts) {
           // Check the mode on mouseup
           if (svgCanvas.getMode() === 'line_horizontal') {
-            const zoom = svgCanvas.getZoom();
-  
-            // Get the actual coordinate by dividing by the zoom value
-            const x = opts.mouse_x / zoom;
-            const y = opts.mouse_y / zoom;
-  
-              var image1 = S.addSvgElementFromJson({
-                element: 'image',
-                attr: {
-                  x: x,
-                  y: y,
-                  width:16,
-                  height: 16,
-                  id: S.getNextId(),
-                  //opacity: curShape.opacity / 2,
-                  style: 'pointer-events:inherit'
-                }
-              });
-              setHref(image1, 'data:image/png;svgedit_url=images%2Ficon-dot.png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABWElEQVQ4T62TOyxDURjHf6eNLk0tDAYdmEQl1YHdY2jjMXYxVWrwGDAjEeaWoRaNWixGKulA7Qw0cTGJxGJgoYg27ZHj5l63xfU82/l/3/fL9xRUvzXZioMokhDQ9GqWXOAgQ5kkw+LUGiLMz6Z08UAMGAUc78C6UAZWcTNFWDwpQQeo4Ed2kPR+ElgtZ3ETIiwKOiAlE8CY4dXvhWkfdNTpyuEtxDRIX1VwEkTEhGBd+pDkAKcyzwdgzv9xHos5mD0ybSUEfkFKxoFJJfc1QvqLIgb3YPstkyUFOANaFCAbhK4G+y7sX0N3xvQ5V4BnwKWkuyHw1NgD7otQu2H6FH4MyBfBYwAE+b+WoFU0ccALWz32JVQ1cVmQlG04OTbGuBCAme+OsUS77SJ11uvZHNxAXKsYn5JXiIjxf1pl4x5+fUzWvumrPQIEgWagAFwCu5RIEhUnVvcX53+ADevpyPcAAAAASUVORK5CYII=');
-              //S.preventClickDefault(image1);
-  
-              
-              var image2 = S.addSvgElementFromJson({
-                element: 'image',
-                attr: {
-                  x: x+100,
-                  y: y,
-                  width: 16,
-                  height: 16,
-                  id: S.getNextId(),
-                  //opacity: curShape.opacity / 2,
-                  style: 'pointer-events:inherit'
-                }
-              });
-              setHref(image2, 'data:image/png;svgedit_url=images%2Ficon-dot.png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABWElEQVQ4T62TOyxDURjHf6eNLk0tDAYdmEQl1YHdY2jjMXYxVWrwGDAjEeaWoRaNWixGKulA7Qw0cTGJxGJgoYg27ZHj5l63xfU82/l/3/fL9xRUvzXZioMokhDQ9GqWXOAgQ5kkw+LUGiLMz6Z08UAMGAUc78C6UAZWcTNFWDwpQQeo4Ed2kPR+ElgtZ3ETIiwKOiAlE8CY4dXvhWkfdNTpyuEtxDRIX1VwEkTEhGBd+pDkAKcyzwdgzv9xHos5mD0ybSUEfkFKxoFJJfc1QvqLIgb3YPstkyUFOANaFCAbhK4G+y7sX0N3xvQ5V4BnwKWkuyHw1NgD7otQu2H6FH4MyBfBYwAE+b+WoFU0ccALWz32JVQ1cVmQlG04OTbGuBCAme+OsUS77SJ11uvZHNxAXKsYn5JXiIjxf1pl4x5+fUzWvumrPQIEgWagAFwCu5RIEhUnVvcX53+ADevpyPcAAAAASUVORK5CYII=');
-              //S.preventClickDefault(image2);
-            
-              startX = opts.mouse_x;
-              startY = opts.mouse_y;
-  
-              var initStroke = svgEditor.curConfig.initStroke;
-  
-              var bb = svgCanvas.getStrokedBBox([image1]);
-              var bx = bb.x + bb.width / 2;
-              var by = bb.y + bb.height / 2;
-  
-              curLine = addElem({
-                element: 'polyline',
-                attr: {
-                  id: getNextId(),
-                  points: bx + ',' + by + ' ' + bx + ',' + by + ' ' + startX + ',' + startY,
-                  stroke: '#' + initStroke.color,
-                  'stroke-width': initStroke.width,
-                  fill: 'none',
-                  opacity: initStroke.opacity,
-                  style: 'pointer-events:none'
-                }
-              });
-              elData(curLine, 'start_bb', bb);
-  
-              startElem=image1;
-              
-              endElem = image2;
-  
-              var startId = startElem.id,
-                  endId = endElem.id;
-              var connStr = startId + ' ' + endId;
-              var altStr = endId + ' ' + startId;
-  
-              var bb = svgCanvas.getStrokedBBox([endElem]);
-  
-              var pt = getBBintersect(startX, startY, bb, getOffset('start', curLine));
-              setPoint(curLine, 'end', pt.x, pt.y, true);
-              $(curLine).data('c_start', startId).data('c_end', endId).data('end_bb', bb);
-              seNs = svgCanvas.getEditorNS(true);
-              curLine.setAttributeNS(seNs, 'se:connector', connStr);
-              curLine.setAttribute('class', connSel.substr(1));
-              curLine.setAttribute('opacity', 1);
-              svgCanvas.addToSelection([curLine]);
-              svgCanvas.moveToBottomSelectedElement();
-              selManager.requestSelector(curLine).showGrips(false);
-  
-  
+          
           }
         }
       };
+
+
+
+
+      //draw Mode Funcs
+      //drawLineHoriaontal
+      function drawLineHoriaontal(opts){
+        const zoom = svgCanvas.getZoom();
+  
+        // Get the actual coordinate by dividing by the zoom value
+        const x = opts.start_x / zoom;
+        const y = opts.start_y / zoom;
+        var initStroke = svgEditor.curConfig.initStroke;
+
+          var image1 = addElem({
+            element: 'image',
+            attr: {
+              x: x,
+              y: y,
+              width:16,
+              height: 16,
+              id: getNextId(),
+              //opacity: curShape.opacity / 2,
+              style: 'pointer-events:inherit'
+            }
+          });
+          setHref(image1, 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABWElEQVQ4T62TOyxDURjHf6eNLk0tDAYdmEQl1YHdY2jjMXYxVWrwGDAjEeaWoRaNWixGKulA7Qw0cTGJxGJgoYg27ZHj5l63xfU82/l/3/fL9xRUvzXZioMokhDQ9GqWXOAgQ5kkw+LUGiLMz6Z08UAMGAUc78C6UAZWcTNFWDwpQQeo4Ed2kPR+ElgtZ3ETIiwKOiAlE8CY4dXvhWkfdNTpyuEtxDRIX1VwEkTEhGBd+pDkAKcyzwdgzv9xHos5mD0ybSUEfkFKxoFJJfc1QvqLIgb3YPstkyUFOANaFCAbhK4G+y7sX0N3xvQ5V4BnwKWkuyHw1NgD7otQu2H6FH4MyBfBYwAE+b+WoFU0ccALWz32JVQ1cVmQlG04OTbGuBCAme+OsUS77SJ11uvZHNxAXKsYn5JXiIjxf1pl4x5+fUzWvumrPQIEgWagAFwCu5RIEhUnVvcX53+ADevpyPcAAAAASUVORK5CYII=');
+          //S.preventClickDefault(image1);
+
+          
+          var image2 = addElem({
+            element: 'image',
+            attr: {
+              x: x+100,
+              y: y,
+              width: 16,
+              height: 16,
+              id: getNextId(),
+              //opacity: curShape.opacity / 2,
+              style: 'pointer-events:inherit'
+            }
+          });
+          setHref(image2, 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABWElEQVQ4T62TOyxDURjHf6eNLk0tDAYdmEQl1YHdY2jjMXYxVWrwGDAjEeaWoRaNWixGKulA7Qw0cTGJxGJgoYg27ZHj5l63xfU82/l/3/fL9xRUvzXZioMokhDQ9GqWXOAgQ5kkw+LUGiLMz6Z08UAMGAUc78C6UAZWcTNFWDwpQQeo4Ed2kPR+ElgtZ3ETIiwKOiAlE8CY4dXvhWkfdNTpyuEtxDRIX1VwEkTEhGBd+pDkAKcyzwdgzv9xHos5mD0ybSUEfkFKxoFJJfc1QvqLIgb3YPstkyUFOANaFCAbhK4G+y7sX0N3xvQ5V4BnwKWkuyHw1NgD7otQu2H6FH4MyBfBYwAE+b+WoFU0ccALWz32JVQ1cVmQlG04OTbGuBCAme+OsUS77SJ11uvZHNxAXKsYn5JXiIjxf1pl4x5+fUzWvumrPQIEgWagAFwCu5RIEhUnVvcX53+ADevpyPcAAAAASUVORK5CYII=');
+          //S.preventClickDefault(image2);
+        
+          var bb = svgCanvas.getStrokedBBox([image1]);
+          var bx = bb.x + bb.width / 2;
+          var by = bb.y + bb.height / 2;
+
+          var curLine = addElem({
+            element: 'polyline',
+            attr: {
+              id: getNextId(),
+              points: bx + ',' + by + ' ' + bx + ',' + by + ' ' + (x+100) + ',' + y,
+              stroke: '#' + initStroke.color,
+              'stroke-width': initStroke.width,
+              fill: 'none',
+              opacity: initStroke.opacity,
+              style: 'pointer-events:none'
+            }
+          });
+          elData(curLine, 'start_bb', bb);
+
+         var startElem=image1;
+          
+         var endElem = image2;
+
+          var startId = startElem.id,
+              endId = endElem.id;
+          var connStr = startId + ' ' + endId;
+          var altStr = endId + ' ' + startId;
+
+          var bb = svgCanvas.getStrokedBBox([endElem]);
+
+          var pt = getBBintersect(x, y, bb, getOffset('start', curLine));
+          setPoint(curLine, 'end', pt.x, pt.y, true);
+          $(curLine).data('c_start', startId).data('c_end', endId).data('end_bb', bb);
+          var seNs = svgCanvas.getEditorNS(true);
+          curLine.setAttributeNS(seNs, 'se:connector', connStr);
+          curLine.setAttribute('class', connSel.substr(1));
+          curLine.setAttribute('opacity', 1);
+          svgCanvas.clearSelection();
+          svgCanvas.addToSelection([startElem,curLine,endElem]);
+
+          return {
+            keep: true
+          };
+
+      }
+
+
     }
   };
   
