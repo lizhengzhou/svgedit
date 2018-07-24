@@ -60,6 +60,7 @@ svgEditor.setConfig({
 // EXTENSION CONFIG
 svgEditor.setConfig({
   extensions: [
+    'ext-wcsmapediter.js',
     // 'ext-overview_window.js', 'ext-markers.js', 'ext-connector.js', 'ext-eyedropper.js', 'ext-shapes.js', 'ext-imagelib.js', 'ext-grid.js', 'ext-polygon.js', 'ext-star.js', 'ext-panning.js', 'ext-storage.js'
   ]
   // , noDefaultExtensions: false, // noDefaultExtensions can only be meaningfully used in svgedit-config-es.js or in the URL
@@ -67,7 +68,7 @@ svgEditor.setConfig({
 
 // STYLESHEET CONFIG
 svgEditor.setConfig({
-  stylesheets: ['@default', '../svgedit-custom.css']
+  //stylesheets: ['@default', '../svgedit-custom.css']
 });
 
 // OTHER CONFIG
@@ -95,6 +96,7 @@ svgEditor.setConfig({
   // langPath: 'locale/',
   // extPath: 'extensions/',
   // jGraduatePath: 'jgraduate/images/',
+  serverApi:'http://localhost:1694/api/MapEditor/',
   /*
   Uncomment the following to allow at least same domain (embedded) access,
   including file:// access.
@@ -103,7 +105,7 @@ svgEditor.setConfig({
   */
   // allowedOrigins: [window.location.origin || 'null'], // May be 'null' (as a string) when used as a file:// URL
   // DOCUMENT PROPERTIES
-  // dimensions: [640, 480],
+  dimensions: [1920, 1080],
   // EDITOR OPTIONS
   // gridSnapping: false,
   // gridColor: '#000',
