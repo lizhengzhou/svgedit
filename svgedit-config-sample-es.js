@@ -135,7 +135,7 @@ As with configuration, one may use allowInitialUserOverride, but
   are hard-coded here regardless of URL or prior user storage setting.
 */
 svgEditor.setConfig({
-  // lang: '', // Set dynamically within locale.js if not previously set
+   lang: 'en', // Set dynamically within locale.js if not previously set
   // iconsize: '', // Will default to 's' if the window height is smaller than the minimum height and 'm' otherwise
   /**
   * When showing the preferences dialog, svg-editor.js currently relies
