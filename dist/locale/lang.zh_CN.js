@@ -153,17 +153,17 @@ var svgEditorLang_zh_CN = (function () {
     },
     layers: {
       layer: 'Layer',
-      layers: 'layers',
-      del: 'del',
-      move_down: 'move_down',
-      new: 'new',
-      rename: 'rename',
-      move_up: 'move_up',
-      dupe: 'dupe',
-      merge_down: 'merge_down',
-      merge_all: 'merge_all',
-      move_elems_to: 'move_elems_to',
-      move_selected: 'move_selected'
+      layers: '图层',
+      del: '删除',
+      move_down: '向下移动',
+      new: '新增',
+      rename: '重命名',
+      move_up: '向上移动',
+      dupe: '复制',
+      merge_down: '向下合并',
+      merge_all: '合并所有',
+      move_elems_to: '将元素移动到',
+      move_selected: '移动选中'
     },
     config: {
       image_props: '图片属性',
