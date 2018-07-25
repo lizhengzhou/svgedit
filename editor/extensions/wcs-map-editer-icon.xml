@@ -42,6 +42,16 @@
             <path stroke-width="10" stroke="#ff7f00" fill="#ff7f00" d="m-50,0l100,40l-30,-40l30,-40z" />
         </svg>
     </g>
+    <g id="uparrow">
+        <svg viewBox="-60 -60 120 120" xmlns="http://www.w3.org/2000/svg">
+            <path d="m-50,0l100,40l-30,-40l30,-40l-100,40z" fill="#ff7f00" id="svg_1" stroke="#ff7f00" stroke-width="10" transform="rotate(90)"/>
+        </svg>
+    </g>
+    <g id="downarrow">
+        <svg viewBox="-60 -60 120 120" xmlns="http://www.w3.org/2000/svg">
+            <path d="m-50,0l100,40l-30,-40l30,-40l-100,40z" fill="#ff7f00" id="svg_1" stroke="#ff7f00" stroke-width="10" transform="rotate(-90)"/>
+        </svg>
+    </g>
     <g id="rightarrow">
         <svg viewBox="-60 -60 120 120" xmlns="http://www.w3.org/2000/svg">
             <path stroke-width="10" stroke="#ff7f00" fill="#ff7f00" d="m50,0l-100,40l30,-40l-30,-40z" />

@@ -33,7 +33,7 @@ var svgEditorExtension_wcsmapediter = (function () {
         connections = [],
         selElems = [],
         NS = S.NS,
-        svgdoc = svgroot.ownerDocument,
+        svgdoc = svgroot.ownerDocument;
         var initStroke = svgEditor.curConfig.initStroke;
 
 
@@ -194,8 +194,8 @@ var svgEditorExtension_wcsmapediter = (function () {
             }
           },
           {
-            id: 'leftarrow',
-            svgicon: 'leftarrow',
+            id: 'uparrow',
+            svgicon: 'uparrow',
             title: 'forword direction',
             type: 'context',
             events: {
@@ -206,8 +206,8 @@ var svgEditorExtension_wcsmapediter = (function () {
             isDefault: true
           },
           {
-            id: 'rightarrow',
-            svgicon: 'rightarrow',
+            id: 'downarrow',
+            svgicon: 'downarrow',
             title: 'backword direction',
             type: 'context',
             events: {
@@ -611,9 +611,9 @@ var svgEditorExtension_wcsmapediter = (function () {
       function setDirectionFromButton() {
 
         var val = 0;
-        if (this.id == 'leftarrow') {
+        if (this.id == 'uparrow') {
           val = 10;
-        } else if (this.id == 'rightarrow') {
+        } else if (this.id == 'downarrow') {
           val = 20;
         }
 
