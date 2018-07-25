@@ -1758,12 +1758,10 @@ class SvgCanvas {
 
         rootSctm = $('#svgcontent g')[0].getScreenCTM().inverse();
 
-        const pt = transformPoint(evt.pageX, evt.pageY, rootSctm),
-          mouseX = pt.x * currentZoom,
-          mouseY = pt.y * currentZoom;
+        const pt = transformPoint(evt.pageX, evt.pageY, rootSctm);
 
-        $('#mouse_x').html(mouseX);
-        $('#mouse_y').html(mouseY);
+        $('#mouse_x').html(pt.x);
+        $('#mouse_y').html(pt.y);
 
         if (!started) {
           return;
@@ -1775,7 +1773,9 @@ class SvgCanvas {
         let i, xya, c, cx, cy, dx, dy, len, angle, box,
           selected = selectedElements[0];
 
-        const shape = getElem(getId());
+        const mouseX = pt.x * currentZoom,
+          mouseY = pt.y * currentZoom,
+          shape = getElem(getId());
 
         let realX = mouseX / currentZoom;
         let x = realX;
@@ -3661,8 +3661,7 @@ class SvgCanvas {
           // Todo: Switch to `import()` when widely supported and available (also allow customization of path)
           await importScript(curConfig.jspdfPath + 'jspdf.plugin.svgToPdf.js', {
             type: modularVersion ?
-              'module' :
-              'text/javascript'
+              'module' : 'text/javascript'
           });
           // await importModule('jspdf/jspdf.plugin.svgToPdf.js');
         }
