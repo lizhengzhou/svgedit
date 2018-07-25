@@ -42,17 +42,17 @@ var svgEditorExtension_wcsmapediter = (function () {
           id: 'line_horizontal',
           title: 'Draw horizontal line'
         }],
-        zh_cn: [{
+        zh_CN: [{
           id: 'line_horizontal',
-          title: '»­ºáÏß'
+          title: 'ç”»æ¨ªçº¿'
         }],
         en: [{
           id: 'line_vertical',
           title: 'Draw vertical line'
         }],
-        zh_cn: [{
+        zh_CN: [{
           id: 'line_vertical',
-          title: '»­ÊúÏß'
+          title: 'ç”»ç«–çº¿'
         }]
       };
 
