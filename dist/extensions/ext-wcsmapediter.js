@@ -401,6 +401,12 @@ var svgEditorExtension_wcsmapediter = (function () {
         svgCanvas.clearSelection();
         svgCanvas.addToSelection([startElem, endElem, path]);
 
+        var batchCmd = new S.BatchCommand();
+        batchCmd.addSubCommand(new S.InsertElementCommand(path));
+        batchCmd.addSubCommand(new S.InsertElementCommand(endElem));        
+        batchCmd.addSubCommand(new S.InsertElementCommand(startElem));     
+        S.addCommandToHistory(batchCmd);
+
         return {
           keep: true
         };
@@ -525,6 +531,13 @@ var svgEditorExtension_wcsmapediter = (function () {
 
         svgCanvas.clearSelection();
         svgCanvas.addToSelection([startElem, endElem, path, control]);
+
+        var batchCmd = new S.BatchCommand();
+        batchCmd.addSubCommand(new S.InsertElementCommand(control));
+        batchCmd.addSubCommand(new S.InsertElementCommand(path));
+        batchCmd.addSubCommand(new S.InsertElementCommand(endElem));        
+        batchCmd.addSubCommand(new S.InsertElementCommand(startElem));     
+        S.addCommandToHistory(batchCmd);
 
         return {
           keep: true

@@ -1,6 +1,7 @@
 node_modules
 
 build/
+deploy/
 
 # For examples, see
 # svgedit-config-sample-es.js
