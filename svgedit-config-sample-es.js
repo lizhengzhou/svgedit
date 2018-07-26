@@ -60,10 +60,10 @@ svgEditor.setConfig({
 // EXTENSION CONFIG
 svgEditor.setConfig({
   extensions: [
-    'ext-panning.js','ext-storage.js','ext-wcsmapediter.js',
+    'ext-grid.js', 'ext-panning.js','ext-storage.js','ext-wcsmapediter.js',
     // 'ext-overview_window.js', 'ext-markers.js', 'ext-connector.js', 'ext-eyedropper.js', 'ext-shapes.js', 'ext-imagelib.js', 'ext-grid.js', 'ext-polygon.js', 'ext-star.js', 'ext-panning.js', 'ext-storage.js'
   ]
-  // , noDefaultExtensions: false, // noDefaultExtensions can only be meaningfully used in svgedit-config-es.js or in the URL
+   , noDefaultExtensions: false, // noDefaultExtensions can only be meaningfully used in svgedit-config-es.js or in the URL
 });
 
 // STYLESHEET CONFIG
@@ -135,7 +135,7 @@ As with configuration, one may use allowInitialUserOverride, but
   are hard-coded here regardless of URL or prior user storage setting.
 */
 svgEditor.setConfig({
-   lang: 'en', // Set dynamically within locale.js if not previously set
+   lang: 'zh_CN', // Set dynamically within locale.js if not previously set
   // iconsize: '', // Will default to 's' if the window height is smaller than the minimum height and 'm' otherwise
   /**
   * When showing the preferences dialog, svg-editor.js currently relies
