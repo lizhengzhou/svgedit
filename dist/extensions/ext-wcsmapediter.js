@@ -67,8 +67,7 @@ var svgEditorExtension_wcsmapediter = (function () {
             success: function (data) {
               // alert(data);
               if (data) {
-                svgCanvas.setSvgString(data);
-                init();
+                svgCanvas.setSvgString(data);              
               }
             },
             error: function (err) {
@@ -310,7 +309,11 @@ var svgEditorExtension_wcsmapediter = (function () {
 
         },
         elementChanged: function elementChanged(opts) {
-
+          var elem = opts.elems[0];
+          if (elem && elem.tagName === 'svg' && elem.id === 'svgcontent') {
+            // Update svgcontent (can change on import)
+            svgcontent = elem;
+          }
         },
       };
 
