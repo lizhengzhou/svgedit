@@ -29,12 +29,13 @@ var svgEditorExtension_wcsmapediter = (function () {
         addElem = S.addSvgElementFromJson,
         setAttrs = S.assignAttributes,
         selManager = S.selectorManager,
-        seNs = void 0,
+        // seNs = void 0,
         connections = [],
         selElems = [],
         NS = S.NS,
         svgdoc = svgroot.ownerDocument;
         var initStroke = svgEditor.curConfig.initStroke;
+        var seNs = svgCanvas.getEditorNS(true);
 
 
       var langList = {
@@ -313,12 +314,31 @@ var svgEditorExtension_wcsmapediter = (function () {
           if (elem && elem.tagName === 'svg' && elem.id === 'svgcontent') {
             // Update svgcontent (can change on import)
             svgcontent = elem;
+            init() ;
           }
         },
       };
 
 
-
+ // Do on reset
+ function init() {
+  // Make sure all routes have data set
+  $(svgcontent).find('*').each(function () {
+    var conn = this.getAttributeNS(seNs, 'route');
+    if (conn) {
+      this.setAttribute('class', 'route');
+      // var connData = conn.split(' ');
+      // var controlid=connData[2];
+      // if(controlid)
+      // {
+      //   this.setAttribute('control', controlid);
+      //   getElem(controlid).setAttribute('path',this.id);
+      // }
+      // $(this).data('c_start', connData[0]).data('c_end', connData[1]);
+      svgCanvas.getEditorNS(true);
+    }
+  });
+}
 
       //draw Mode Functions
       //draw Horiaontal Line
@@ -401,9 +421,14 @@ var svgEditorExtension_wcsmapediter = (function () {
         })
         endElem.append(circle);
 
-        path.setAttribute('c_start', startElem.id);
-        path.setAttribute('c_end', endElem.id);
-        path.setAttribute('route', startElem.id + ' ' + endElem.id);
+        // path.setAttribute('c_start', startElem.id);
+        // path.setAttribute('c_end', endElem.id);
+        // path.setAttribute('route', startElem.id + ' ' + endElem.id);
+
+        // var seNs = svgCanvas.getEditorNS(true);
+        path.setAttributeNS(seNs, 'se:route',  startElem.id + ' ' + endElem.id);
+        // path.setAttributeNS(seNs, 'se:c_start',  startElem.id);
+        // path.setAttributeNS(seNs, 'se:c_end',  endElem.id);
 
         svgCanvas.clearSelection();
         svgCanvas.addToSelection([startElem, endElem, path]);
@@ -529,16 +554,18 @@ var svgEditorExtension_wcsmapediter = (function () {
             r: 8,
             stroke: 'none',
             fill: 'red',
-            'path': path.id,
+            // 'path': path.id,
             'class': 'control'
           }
         });
-
-        path.setAttribute('c_start', startElem.id);
-        path.setAttribute('c_end', endElem.id);
-        path.setAttribute('route', startElem.id + ' ' + endElem.id);
-        path.setAttribute('control', control.id);
-
+     
+       
+        // path.setAttributeNS(seNs, 'se:c_start',  startElem.id);
+        // path.setAttributeNS(seNs, 'se:c_end',  endElem.id);
+        // path.setAttributeNS(seNs, 'se:control',  control.id);
+        control.setAttributeNS(seNs, 'se:path', path.id);
+        path.setAttributeNS(seNs, 'se:route',  startElem.id + ' ' + endElem.id+' '+control.id);
+    
         svgCanvas.clearSelection();
         svgCanvas.addToSelection([startElem, endElem, path, control]);
 
@@ -558,7 +585,7 @@ var svgEditorExtension_wcsmapediter = (function () {
         var routers = $(svgcontent).find('.route');
         var route, pos;
         routers.each(function () {
-          var points = this.getAttribute('route').split(' ');
+          var points = this.getAttributeNS(seNs, 'route').split(' ');
           if (points[0] == elem.id || points[1] == elem.id) {
             route = this;
             if (points[0] == elem.id) pos = 'start';
@@ -585,10 +612,10 @@ var svgEditorExtension_wcsmapediter = (function () {
       }
 
       function routemove(elem) {
-        var points = elem.getAttribute('route').split(' ');
+        var points = elem.getAttributeNS(seNs, 'route').split(' ');
         var startElem = getElem(points[0]),
           endElem = getElem(points[1]),
-          control = getElem(elem.getAttribute('control'));
+          control = getElem(points[2]);
 
         var selectedElems = svgCanvas.getSelectedElems();
         if (!selectedElems.includes(control)) {
@@ -597,7 +624,7 @@ var svgEditorExtension_wcsmapediter = (function () {
       }
 
       function controlMove(elem, opts) {
-        var routeid = elem.getAttribute('path');
+        var routeid = elem.getAttributeNS(seNs,'path');
         var route = getElem(routeid);
 
         var x1 = opts ? opts.mouse_x : elem.getAttribute('cx');
