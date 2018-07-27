@@ -92,7 +92,7 @@ var svgEditorLang_zh_CN = (function () {
       open_doc: '打开地图',
       export_img: '导出图片',
       save_doc: '保存地图',
-      import_doc: '导入',
+      import_doc: '导入图片',
       align_to_page: 'align_to_page',
       align_bottom: 'align_bottom',
       align_center: 'align_center',

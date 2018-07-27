@@ -34,8 +34,8 @@ var svgEditorExtension_wcsmapediter = (function () {
         selElems = [],
         NS = S.NS,
         svgdoc = svgroot.ownerDocument;
-        var initStroke = svgEditor.curConfig.initStroke;
-        var seNs = svgCanvas.getEditorNS(true);
+      var initStroke = svgEditor.curConfig.initStroke;
+      var seNs = svgCanvas.getEditorNS(true);
 
 
       var langList = {
@@ -68,7 +68,7 @@ var svgEditorExtension_wcsmapediter = (function () {
             success: function (data) {
               // alert(data);
               if (data) {
-                svgCanvas.setSvgString(data);              
+                svgCanvas.setSvgString(data);
               }
             },
             error: function (err) {
@@ -314,39 +314,31 @@ var svgEditorExtension_wcsmapediter = (function () {
           if (elem && elem.tagName === 'svg' && elem.id === 'svgcontent') {
             // Update svgcontent (can change on import)
             svgcontent = elem;
-            init() ;
+            init();
           }
         },
       };
 
 
- // Do on reset
- function init() {
-  // Make sure all routes have data set
-  $(svgcontent).find('*').each(function () {
-    var conn = this.getAttributeNS(seNs, 'route');
-    if (conn) {
-      this.setAttribute('class', 'route');
-      // var connData = conn.split(' ');
-      // var controlid=connData[2];
-      // if(controlid)
-      // {
-      //   this.setAttribute('control', controlid);
-      //   getElem(controlid).setAttribute('path',this.id);
-      // }
-      // $(this).data('c_start', connData[0]).data('c_end', connData[1]);
-      svgCanvas.getEditorNS(true);
-    }
-  });
-}
+      // Do on reset
+      function init() {
+        // Make sure all routes have data set
+        $(svgcontent).find('*').each(function () {
+          var conn = this.getAttributeNS(seNs, 'route');
+          if (conn) {
+            this.setAttribute('class', 'route');
+            svgCanvas.getEditorNS(true);
+          }
+        });
+      }
 
       //draw Mode Functions
       //draw Horiaontal Line
       function drawLine(opts, IsHoriaontal = true) {
         const zoom = svgCanvas.getZoom();
         // Get the actual coordinate by dividing by the zoom value
-        const x = opts.start_x ;
-        const y = opts.start_y ;
+        const x = opts.start_x;
+        const y = opts.start_y;
 
         var x1, y1, x2, y2;
         if (IsHoriaontal) {
@@ -368,10 +360,7 @@ var svgEditorExtension_wcsmapediter = (function () {
             d: 'M' + x1 + ',' + y1 + ' L' + x2 + ',' + y2,
             stroke: '#ff7f00',
             'stroke-width': 4,
-            fill: 'none',
-            // 'route': startElem.id + ' ' + endElem.id,
-            // 'c_start': startElem.id,
-            // 'c_end': endElem.id,
+            fill: 'none',         
             'class': 'route'
           }
         });
@@ -421,20 +410,13 @@ var svgEditorExtension_wcsmapediter = (function () {
         })
         endElem.append(circle);
 
-        // path.setAttribute('c_start', startElem.id);
-        // path.setAttribute('c_end', endElem.id);
-        // path.setAttribute('route', startElem.id + ' ' + endElem.id);
-
-        // var seNs = svgCanvas.getEditorNS(true);
-        path.setAttributeNS(seNs, 'se:route',  startElem.id + ' ' + endElem.id);
-        // path.setAttributeNS(seNs, 'se:c_start',  startElem.id);
-        // path.setAttributeNS(seNs, 'se:c_end',  endElem.id);
-
+        path.setAttributeNS(seNs, 'se:route', startElem.id + ' ' + endElem.id);
+       
         svgCanvas.clearSelection();
         svgCanvas.addToSelection([startElem, endElem, path]);
 
-        var batchCmd = new S.BatchCommand();      
-        batchCmd.addSubCommand(new S.InsertElementCommand(endElem));        
+        var batchCmd = new S.BatchCommand();
+        batchCmd.addSubCommand(new S.InsertElementCommand(endElem));
         batchCmd.addSubCommand(new S.InsertElementCommand(startElem));
         batchCmd.addSubCommand(new S.InsertElementCommand(path));
         S.addCommandToHistory(batchCmd);
@@ -451,8 +433,8 @@ var svgEditorExtension_wcsmapediter = (function () {
        * */
       function drawArcLine(opts, direction = 'up') {
         const zoom = svgCanvas.getZoom();
-        const x = opts.start_x ;
-        const y = opts.start_y ;
+        const x = opts.start_x;
+        const y = opts.start_y;
 
         var x1, y1, x2, y2, cx, cy;
         if (direction == 'up') {
@@ -492,10 +474,7 @@ var svgEditorExtension_wcsmapediter = (function () {
             d: 'M' + x1 + ',' + y1 + ' Q' + cx + ',' + cy + ' ' + x2 + ',' + y2,
             stroke: '#ff7f00',
             'stroke-width': 4,
-            fill: 'none',
-            // 'route': startElem.id + ' ' + endElem.id,
-            // 'c_start': startElem.id,
-            // 'c_end': endElem.id,
+            fill: 'none',          
             'class': 'route'
           }
         });
@@ -553,25 +532,20 @@ var svgEditorExtension_wcsmapediter = (function () {
             cy: cy,
             r: 8,
             stroke: 'none',
-            fill: 'red',
-            // 'path': path.id,
+            fill: 'red',            
             'class': 'control'
           }
         });
-     
-       
-        // path.setAttributeNS(seNs, 'se:c_start',  startElem.id);
-        // path.setAttributeNS(seNs, 'se:c_end',  endElem.id);
-        // path.setAttributeNS(seNs, 'se:control',  control.id);
+      
         control.setAttributeNS(seNs, 'se:path', path.id);
-        path.setAttributeNS(seNs, 'se:route',  startElem.id + ' ' + endElem.id+' '+control.id);
-    
+        path.setAttributeNS(seNs, 'se:route', startElem.id + ' ' + endElem.id + ' ' + control.id);
+
         svgCanvas.clearSelection();
         svgCanvas.addToSelection([startElem, endElem, path, control]);
 
         var batchCmd = new S.BatchCommand();
-        batchCmd.addSubCommand(new S.InsertElementCommand(control));      
-        batchCmd.addSubCommand(new S.InsertElementCommand(endElem));        
+        batchCmd.addSubCommand(new S.InsertElementCommand(control));
+        batchCmd.addSubCommand(new S.InsertElementCommand(endElem));
         batchCmd.addSubCommand(new S.InsertElementCommand(startElem));
         batchCmd.addSubCommand(new S.InsertElementCommand(path));
         S.addCommandToHistory(batchCmd);
@@ -594,9 +568,9 @@ var svgEditorExtension_wcsmapediter = (function () {
         });
 
         if (route) {
-          if (elem.children.length > 0) {            
-            var cx = opts ? opts.mouse_x  : elem.children[0].getAttribute('cx'),
-              cy = opts ? opts.mouse_y  : elem.children[0].getAttribute('cy');
+          if (elem.children.length > 0) {
+            var cx = opts ? opts.mouse_x : elem.children[0].getAttribute('cx'),
+              cy = opts ? opts.mouse_y : elem.children[0].getAttribute('cy');
 
             if (pos == 'start') {
               var move = route.pathSegList.getItem(0);
@@ -624,7 +598,7 @@ var svgEditorExtension_wcsmapediter = (function () {
       }
 
       function controlMove(elem, opts) {
-        var routeid = elem.getAttributeNS(seNs,'path');
+        var routeid = elem.getAttributeNS(seNs, 'path');
         var route = getElem(routeid);
 
         var x1 = opts ? opts.mouse_x : elem.getAttribute('cx');
