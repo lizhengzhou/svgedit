@@ -325,8 +325,8 @@ var svgEditorExtension_wcsmapediter = (function () {
       function drawLine(opts, IsHoriaontal = true) {
         const zoom = svgCanvas.getZoom();
         // Get the actual coordinate by dividing by the zoom value
-        const x = opts.start_x / zoom;
-        const y = opts.start_y / zoom;
+        const x = opts.start_x ;
+        const y = opts.start_y ;
 
         var x1, y1, x2, y2;
         if (IsHoriaontal) {
@@ -422,8 +422,8 @@ var svgEditorExtension_wcsmapediter = (function () {
        * */
       function drawArcLine(opts, direction = 'up') {
         const zoom = svgCanvas.getZoom();
-        const x = opts.start_x / zoom;
-        const y = opts.start_y / zoom;
+        const x = opts.start_x ;
+        const y = opts.start_y ;
 
         var x1, y1, x2, y2, cx, cy;
         if (direction == 'up') {
@@ -560,10 +560,9 @@ var svgEditorExtension_wcsmapediter = (function () {
         });
 
         if (route) {
-          if (elem.children.length > 0) {
-            const zoom = svgCanvas.getZoom();
-            var cx = opts ? opts.mouse_x / zoom : elem.children[0].getAttribute('cx'),
-              cy = opts ? opts.mouse_y / zoom : elem.children[0].getAttribute('cy');
+          if (elem.children.length > 0) {            
+            var cx = opts ? opts.mouse_x  : elem.children[0].getAttribute('cx'),
+              cy = opts ? opts.mouse_y  : elem.children[0].getAttribute('cy');
 
             if (pos == 'start') {
               var move = route.pathSegList.getItem(0);
@@ -594,9 +593,8 @@ var svgEditorExtension_wcsmapediter = (function () {
         var routeid = elem.getAttribute('path');
         var route = getElem(routeid);
 
-        const zoom = svgCanvas.getZoom();
-        var x1 = opts ? opts.mouse_x / zoom : elem.getAttribute('cx');
-        var y1 = opts ? opts.mouse_y / zoom : elem.getAttribute('cy');
+        var x1 = opts ? opts.mouse_x : elem.getAttribute('cx');
+        var y1 = opts ? opts.mouse_y : elem.getAttribute('cy');
 
         var contollSeg = route.pathSegList.getItem(1);
         contollSeg.x1 = x1;
