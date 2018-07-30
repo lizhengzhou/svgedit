@@ -355,12 +355,16 @@ var canvg = (function (exports) {
         var bits = re.exec(colorString);
         if (bits) {
           var _processor = processor(bits),
-              _processor2 = slicedToArray(_processor, 3),
-              r = _processor2[0],
-              g = _processor2[1],
-              b = _processor2[2];
+            _processor2 = slicedToArray(_processor, 3),
+            r = _processor2[0],
+            g = _processor2[1],
+            b = _processor2[2];
 
-          Object.assign(this, { r: r, g: g, b: b });
+          Object.assign(this, {
+            r: r,
+            g: g,
+            b: b
+          });
           this.ok = true;
         }
       }
@@ -498,7 +502,9 @@ var canvg = (function (exports) {
   };
 
   function build(opts) {
-    var svg = { opts: opts };
+    var svg = {
+      opts: opts
+    };
 
     svg.FRAMERATE = 30;
     svg.MAX_VIRTUAL_PIXELS = 30000;
@@ -528,7 +534,10 @@ var canvg = (function (exports) {
           this.viewPorts = [];
         },
         SetCurrent: function SetCurrent(width, height) {
-          this.viewPorts.push({ width: width, height: height });
+          this.viewPorts.push({
+            width: width,
+            height: height
+          });
         },
         RemoveCurrent: function RemoveCurrent() {
           this.viewPorts.pop();
@@ -833,7 +842,10 @@ var canvg = (function (exports) {
         var f = {};
         var d = svg.trim(svg.compressSpaces(s || '')).split(' ');
         var set$$1 = {
-          fontSize: false, fontStyle: false, fontWeight: false, fontVariant: false
+          fontSize: false,
+          fontStyle: false,
+          fontWeight: false,
+          fontVariant: false
         };
         var ff = '';
         d.forEach(function (d) {
@@ -1001,9 +1013,9 @@ var canvg = (function (exports) {
 
           // from http://blog.hackers-cafe.net/2009/06/how-to-calculate-bezier-curves-bounding.html
           var p0 = [p0x, p0y],
-              p1 = [p1x, p1y],
-              p2 = [p2x, p2y],
-              p3 = [p3x, p3y];
+            p1 = [p1x, p1y],
+            p2 = [p2x, p2y],
+            p3 = [p3x, p3y];
           this.addPoint(p0[0], p0[1]);
           this.addPoint(p3[0], p3[1]);
 
@@ -1223,10 +1235,12 @@ var canvg = (function (exports) {
       var scaleMin = Math.min(scaleX, scaleY);
       var scaleMax = Math.max(scaleX, scaleY);
       if (meetOrSlice === 'meet') {
-        desiredWidth *= scaleMin;desiredHeight *= scaleMin;
+        desiredWidth *= scaleMin;
+        desiredHeight *= scaleMin;
       }
       if (meetOrSlice === 'slice') {
-        desiredWidth *= scaleMax;desiredHeight *= scaleMax;
+        desiredWidth *= scaleMax;
+        desiredHeight *= scaleMax;
       }
 
       refX = new svg.Property('refX', refX);
@@ -1242,7 +1256,9 @@ var canvg = (function (exports) {
       }
 
       // scale
-      if (align === 'none') ctx.scale(scaleX, scaleY);else if (meetOrSlice === 'meet') ctx.scale(scaleMin, scaleMin);else if (meetOrSlice === 'slice') ctx.scale(scaleMax, scaleMax);
+      if (align === 'none') ctx.scale(scaleX, scaleY);
+      else if (meetOrSlice === 'meet') ctx.scale(scaleMin, scaleMin);
+      else if (meetOrSlice === 'slice') ctx.scale(scaleMax, scaleMax);
 
       // translate
       ctx.translate(minX == null ? 0 : -minX, minY == null ? 0 : -minY);
@@ -1280,7 +1296,7 @@ var canvg = (function (exports) {
           // add attributes
           [].concat(toConsumableArray(node.attributes)).forEach(function (_ref) {
             var nodeName = _ref.nodeName,
-                nodeValue = _ref.nodeValue;
+              nodeValue = _ref.nodeValue;
 
             _this7.attributes[nodeName] = new svg.Property(nodeName, nodeValue);
           });
@@ -1327,8 +1343,8 @@ var canvg = (function (exports) {
             _styles2.forEach(function (style) {
               if (svg.trim(style) !== '') {
                 var _style$split = style.split(':'),
-                    _name4 = _style$split.name,
-                    value = _style$split.value;
+                  _name4 = _style$split.name,
+                  value = _style$split.value;
 
                 _name4 = svg.trim(_name4);
                 value = svg.trim(value);
@@ -1356,7 +1372,8 @@ var canvg = (function (exports) {
           if (a != null) return a;
 
           if (createIfNotExists === true) {
-            a = new svg.Property(name, '');this.attributes[name] = a;
+            a = new svg.Property(name, '');
+            this.attributes[name] = a;
           }
           return a || svg.EmptyProperty;
         }
@@ -1396,7 +1413,8 @@ var canvg = (function (exports) {
           }
 
           if (createIfNotExists === true) {
-            s = new svg.Property(name, '');this.styles[name] = s;
+            s = new svg.Property(name, '');
+            this.styles[name] = s;
           }
           return s || svg.EmptyProperty;
         }
@@ -1836,7 +1854,10 @@ var canvg = (function (exports) {
         value: function getMarkers() {
           var points = this.getPoints();
           var a = points[0].angleTo(points[1]);
-          return [[points[0], a], [points[1], a]];
+          return [
+            [points[0], a],
+            [points[1], a]
+          ];
         }
       }]);
       return _class11;
@@ -1859,8 +1880,8 @@ var canvg = (function (exports) {
         key: 'path',
         value: function path(ctx) {
           var _points$ = this.points[0],
-              x = _points$.x,
-              y = _points$.y;
+            x = _points$.x,
+            y = _points$.y;
 
           var bb = new svg.BoundingBox(x, y);
           if (ctx != null) {
@@ -1869,8 +1890,8 @@ var canvg = (function (exports) {
           }
           for (var i = 1; i < this.points.length; i++) {
             var _points$i = this.points[i],
-                _x = _points$i.x,
-                _y = _points$i.y;
+              _x = _points$i.x,
+              _y = _points$i.y;
 
             bb.addPoint(_x, _y);
             if (ctx != null) ctx.lineTo(_x, _y);
@@ -1924,15 +1945,15 @@ var canvg = (function (exports) {
         var _this17 = possibleConstructorReturn(this, (_class14.__proto__ || Object.getPrototypeOf(_class14)).call(this, node));
 
         var d = _this17.attribute('d').value
-        // TODO: convert to real lexer based on https://www.w3.org/TR/SVG11/paths.html#PathDataBNF
-        .replace(/,/gm, ' ') // get rid of all commas
-        .replace(/([MmZzLlHhVvCcSsQqTtAa])([MmZzLlHhVvCcSsQqTtAa])/gm, '$1 $2') // separate commands from commands
-        .replace(/([MmZzLlHhVvCcSsQqTtAa])([MmZzLlHhVvCcSsQqTtAa])/gm, '$1 $2') // separate commands from commands
-        .replace(/([MmZzLlHhVvCcSsQqTtAa])([^\s])/gm, '$1 $2') // separate commands from points
-        .replace(/([^\s])([MmZzLlHhVvCcSsQqTtAa])/gm, '$1 $2') // separate commands from points
-        .replace(/([0-9])([+-])/gm, '$1 $2') // separate digits when no comma
-        .replace(/(\.[0-9]*)(\.)/gm, '$1 $2') // separate digits when no comma
-        .replace(/([Aa](\s+[0-9]+){3})\s+([01])\s*([01])/gm, '$1 $3 $4 '); // shorthand elliptical arc path syntax
+          // TODO: convert to real lexer based on https://www.w3.org/TR/SVG11/paths.html#PathDataBNF
+          .replace(/,/gm, ' ') // get rid of all commas
+          .replace(/([MmZzLlHhVvCcSsQqTtAa])([MmZzLlHhVvCcSsQqTtAa])/gm, '$1 $2') // separate commands from commands
+          .replace(/([MmZzLlHhVvCcSsQqTtAa])([MmZzLlHhVvCcSsQqTtAa])/gm, '$1 $2') // separate commands from commands
+          .replace(/([MmZzLlHhVvCcSsQqTtAa])([^\s])/gm, '$1 $2') // separate commands from points
+          .replace(/([^\s])([MmZzLlHhVvCcSsQqTtAa])/gm, '$1 $2') // separate commands from points
+          .replace(/([0-9])([+-])/gm, '$1 $2') // separate digits when no comma
+          .replace(/(\.[0-9]*)(\.)/gm, '$1 $2') // separate digits when no comma
+          .replace(/([Aa](\s+[0-9]+){3})\s+([01])\s*([01])/gm, '$1 $3 $4 '); // shorthand elliptical arc path syntax
         d = svg.compressSpaces(d); // compress multiple spaces
         d = svg.trim(d);
         _this17.PathParser = {
@@ -2389,7 +2410,7 @@ var canvg = (function (exports) {
           if (g == null) return addParentOpacity(stopsContainer.stops[stopsContainer.stops.length - 1].color);
           stopsContainer.stops.forEach(function (_ref2) {
             var offset = _ref2.offset,
-                color = _ref2.color;
+              color = _ref2.color;
 
             g.addColorStop(offset, addParentOpacity(color));
           });
@@ -2618,11 +2639,13 @@ var canvg = (function (exports) {
       }, {
         key: 'progress',
         value: function progress() {
-          var ret = { progress: (this.duration - this.begin) / (this.maxDuration - this.begin) };
+          var ret = {
+            progress: (this.duration - this.begin) / (this.maxDuration - this.begin)
+          };
           if (this.values.hasValue()) {
             var p = ret.progress * (this.values.value.length - 1);
             var lb = Math.floor(p),
-                ub = Math.ceil(p);
+              ub = Math.ceil(p);
             ret.from = new svg.Property('from', parseFloat(this.values.value[lb]));
             ret.to = new svg.Property('to', parseFloat(this.values.value[ub]));
             ret.progress = (p - lb) / (ub - lb);
@@ -3006,7 +3029,7 @@ var canvg = (function (exports) {
           this.setContext(ctx);
 
           var _ctx$measureText = ctx.measureText(textToMeasure),
-              width = _ctx$measureText.width;
+            width = _ctx$measureText.width;
 
           ctx.restore();
           return width;
@@ -3248,9 +3271,9 @@ var canvg = (function (exports) {
         cssDefs.forEach(function (cssDef) {
           if (svg.trim(cssDef) !== '') {
             var _cssDef$split = cssDef.split('{'),
-                _cssDef$split2 = slicedToArray(_cssDef$split, 2),
-                cssClasses = _cssDef$split2[0],
-                cssProps = _cssDef$split2[1];
+              _cssDef$split2 = slicedToArray(_cssDef$split, 2),
+              cssClasses = _cssDef$split2[0],
+              cssProps = _cssDef$split2[1];
 
             cssClasses = cssClasses.split(',');
             cssProps = cssProps.split(';');
@@ -3483,7 +3506,7 @@ var canvg = (function (exports) {
           element.style('filter').value = '';
 
           var px = 0,
-              py = 0;
+            py = 0;
           this.children.forEach(function (child) {
             var efd = child.extraFilterDistance || 0;
             px = Math.max(px, efd);
@@ -3568,7 +3591,7 @@ var canvg = (function (exports) {
         var _this49 = possibleConstructorReturn(this, (_class45.__proto__ || Object.getPrototypeOf(_class45)).call(this, node));
 
         var matrix = svg.ToNumberArray(_this49.attribute('values').value);
-        switch (_this49.attribute('type').valueOrDefault('matrix')) {// https://www.w3.org/TR/SVG/filters.html#feColorMatrixElement
+        switch (_this49.attribute('type').valueOrDefault('matrix')) { // https://www.w3.org/TR/SVG/filters.html#feColorMatrixElement
           case 'saturate':
             var s = matrix[0];
             matrix = [0.213 + 0.787 * s, 0.715 - 0.715 * s, 0.072 - 0.072 * s, 0, 0, 0.213 - 0.213 * s, 0.715 + 0.285 * s, 0.072 - 0.072 * s, 0, 0, 0.213 - 0.213 * s, 0.715 - 0.715 * s, 0.072 + 0.928 * s, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1];
@@ -3693,7 +3716,7 @@ var canvg = (function (exports) {
     // element factory
     svg.CreateElement = function (node) {
       var className = node.nodeName.replace(/^[^:]+:/, '') // remove namespace
-      .replace(/-/g, ''); // remove dashes
+        .replace(/-/g, ''); // remove dashes
       var e = void 0;
       if (typeof svg.Element[className] !== 'undefined') {
         e = new svg.Element[className](node);
@@ -3707,7 +3730,7 @@ var canvg = (function (exports) {
 
     // load from url
     svg.load = function () {
-      var _ref4 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(ctx, url) {
+      var _ref4 = asyncToGenerator( /*#__PURE__*/ regeneratorRuntime.mark(function _callee(ctx, url) {
         var dom;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
@@ -3758,18 +3781,18 @@ var canvg = (function (exports) {
         ctx.canvas.onclick = function (e) {
           var args = e != null ? [e.clientX, e.clientY] : [event.clientX, event.clientY];
 
-          var _mapXY = mapXY(new (Function.prototype.bind.apply(svg.Point, [null].concat(args)))()),
-              x = _mapXY.x,
-              y = _mapXY.y;
+          var _mapXY = mapXY(new(Function.prototype.bind.apply(svg.Point, [null].concat(args)))()),
+            x = _mapXY.x,
+            y = _mapXY.y;
 
           svg.Mouse.onclick(x, y);
         };
         ctx.canvas.onmousemove = function (e) {
           var args = e != null ? [e.clientX, e.clientY] : [event.clientX, event.clientY];
 
-          var _mapXY2 = mapXY(new (Function.prototype.bind.apply(svg.Point, [null].concat(args)))()),
-              x = _mapXY2.x,
-              y = _mapXY2.y;
+          var _mapXY2 = mapXY(new(Function.prototype.bind.apply(svg.Point, [null].concat(args)))()),
+            x = _mapXY2.x,
+            y = _mapXY2.y;
 
           svg.Mouse.onmousemove(x, y);
         };
@@ -3814,7 +3837,7 @@ var canvg = (function (exports) {
         if (svg.opts.scaleWidth != null || svg.opts.scaleHeight != null) {
           var viewBox = svg.ToNumberArray(e.attribute('viewBox').value);
           var xRatio = null,
-              yRatio = null;
+            yRatio = null;
 
           if (svg.opts.scaleWidth != null) {
             if (e.attribute('width').hasValue()) {
@@ -3850,7 +3873,7 @@ var canvg = (function (exports) {
           ctx.clearRect(0, 0, cWidth, cHeight);
         }
         e.render(ctx);
-        if (isFirstRender) {
+        if (isFirstRender && resolve) {
           isFirstRender = false;
           resolve(dom);
         }
@@ -3911,7 +3934,9 @@ var canvg = (function (exports) {
       },
       onclick: function onclick(x, y) {
         this.events.push({
-          type: 'onclick', x: x, y: y,
+          type: 'onclick',
+          x: x,
+          y: y,
           run: function run(e) {
             if (e.onclick) e.onclick();
           }
@@ -3919,7 +3944,9 @@ var canvg = (function (exports) {
       },
       onmousemove: function onmousemove(x, y) {
         this.events.push({
-          type: 'onmousemove', x: x, y: y,
+          type: 'onmousemove',
+          x: x,
+          y: y,
           run: function run(e) {
             if (e.onmousemove) e.onmousemove();
           }
@@ -3934,7 +3961,7 @@ var canvg = (function (exports) {
 
         this.events.forEach(function (_ref5, i) {
           var x = _ref5.x,
-              y = _ref5.y;
+            y = _ref5.y;
 
           if (ctx.isPointInPath && ctx.isPointInPath(x, y)) {
             _this54.eventElements[i] = element;
@@ -3946,7 +3973,7 @@ var canvg = (function (exports) {
 
         this.events.forEach(function (_ref6, i) {
           var x = _ref6.x,
-              y = _ref6.y;
+            y = _ref6.y;
 
           if (bb.isPointInBox(x, y)) {
             _this55.eventElements[i] = element;
