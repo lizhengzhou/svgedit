@@ -4,6 +4,7 @@ var svgEditorExtension_wcsmapediter = (function () {
   /* globals jQuery */
   /*
    * ext-wcsmapediter.js
+   * https://github.com/lizhengzhou/svgedit.git
    *
    * Licensed under the MIT License
    *
