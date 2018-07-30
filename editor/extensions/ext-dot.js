@@ -87,8 +87,8 @@ export default {
               cx: opts.start_x,
               cy: opts.start_y,
               r: 8,
-              stroke: '#00ffff',
-              'stroke-width': 4,
+              stroke: '#009FFF',
+              'stroke-width': 5,
               fill: '#fff',
               'class': 'point'
             }
@@ -114,8 +114,8 @@ export default {
           newFO.setAttributeNS(null, 'r2', inradius);
 
           newFO.setAttributeNS(null, 'fill', fill);
-          newFO.setAttributeNS(null, 'stroke', strokecolor);
-          newFO.setAttributeNS(null, 'stroke-width', strokeWidth);
+          // newFO.setAttributeNS(null, 'stroke', strokecolor);
+          // newFO.setAttributeNS(null, 'stroke-width', strokeWidth);
           /* const shape = */ newFO.getAttributeNS(null, 'shape');
 
           return {
@@ -131,6 +131,27 @@ export default {
             keep: (attrs.r !== '0'),
             element: newFO
           };
+        }
+      },
+      selectedChanged (opts) {
+        // Use this to update the current selected elements
+        selElems = opts.elems;
+
+        let i = selElems.length;
+        while (i--) {
+          const elem = selElems[i];
+          if (elem && elem.getAttributeNS(null, 'shape') === 'dot') {
+            if (opts.selectedElement && !opts.multiselected) {
+              // $('#starRadiusMulitplier').val(elem.getAttribute('r2'));
+              $('#dotNumPoints').val(elem.getAttribute('point'));
+              $('#radialShift').val(elem.getAttribute('radialshift'));
+              showPanel(true);
+            } else {
+              showPanel(false);
+            }
+          } else {
+            showPanel(false);
+          }
         }
       },
       elementChanged (opts) {
