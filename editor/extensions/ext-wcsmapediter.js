@@ -323,7 +323,7 @@
         },
         IDsUpdated:function IDsUpdated(opts){
 
-            console.log(changes);
+            console.log(opts);
         }
       };
 
