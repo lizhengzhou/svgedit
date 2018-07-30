@@ -80,12 +80,14 @@ export default {
 
         if (svgCanvas.getMode() === 'dot') {
           started = true;
-
+          const x = opts.start_x;
+          const y = opts.start_y;
+  
           newFO = S.addSvgElementFromJson({
             element: 'circle',
             attr: {
-              cx: opts.start_x,
-              cy: opts.start_y,
+              cx: x,
+              cy: y,
               r: 8,
               stroke: '#00ffff',
               'stroke-width': 4,
@@ -98,31 +100,7 @@ export default {
           };
         }
       },
-      mouseMove (opts) {
-        if (!started) {
-          return;
-        }
-        if (svgCanvas.getMode() === 'dot') {
-          const c = $(newFO).attr(['cx', 'cy', 'orient', 'fill', 'strokecolor', 'strokeWidth', 'radialshift']);
 
-          let x = opts.mouse_x;
-          let y = opts.mouse_y;
-          const {cx, cy, fill, strokecolor, strokeWidth, radialshift, point, orient} = c,
-            circumradius = (Math.sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy))) / 1.5,
-            inradius = circumradius / document.getElementById('starRadiusMulitplier').value;
-          newFO.setAttributeNS(null, 'r', circumradius);
-          newFO.setAttributeNS(null, 'r2', inradius);
-
-          newFO.setAttributeNS(null, 'fill', fill);
-          newFO.setAttributeNS(null, 'stroke', strokecolor);
-          newFO.setAttributeNS(null, 'stroke-width', strokeWidth);
-          /* const shape = */ newFO.getAttributeNS(null, 'shape');
-
-          return {
-            started: true
-          };
-        }
-      },
       mouseUp () {
         if (svgCanvas.getMode() === 'dot') {
           const attrs = $(newFO).attr(['r']);
@@ -133,9 +111,31 @@ export default {
           };
         }
       },
+      selectedChanged (opts) {
+        // Use this to update the current selected elements
+        selElems = opts.elems;
+
+        let i = selElems.length;
+        while (i--) {
+          const elem = selElems[i];
+          if (elem && elem.getAttributeNS(null, 'shape') === 'dot') {
+            if (opts.selectedElement && !opts.multiselected) {
+              // $('#starRadiusMulitplier').val(elem.getAttribute('r2'));
+              $('#dotNumPoints').val(elem.getAttribute('point'));
+              $('#radialShift').val(elem.getAttribute('radialshift'));
+              showPanel(true);
+            } else {
+              showPanel(false);
+            }
+          } else {
+            showPanel(false);
+          }
+        }
+      },
       elementChanged (opts) {
         // const elem = opts.elems[0];
       }
+      
     };
   }
 };
