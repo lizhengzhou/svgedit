@@ -57,7 +57,7 @@ export default {
 
     return {
       name: 'dot',
-      svgicons: svgEditor.curConfig.extIconsPath + 'dot-icons.svg',
+      svgicons: svgEditor.curConfig.extIconsPath + 'dot-icon.xml',
       buttons: [{
         id: 'dot',
         type: 'mode',
