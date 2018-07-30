@@ -557,6 +557,7 @@ var svgEditorExtension_wcsmapediter = (function () {
       }
 
       function pointMove(elem, opts) {
+        const zoom = svgCanvas.getZoom();
         var routers = $(svgcontent).find('.route');
         var route, pos;
         routers.each(function () {
@@ -570,8 +571,8 @@ var svgEditorExtension_wcsmapediter = (function () {
 
         if (route) {
           if (elem.children.length > 0) {
-            var cx = opts ? opts.mouse_x : elem.children[0].getAttribute('cx'),
-              cy = opts ? opts.mouse_y : elem.children[0].getAttribute('cy');
+            var cx = opts ? opts.mouse_x/zoom : elem.children[0].getAttribute('cx'),
+              cy = opts ? opts.mouse_y/zoom : elem.children[0].getAttribute('cy');
 
             if (pos == 'start') {
               var move = route.pathSegList.getItem(0);
@@ -599,11 +600,12 @@ var svgEditorExtension_wcsmapediter = (function () {
       }
 
       function controlMove(elem, opts) {
+        const zoom = svgCanvas.getZoom();
         var routeid = elem.getAttributeNS(seNs, 'path');
         var route = getElem(routeid);
 
-        var x1 = opts ? opts.mouse_x : elem.getAttribute('cx');
-        var y1 = opts ? opts.mouse_y : elem.getAttribute('cy');
+        var x1 = opts ? opts.mouse_x/zoom : elem.getAttribute('cx');
+        var y1 = opts ? opts.mouse_y/zoom : elem.getAttribute('cy');
 
         var contollSeg = route.pathSegList.getItem(1);
         contollSeg.x1 = x1;
