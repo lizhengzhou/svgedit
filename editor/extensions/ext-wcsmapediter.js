@@ -260,21 +260,27 @@
             // a value of true in order for mouseUp to be triggered
             //horizontal line
             drawLine(opts);
+            svgCanvas.setMode('select');
             //return {started: true};
           } else if (mode === 'line_vertical') {
             // The returned object must include "started" with
             // a value of true in order for mouseUp to be triggered
             //vertical line
             drawLine(opts, false);
+            svgCanvas.setMode('select');
             //return {started: true};
           } else if (mode == 'line_arc_up') {
             drawArcLine(opts, 'up');
+            svgCanvas.setMode('select');
           } else if (mode == 'line_arc_down') {
             drawArcLine(opts, 'down');
+            svgCanvas.setMode('select');
           } else if (mode == 'line_arc_left') {
             drawArcLine(opts, 'left');
+            svgCanvas.setMode('select');
           } else if (mode == 'line_arc_right') {
             drawArcLine(opts, 'right');
+            svgCanvas.setMode('select');
           }
 
           if (mode == 'select') {
@@ -315,10 +321,11 @@
             svgcontent = elem;
             init();
           }
-
-          if(!getElem(elem.id)){
+          
+          if(!svgcontent.getElementById(elem.id)){
              // deleteElem(elem);
              console.log(elem.id);
+
           }
         },
         IDsUpdated:function IDsUpdated(opts){
