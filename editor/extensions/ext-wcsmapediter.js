@@ -315,7 +315,16 @@
             svgcontent = elem;
             init();
           }
+
+          if(!getElem(elem.id)){
+             // deleteElem(elem);
+             console.log(elem.id);
+          }
         },
+        IDsUpdated:function IDsUpdated(opts){
+
+            console.log(opts);
+        }
       };
 
 
