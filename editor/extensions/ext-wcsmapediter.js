@@ -376,11 +376,15 @@ export default {
           init();
         }
 
-        if (elem && !svgcontent.getElementById(elem.id)) {
-          // deleteElem(elem);
-          console.log(elem.id);
-
-        }
+        opts.elems.forEach(function (elem) {
+          if (elem && !svgcontent.getElementById(elem.id)) {
+            if (elem && elem.tagName === 'g' && elem.getAttribute('class') === 'pointgroup') {
+              routeDelete(elem, 'pointgroup');
+            } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
+              routeDelete(elem, 'control');
+            }
+          }
+        });
       },
       IDsUpdated: function IDsUpdated(opts) {
 
@@ -679,6 +683,46 @@ export default {
       contollSeg.x1 = x1;
       contollSeg.y1 = y1;
     }
+
+    function routeDelete(elem, type) {
+      if (type == 'pointgroup') {
+        var routers = $(svgcontent).find('.route');
+        routers.each(function () {
+          var points = this.getAttributeNS(seNs, 'route').split(' ');
+          var pos;
+          if (points.length >= 2) {
+            if (points[0] == elem.id) {
+              pos = 'start';
+              var endElem = getElem(points[1]);
+              if (endElem) endElem.remove();
+            } else if (points[1] == elem.id) {
+              pos = 'end';
+              var startElem = getElem(points[0]);
+              if (startElem) startElem.remove();
+            }
+          }
+          if (pos && points.length >= 3) {
+            var control = getElem(points[2]);
+            if (control) control.remove();
+          }
+          if (pos) this.remove();
+        });
+      } else if (type == 'control') {
+        var pathid = elem.getAttributeNS(seNs, 'path');
+        var route = getElem(pathid);
+        if (route) {
+          var elemids = route.getAttributeNS(seNs, 'route').split(' ');
+          if (elemids.length > 2) {
+            var startElem = getElem(elemids[0]);
+            if (startElem) startElem.remove();
+            var endElem = getElem(elemids[1]);
+            if (endElem) endElem.remove();
+          }
+          route.remove();
+        }
+      }
+    }
+
     // End draw functions
 
 
