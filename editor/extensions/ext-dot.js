@@ -62,7 +62,7 @@ export default {
         id: 'dot',
         type: 'mode',
         title: 'Dot',
-        position: 12,
+        position: '5',
         events: {
           click () {
             showPanel(true);
