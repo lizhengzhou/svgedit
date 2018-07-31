@@ -125,8 +125,7 @@ export default {
             click() {
               // The action taken when the button is clicked on.
               // For "mode" buttons, any other button will
-              // automatically be de-pressed.
-              // showRoutePanel(true);
+              // automatically be de-pressed.              
               svgCanvas.setMode('line_horizontal');
             }
           }
@@ -144,8 +143,7 @@ export default {
             click() {
               // The action taken when the button is clicked on.
               // For "mode" buttons, any other button will
-              // automatically be de-pressed.
-              // showRoutePanel(true);
+              // automatically be de-pressed.              
               svgCanvas.setMode('line_vertical');
             }
           }
@@ -157,7 +155,6 @@ export default {
           title: "Draw arc line",
           events: {
             click() {
-              //showLinePanel(true);
               svgCanvas.setMode('line_arc_upleft');
             }
           }
@@ -169,7 +166,6 @@ export default {
           title: "Draw arc line",
           events: {
             click() {
-              //showLinePanel(true);
               svgCanvas.setMode('line_arc_upright');
             }
           }
@@ -181,7 +177,6 @@ export default {
           title: "Draw arc line",
           events: {
             click() {
-              //showLinePanel(true);
               svgCanvas.setMode('line_arc_downleft');
             }
           }
@@ -193,7 +188,6 @@ export default {
           title: "Draw arc line",
           events: {
             click() {
-              //showLinePanel(true);
               svgCanvas.setMode('line_arc_downright');
             }
           }
@@ -297,7 +291,6 @@ export default {
       ],
       callback: function callback() {
         $('#wcsline_panel').hide();
-        // const endChanges = function(){};
       },
       addLangData: function addLangData(lang) {
         return {
@@ -315,14 +308,12 @@ export default {
           //horizontal line
           drawLine(opts);
           svgCanvas.setMode('select');
-          //return {started: true};
         } else if (mode === 'line_vertical') {
           // The returned object must include "started" with
           // a value of true in order for mouseUp to be triggered
           //vertical line
           drawLine(opts, false);
           svgCanvas.setMode('select');
-          //return {started: true};
         } else if (mode == 'line_arc_upleft') {
           drawArcLine(opts, 'upleft');
           svgCanvas.setMode('select');
@@ -350,9 +341,6 @@ export default {
           if (elem && elem.tagName === 'g' && elem.getAttribute('class') === 'pointgroup') {
             //Point Group Changed
             pointMove(elem, opts);
-          } else if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
-            //route move
-            //routeMove(elem, opts);
           } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
             //be line control point move
             controlMove(elem, opts);
@@ -377,93 +365,6 @@ export default {
             showRoutePanel(false);
           }
         }
-
-        // var selectedElems = svgCanvas.getSelectedElems();
-        // var toSelectedElems = [];
-        // opts.elems.forEach(function (elem) {
-        //   if(elem.tagName === 'path' && elem.getAttribute('class') === 'route')
-        //   {
-        //     var points = elem.getAttributeNS(seNs, 'route'.split(' '));
-        //     if (points.length >= 2) {
-        //       var startElem = getElem(points[0]),
-        //         endElem = getElem(points[1]);
-
-        //         if (!selectedElems.includes(startElem)) {
-        //           toSelectedElems.push(startElem);
-        //         }
-        //         if (!selectedElems.includes(endElem)) {
-        //           toSelectedElems.push(endElem);
-        //         }
-        //     }
-        //   }
-        // });
-
-        // if (toSelectedElems.length > 0) {
-        //   svgCanvas.addToSelection(toSelectedElems);
-        // }
-
-        // console.log(routes);
-        // if(routes)
-        // {
-        //   routes.forEach(function (route) {
-        //     var points = route.getAttributeNS(seNs, 'route'.split(' '));
-        //     if (points.length >= 2) {
-        //       var startElem = getElem(points[0]),
-        //         endElem = getElem(points[1]);
-
-        //       var selectedElems = svgCanvas.getSelectedElems();
-        //       var toSelectedElems = [];
-        //       if (!selectedElems.includes(startElem)) {
-        //         toSelectedElems.push(startElem);
-        //       }
-        //       if (!selectedElems.includes(endElem)) {
-        //         toSelectedElems.push(endElem);
-        //       }
-
-        //       if (toSelectedElems.length > 0) {
-        //         svgCanvas.addToSelection(toSelectedElems);
-        //       }
-        //     }
-        //   });
-
-        // }
-
-        // if (svgCanvas.getSelectedElems().length > 0) {
-        // var selRoutes=Array.find(opts.elems,function(value){
-        //   console.log(value);
-        // });
-        // selRoute=opts.elems.find(function(elem){
-        //     return elem.tagName === 'path' && elem.getAttribute('class') === 'route';
-        // });
-        // if(selRoute)
-        // {
-        //   showRoutePanel(true);
-        //   selectRoute(selRoute);
-        // }else{
-        //   showRoutePanel(false);
-        // }
-        // if(selRoutes&&selRoutes.length>1)
-        // {
-        //   var route=selRoutes[0];
-        //   svgCanvas.clearSelection();
-        //   selectRoute(route);
-        // }
-        // var elem = opts.elems[0];
-        // if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
-        //   //Route Move
-        //   // if (selRoute != elem) {
-        //   showRoutePanel(true);
-        //   selRoute = elem;
-        //   selectRoute(elem);
-        //   // }
-        // }else{
-        //   showRoutePanel(false);
-        //   // if(svgCanvas.getSelectedElems().length>0)
-        //   // {
-        //   //   svgCanvas.clearSelection();
-        //   // }          
-        // }
-        // // }
       },
       elementChanged: function elementChanged(opts) {
         var elem = opts.elems[0];
@@ -773,11 +674,6 @@ export default {
 
       if (route) {
         if (elem.children.length > 0) {
-          // if(opts)
-          // {
-          //   elem.children[0].setAttribute('cx',opts.mouse_x / zoom);
-          //   elem.children[0].setAttribute('cy',opts.mouse_y / zoom);
-          // }
           var cx = opts ? opts.mouse_x / zoom : elem.children[0].getAttribute('cx'),
             cy = opts ? opts.mouse_y / zoom : elem.children[0].getAttribute('cy');
 
@@ -870,12 +766,6 @@ export default {
       const zoom = svgCanvas.getZoom();
       var routeid = elem.getAttributeNS(seNs, 'path');
       var route = getElem(routeid);
-
-      // if(opts)
-      // {
-      //   elem.children[0].setAttribute('cx',opts.mouse_x / zoom);
-      //   elem.children[0].setAttribute('cy',opts.mouse_y / zoom);
-      // }
 
       var x1 = opts ? opts.mouse_x / zoom : elem.getAttribute('cx');
       var y1 = opts ? opts.mouse_y / zoom : elem.getAttribute('cy');
