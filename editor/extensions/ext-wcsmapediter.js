@@ -26,7 +26,7 @@ export default {
       getElem = S.getElem,
       addElem = S.addSvgElementFromJson,
       setAttrs = S.assignAttributes,
-      selManager = S.selectorManager,
+      selManager = svgCanvas.selectorManager,
       // seNs = void 0,
       connections = [],
       selElems = [],
@@ -289,7 +289,7 @@ export default {
           events: {
             change: function change() {
               if (selRoute) {
-                selRoute.setAttributeNS(seNs,'se:Speed', this.value);
+                selRoute.setAttributeNS(seNs, 'se:Speed', this.value);
               }
             }
           }
@@ -345,10 +345,14 @@ export default {
       },
       mouseMove: function mouseMove(opts) {
         if (svgCanvas.getSelectedElems().length == 1) {
-          var elem = opts.selected;
+          var elems = svgCanvas.getSelectedElems();
+          var elem = elems[0];
           if (elem && elem.tagName === 'g' && elem.getAttribute('class') === 'pointgroup') {
             //Point Group Changed
             pointMove(elem, opts);
+          } else if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
+            //route move
+            //routeMove(elem, opts);
           } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
             //be line control point move
             controlMove(elem, opts);
@@ -363,19 +367,103 @@ export default {
         //}
       },
       selectedChanged: function selectedChanged(opts) {
-        // if (svgCanvas.getSelectedElems().length > 0) {
-        var elem = opts.elems[0];
-        if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
-          //Route Move
-          // if (selRoute != elem) {
-          showRoutePanel(true);
-          selRoute = elem;
-          selectRoute(elem);
-          // }
-        }else{
-          showRoutePanel(false);
+        if (svgCanvas.getSelectedElems().length == 1) {
+          var elem = opts.elems[0];
+          if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
+            selRoute = elem;
+            showRoutePanel(true);
+            selectRoute(selRoute);
+          } else {
+            showRoutePanel(false);
+          }
         }
+
+        // var selectedElems = svgCanvas.getSelectedElems();
+        // var toSelectedElems = [];
+        // opts.elems.forEach(function (elem) {
+        //   if(elem.tagName === 'path' && elem.getAttribute('class') === 'route')
+        //   {
+        //     var points = elem.getAttributeNS(seNs, 'route'.split(' '));
+        //     if (points.length >= 2) {
+        //       var startElem = getElem(points[0]),
+        //         endElem = getElem(points[1]);
+
+        //         if (!selectedElems.includes(startElem)) {
+        //           toSelectedElems.push(startElem);
+        //         }
+        //         if (!selectedElems.includes(endElem)) {
+        //           toSelectedElems.push(endElem);
+        //         }
+        //     }
+        //   }
+        // });
+
+        // if (toSelectedElems.length > 0) {
+        //   svgCanvas.addToSelection(toSelectedElems);
         // }
+
+        // console.log(routes);
+        // if(routes)
+        // {
+        //   routes.forEach(function (route) {
+        //     var points = route.getAttributeNS(seNs, 'route'.split(' '));
+        //     if (points.length >= 2) {
+        //       var startElem = getElem(points[0]),
+        //         endElem = getElem(points[1]);
+
+        //       var selectedElems = svgCanvas.getSelectedElems();
+        //       var toSelectedElems = [];
+        //       if (!selectedElems.includes(startElem)) {
+        //         toSelectedElems.push(startElem);
+        //       }
+        //       if (!selectedElems.includes(endElem)) {
+        //         toSelectedElems.push(endElem);
+        //       }
+
+        //       if (toSelectedElems.length > 0) {
+        //         svgCanvas.addToSelection(toSelectedElems);
+        //       }
+        //     }
+        //   });
+
+        // }
+
+        // if (svgCanvas.getSelectedElems().length > 0) {
+        // var selRoutes=Array.find(opts.elems,function(value){
+        //   console.log(value);
+        // });
+        // selRoute=opts.elems.find(function(elem){
+        //     return elem.tagName === 'path' && elem.getAttribute('class') === 'route';
+        // });
+        // if(selRoute)
+        // {
+        //   showRoutePanel(true);
+        //   selectRoute(selRoute);
+        // }else{
+        //   showRoutePanel(false);
+        // }
+        // if(selRoutes&&selRoutes.length>1)
+        // {
+        //   var route=selRoutes[0];
+        //   svgCanvas.clearSelection();
+        //   selectRoute(route);
+        // }
+        // var elem = opts.elems[0];
+        // if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
+        //   //Route Move
+        //   // if (selRoute != elem) {
+        //   showRoutePanel(true);
+        //   selRoute = elem;
+        //   selectRoute(elem);
+        //   // }
+        // }else{
+        //   showRoutePanel(false);
+        //   // if(svgCanvas.getSelectedElems().length>0)
+        //   // {
+        //   //   svgCanvas.clearSelection();
+        //   // }          
+        // }
+        // // }
       },
       elementChanged: function elementChanged(opts) {
         var elem = opts.elems[0];
@@ -388,6 +476,9 @@ export default {
         if (elem && elem.tagName === 'g' && elem.getAttribute('class') === 'pointgroup') {
           //Point Group Changed
           pointMove(elem);
+        } else if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
+          //route move
+          routeMove(elem, opts);
         } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
           //be line control point move
           controlMove(elem);
@@ -402,6 +493,14 @@ export default {
             }
           }
         });
+      },
+      elementTransition: function (opts) {
+        console.log(opts);
+        var elem = opts.elems[0];
+        if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
+          //route move
+          //routeMove(elem, opts);
+        }
       },
       IDsUpdated: function IDsUpdated(opts) {
 
@@ -674,6 +773,11 @@ export default {
 
       if (route) {
         if (elem.children.length > 0) {
+          // if(opts)
+          // {
+          //   elem.children[0].setAttribute('cx',opts.mouse_x / zoom);
+          //   elem.children[0].setAttribute('cy',opts.mouse_y / zoom);
+          // }
           var cx = opts ? opts.mouse_x / zoom : elem.children[0].getAttribute('cx'),
             cy = opts ? opts.mouse_y / zoom : elem.children[0].getAttribute('cy');
 
@@ -691,7 +795,7 @@ export default {
     }
 
     function selectRoute(elem) {
-      var route=elem;
+      var route = elem;
       var points = elem.getAttributeNS(seNs, 'route').split(' ');
       var startElem = getElem(points[0]),
         endElem = getElem(points[1]),
@@ -722,22 +826,56 @@ export default {
       $('#wcsline_height').val(curve.x - move.y);
 
       var Direction = route.getAttributeNS(seNs, 'Direction');
-      if(Direction==10)
-      {
-        svgEditor.setIcon('#cur_direction_list','uparrow');
-      }else if(Direction==20)
-      {
-        svgEditor.setIcon('#cur_direction_list','downarrow');
+      if (Direction == 10) {
+        svgEditor.setIcon('#cur_direction_list', 'uparrow');
+      } else if (Direction == 20) {
+        svgEditor.setIcon('#cur_direction_list', 'downarrow');
       }
-      
-      var speed=route.getAttributeNS(seNs, 'Speed');
+
+      var speed = route.getAttributeNS(seNs, 'Speed');
       $('#wcsline_speed').val(speed);
+    }
+
+    function routeMove(elem, opts) {
+      const zoom = svgCanvas.getZoom();
+
+      var move = elem.pathSegList.getItem(0);
+      var curve = elem.pathSegList.getItem(1);
+
+      var startElem, endElem, control;
+      var points = elem.getAttributeNS(seNs, 'route').split(' ');
+      if (points.length >= 2) {
+        startElem = getElem(points[0]);
+        endElem = getElem(points[1]);
+      }
+      if (points.length >= 3) {
+        control = getElem(points[2]);
+      }
+
+      if (startElem) {
+        startElem.children[0].setAttribute('cx', move.x);
+        startElem.children[0].setAttribute('cy', move.y);
+      }
+      if (endElem) {
+        endElem.children[0].setAttribute('cx', curve.x);
+        endElem.children[0].setAttribute('cy', curve.y);
+      }
+      if (control) {
+        control.setAttribute('cx', curve.x1);
+        control.setAttribute('cy', curve.y1);
+      }
     }
 
     function controlMove(elem, opts) {
       const zoom = svgCanvas.getZoom();
       var routeid = elem.getAttributeNS(seNs, 'path');
       var route = getElem(routeid);
+
+      // if(opts)
+      // {
+      //   elem.children[0].setAttribute('cx',opts.mouse_x / zoom);
+      //   elem.children[0].setAttribute('cy',opts.mouse_y / zoom);
+      // }
 
       var x1 = opts ? opts.mouse_x / zoom : elem.getAttribute('cx');
       var y1 = opts ? opts.mouse_y / zoom : elem.getAttribute('cy');
@@ -816,7 +954,7 @@ export default {
         val = 20;
       }
       if (selRoute) {
-        selRoute.setAttributeNS(seNs,'se:Direction', val);
+        selRoute.setAttributeNS(seNs, 'se:Direction', val);
       }
     }
 
