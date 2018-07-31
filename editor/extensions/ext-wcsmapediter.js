@@ -204,7 +204,7 @@ export default {
           title: 'forword direction',
           type: 'context',
           events: {
-            click: setDirectionFromButton
+            click: setRouteDirection
           },
           panel: 'wcsline_panel',
           list: 'direction_list',
@@ -216,7 +216,7 @@ export default {
           title: 'backword direction',
           type: 'context',
           events: {
-            click: setDirectionFromButton
+            click: setRouteDirection
           },
           panel: 'wcsline_panel',
           list: 'direction_list',
@@ -275,20 +275,22 @@ export default {
           label: 'Direction',
           colnum: 3,
           events: {
-            change: setDirectionFromButton
+            change: setRouteDirection
           }
         },
         {
           type: 'input',
           panel: 'wcsline_panel',
           title: 'Speed',
-          id: 'speed',
+          id: 'wcsline_speed',
           label: 'Speed',
           size: 3,
           defval: 10,
           events: {
             change: function change() {
-              setAttr('Speed', this.value);
+              if (selRoute) {
+                selRoute.setAttributeNS(seNs,'se:Speed', this.value);
+              }
             }
           }
         }
@@ -689,6 +691,7 @@ export default {
     }
 
     function selectRoute(elem) {
+      var route=elem;
       var points = elem.getAttributeNS(seNs, 'route').split(' ');
       var startElem = getElem(points[0]),
         endElem = getElem(points[1]),
@@ -718,6 +721,17 @@ export default {
       $('#wcsline_width').val(curve.x - move.x);
       $('#wcsline_height').val(curve.x - move.y);
 
+      var Direction = route.getAttributeNS(seNs, 'Direction');
+      if(Direction==10)
+      {
+        svgEditor.setIcon('#cur_direction_list','uparrow');
+      }else if(Direction==20)
+      {
+        svgEditor.setIcon('#cur_direction_list','downarrow');
+      }
+      
+      var speed=route.getAttributeNS(seNs, 'Speed');
+      $('#wcsline_speed').val(speed);
     }
 
     function controlMove(elem, opts) {
@@ -794,18 +808,15 @@ export default {
 
 
 
-    function setDirectionFromButton() {
-
+    function setRouteDirection() {
       var val = 0;
       if (this.id == 'uparrow') {
         val = 10;
       } else if (this.id == 'downarrow') {
         val = 20;
       }
-
-      let selElem = selElems[0];
-      if (selElem) {
-        selElem.setAttribute('Direction', val);
+      if (selRoute) {
+        selRoute.setAttributeNS(seNs,'se:Direction', val);
       }
     }
 
