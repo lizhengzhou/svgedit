@@ -30,6 +30,7 @@ export default {
       // seNs = void 0,
       connections = [],
       selElems = [],
+      selRoute = void 0,
       NS = S.NS,
       svgdoc = svgroot.ownerDocument;
     var initStroke = svgEditor.curConfig.initStroke;
@@ -125,7 +126,7 @@ export default {
               // The action taken when the button is clicked on.
               // For "mode" buttons, any other button will
               // automatically be de-pressed.
-              showPanel(true);
+              // showRoutePanel(true);
               svgCanvas.setMode('line_horizontal');
             }
           }
@@ -144,7 +145,7 @@ export default {
               // The action taken when the button is clicked on.
               // For "mode" buttons, any other button will
               // automatically be de-pressed.
-              showPanel(true);
+              // showRoutePanel(true);
               svgCanvas.setMode('line_vertical');
             }
           }
@@ -223,6 +224,50 @@ export default {
         }
       ],
       context_tools: [{
+          type: 'input',
+          panel: 'wcsline_panel',
+          title: 'X',
+          id: 'wcsline_x1',
+          label: 'X',
+          size: 3,
+          events: {
+            change: SetRouteXYWH
+          }
+        },
+        {
+          type: 'input',
+          panel: 'wcsline_panel',
+          title: 'Y',
+          id: 'wcsline_y1',
+          label: 'Y',
+          size: 3,
+          events: {
+            change: SetRouteXYWH
+          }
+        },
+        {
+          type: 'input',
+          panel: 'wcsline_panel',
+          title: 'W',
+          id: 'wcsline_width',
+          label: 'W',
+          size: 3,
+          events: {
+            change: SetRouteXYWH
+          }
+        },
+        {
+          type: 'input',
+          panel: 'wcsline_panel',
+          title: 'H',
+          id: 'wcsline_height',
+          label: 'H',
+          size: 3,
+          events: {
+            change: SetRouteXYWH
+          }
+        },
+        {
           type: 'button-select',
           panel: 'wcsline_panel',
           title: 'select direction',
@@ -245,50 +290,6 @@ export default {
             change: function change() {
               setAttr('Speed', this.value);
             }
-          }
-        },
-        {
-          type: 'input',
-          panel: 'wcsline_panel',
-          title: 'X',
-          id: 'wcsline_x1',
-          label: 'X',
-          size: 3,
-          events: {
-            change: SetStartX
-          }
-        },
-        {
-          type: 'input',
-          panel: 'wcsline_panel',
-          title: 'Y',
-          id: 'wcsline_y1',
-          label: 'Y',
-          size: 3,
-          events: {
-            change: SetStartY
-          }
-        },
-        {
-          type: 'input',
-          panel: 'wcsline_panel',
-          title: 'W',
-          id: 'wcsline_width',
-          label: 'W',
-          size: 3,
-          events: {
-            change: SetStartWidth
-          }
-        },
-        {
-          type: 'input',
-          panel: 'wcsline_panel',
-          title: 'H',
-          id: 'wcsline_height',
-          label: 'H',
-          size: 3,
-          events: {
-            change: SetStartHeight
           }
         }
       ],
@@ -360,13 +361,19 @@ export default {
         //}
       },
       selectedChanged: function selectedChanged(opts) {
-        if (svgCanvas.getSelectedElems().length == 1) {
-          var elem = opts.selectedElement;
-          if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
-            //Route Move
-            selectRoute(elem);
-          }
+        // if (svgCanvas.getSelectedElems().length > 0) {
+        var elem = opts.elems[0];
+        if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
+          //Route Move
+          // if (selRoute != elem) {
+          showRoutePanel(true);
+          selRoute = elem;
+          selectRoute(elem);
+          // }
+        }else{
+          showRoutePanel(false);
         }
+        // }
       },
       elementChanged: function elementChanged(opts) {
         var elem = opts.elems[0];
@@ -374,6 +381,14 @@ export default {
           // Update svgcontent (can change on import)
           svgcontent = elem;
           init();
+        }
+
+        if (elem && elem.tagName === 'g' && elem.getAttribute('class') === 'pointgroup') {
+          //Point Group Changed
+          pointMove(elem);
+        } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
+          //be line control point move
+          controlMove(elem);
         }
 
         opts.elems.forEach(function (elem) {
@@ -485,7 +500,9 @@ export default {
 
       path.setAttributeNS(seNs, 'se:route', startElem.id + ' ' + endElem.id);
 
-      svgCanvas.clearSelection();
+      if (svgCanvas.getSelectedElems().length > 0) {
+        svgCanvas.clearSelection();
+      }
       svgCanvas.addToSelection([startElem, endElem, path]);
 
       var batchCmd = new S.BatchCommand();
@@ -493,6 +510,11 @@ export default {
       batchCmd.addSubCommand(new S.InsertElementCommand(startElem));
       batchCmd.addSubCommand(new S.InsertElementCommand(path));
       S.addCommandToHistory(batchCmd);
+
+      $('#wcsline_x1').val(x1);
+      $('#wcsline_y1').val(y1);
+      $('#wcsline_width').val(x2 - x1);
+      $('#wcsline_height').val(y2 - y1);
 
       return {
         keep: true
@@ -613,7 +635,9 @@ export default {
       control.setAttributeNS(seNs, 'se:path', path.id);
       path.setAttributeNS(seNs, 'se:route', startElem.id + ' ' + endElem.id + ' ' + control.id);
 
-      svgCanvas.clearSelection();
+      if (svgCanvas.getSelectedElems().length > 0) {
+        svgCanvas.clearSelection();
+      }
       svgCanvas.addToSelection([startElem, endElem, path, control]);
 
       var batchCmd = new S.BatchCommand();
@@ -622,6 +646,11 @@ export default {
       batchCmd.addSubCommand(new S.InsertElementCommand(startElem));
       batchCmd.addSubCommand(new S.InsertElementCommand(path));
       S.addCommandToHistory(batchCmd);
+
+      $('#wcsline_x1').val(x1);
+      $('#wcsline_y1').val(y1);
+      $('#wcsline_width').val(x2 - x1);
+      $('#wcsline_height').val(y2 - y1);
 
       return {
         keep: true
@@ -666,9 +695,29 @@ export default {
         control = getElem(points[2]);
 
       var selectedElems = svgCanvas.getSelectedElems();
-      if (!selectedElems.includes(control)) {
-        svgCanvas.addToSelection([startElem, endElem, control]);
+      var toSelectedElems = [];
+      if (!selectedElems.includes(startElem)) {
+        toSelectedElems.push(startElem);
       }
+      if (!selectedElems.includes(endElem)) {
+        toSelectedElems.push(endElem);
+      }
+      if (control && !selectedElems.includes(control)) {
+        toSelectedElems.push(control);
+      }
+
+      if (toSelectedElems.length > 0) {
+        svgCanvas.addToSelection(toSelectedElems);
+      }
+
+      var move = elem.pathSegList.getItem(0);
+      var curve = elem.pathSegList.getItem(1);
+
+      $('#wcsline_x1').val(move.x);
+      $('#wcsline_y1').val(move.y);
+      $('#wcsline_width').val(curve.x - move.x);
+      $('#wcsline_height').val(curve.x - move.y);
+
     }
 
     function controlMove(elem, opts) {
@@ -728,12 +777,12 @@ export default {
 
 
     //utils  Functions
-    function showPanel(on) {
+    function showRoutePanel(on) {
       var connRules = $('#wcsline_rules');
       if (!connRules.length) {
         connRules = $('<style id="wcsline_rules"></style>').appendTo('head');
       }
-      connRules.text(!on ? '' : '#tool_clone, #tool_topath, #tool_angle, #xy_panel { display: none !important; }');
+      connRules.text(!on ? '' : '#xy_panel  { display: none !important; }');
       $('#wcsline_panel').toggle(on);
     }
 
@@ -760,25 +809,56 @@ export default {
       }
     }
 
-    function SetStartX() {
+    function SetRouteXYWH() {
+      if (selRoute) {
+        var selElems = svgCanvas.getSelectedElems();
+        svgCanvas.clearSelection();
 
+        var move = selRoute.pathSegList.getItem(0);
+        var curve = selRoute.pathSegList.getItem(1);
+
+        var startElem, endElem, control;
+        var points = selRoute.getAttributeNS(seNs, 'route').split(' ');
+        if (points.length >= 2) {
+          startElem = getElem(points[0]);
+          endElem = getElem(points[1]);
+        }
+        if (points.length >= 3) {
+          control = getElem(points[2]);
+        }
+
+        if (this.id == 'wcsline_x1') {
+          if (startElem) {
+            startElem.children[0].setAttribute('cx', this.value);
+            move.x = this.value;
+          }
+        } else if (this.id == 'wcsline_y1') {
+          if (startElem) {
+            startElem.children[0].setAttribute('cy', this.value);
+            move.y = this.value;
+          }
+        } else if (this.id == 'wcsline_width') {
+          if (startElem && endElem) {
+            var cx = startElem.children[0].getAttribute('cx');
+            cx = parseFloat(cx) + parseFloat(this.value);
+
+            endElem.children[0].setAttribute('cx', cx);
+            curve.x = cx;
+          }
+        } else if (this.id == 'wcsline_height') {
+          if (startElem && endElem) {
+            var cy = startElem.children[0].getAttribute('cy');
+            cy = parseFloat(cy) + parseFloat(this.value);
+
+            endElem.children[0].setAttribute('cy', cy);
+            curve.y = cy;
+          }
+        }
+        svgCanvas.addToSelection(selElems);
+      }
 
     }
 
-    function SetStartY() {
-
-
-    }
-
-    function SetStartWidth() {
-
-
-    }
-
-    function SetStartHeight() {
-
-
-    }
     //End utils  Functions
 
 
