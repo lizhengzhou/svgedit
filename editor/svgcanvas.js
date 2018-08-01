@@ -891,6 +891,12 @@ class SvgCanvas {
       // Boolean indicating whether or not a draw action has been started
       started = false,
 
+      // Start X when mouse down
+      started_x,
+
+      // Start Y when mouse down
+      started_y,
+
       // String with an element's initial transform attribute value
       startTransform = null,
 
@@ -1738,6 +1744,9 @@ class SvgCanvas {
             break;
         }
 
+        started_x = startX;
+        started_y = startY;
+
         const extResult = runExtensions('mouseDown', {
           event: evt,
           start_x: startX,
@@ -2239,6 +2248,8 @@ class SvgCanvas {
 
         runExtensions('mouseMove', {
           event: evt,
+          start_x:started_x,
+          start_y:started_y,
           mouse_x: mouseX,
           mouse_y: mouseY,
           selected

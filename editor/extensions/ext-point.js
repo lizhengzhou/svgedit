@@ -126,7 +126,7 @@ export default {
               point.setAttributeNS(seNs, 'se:nebor', imgElem.id)
             }
 
-            var points = route.getAttributeNS(seNs, 'route').split(' ');
+            var points = route.getAttributeNS(seNs, 'points').split(' ');
             var startElem1 = getElem(points[0]),
               endElem1 = point,
               startElem2 = point,
@@ -135,10 +135,10 @@ export default {
             curve.x = x;
             curve.y = y;
 
-            route.setAttributeNS(seNs, 'se:route', [points[0], point.id, points[2]].join(' '));
+            route.setAttributeNS(seNs, 'se:points', [points[0], point.id, points[2]].join(' '));
 
             endElem2.before(path);
-            path.setAttributeNS(seNs, 'se:route', startElem2.id + ' ' + endElem2.id);
+            path.setAttributeNS(seNs, 'se:points', startElem2.id + ' ' + endElem2.id);
 
             svgCanvas.setMode('select');
           }
