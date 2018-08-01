@@ -31,7 +31,7 @@ export default {
       connections = [],
       selElems = [],
       selRoute = void 0,
-      selPoint=void 0,
+      selPoint = void 0,
       NS = S.NS,
       svgdoc = svgroot.ownerDocument;
     var initStroke = svgEditor.curConfig.initStroke;
@@ -371,23 +371,21 @@ export default {
         //}
       },
       selectedChanged: function selectedChanged(opts) {
-        if(svgCanvas.getSelectedElems().length == 0){
+        if (svgCanvas.getSelectedElems().length == 0) {
           showPointPanel(false);
           showRoutePanel(false);
         }
-       
+
         if (svgCanvas.getSelectedElems().length == 1) {
           var elem = opts.elems[0];
           if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
             selRoute = elem;
             showRoutePanel(true);
             selectRoute(selRoute);
-          }
-          else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
+          } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
             selPoint = elem;
             showPointPanel(true);
-          }
-          else{
+          } else {
             showRoutePanel(false);
             showPointPanel(false);
           }
@@ -409,8 +407,7 @@ export default {
             } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
               routeDelete(elem, 'control');
             }
-          }
-          else{
+          } else {
 
             if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
               //Point Group Changed
@@ -704,11 +701,7 @@ export default {
           route = this;
           if (points[0] == elem.id) pos = 'start';
           else if (points[1] == elem.id) pos = 'end';
-        }
-      });
 
-      if (route) {
-        //if (elem.children.length > 0) {
           var cx = opts ? opts.mouse_x / zoom : elem.getAttribute('cx'),
             cy = opts ? opts.mouse_y / zoom : elem.getAttribute('cy');
 
@@ -721,8 +714,8 @@ export default {
             curve.x = cx;
             curve.y = cy;
           }
-       // }
-      }
+        }
+      });
     }
 
     function selectRoute(elem) {
@@ -863,11 +856,11 @@ export default {
       $('#wcsline_panel').toggle(on);
     }
 
-    function showPointPanel(on){
-        $('#g_panel').toggle(!on);
-        $('#group_title').toggle(!on);
-        // $('#circle_panel').toggle(on);
-        $('#wcspoint_panel').toggle(on);
+    function showPointPanel(on) {
+      $('#g_panel').toggle(!on);
+      $('#group_title').toggle(!on);
+      // $('#circle_panel').toggle(on);
+      $('#wcspoint_panel').toggle(on);
     }
 
     function setAttr(attr, val) {
