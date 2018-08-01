@@ -351,15 +351,32 @@ export default {
         }
       },
       mouseMove: function mouseMove(opts) {
+
+        const zoom = svgCanvas.getZoom();
+        const x = opts.mouse_x / zoom;
+        const y = opts.mouse_y / zoom;
+
         if (svgCanvas.getSelectedElems().length == 1) {
           var elems = svgCanvas.getSelectedElems();
           var elem = elems[0];
           if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
             //Point Group Changed
             pointMove(elem, opts);
+            if (elem.getAttributeNS(seNs, 'nebor')) {
+              var bebor = getElem(elem.getAttributeNS(seNs, 'nebor'));
+              bebor.setAttribute('x', x - 17);
+              bebor.setAttribute('y', y - 50);
+            }
           } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
             //be line control point move
             controlMove(elem, opts);
+          } else if (elem && elem.tagName === 'image' && elem.getAttributeNS(seNs, 'point')) {
+            var point = getElem(elem.getAttributeNS(seNs, 'point'));
+            if (point) {
+              point.setAttribute('cx', x);
+              point.setAttribute('cy', y + 30);
+              pointMove(point);
+            }
           }
         }
       },
@@ -442,7 +459,7 @@ export default {
     function init() {
       // Make sure all routes have data set
       $(svgcontent).find('*').each(function () {
-        var conn = this.getAttributeNS(seNs, 'route');
+        var conn = this.getAttributeNS(seNs, 'points');
         if (conn) {
           this.setAttribute('class', 'route');
           svgCanvas.getEditorNS(true);
@@ -511,7 +528,7 @@ export default {
         }
       })
 
-      path.setAttributeNS(seNs, 'se:route', startElem.id + ' ' + endElem.id);
+      path.setAttributeNS(seNs, 'se:points', startElem.id + ' ' + endElem.id);
 
       if (svgCanvas.getSelectedElems().length > 0) {
         svgCanvas.clearSelection();
@@ -629,7 +646,7 @@ export default {
       });
 
       control.setAttributeNS(seNs, 'se:path', path.id);
-      path.setAttributeNS(seNs, 'se:route', startElem.id + ' ' + endElem.id + ' ' + control.id);
+      path.setAttributeNS(seNs, 'se:points', startElem.id + ' ' + endElem.id + ' ' + control.id);
 
       if (svgCanvas.getSelectedElems().length > 0) {
         svgCanvas.clearSelection();
@@ -658,7 +675,7 @@ export default {
       var routers = $(svgcontent).find('.route');
       var route, pos;
       routers.each(function () {
-        var routeattr = this.getAttributeNS(seNs, 'route');
+        var routeattr = this.getAttributeNS(seNs, 'points');
         if (routeattr) {
           var points = routeattr.split(' ');
           if (points[0] == elem.id || points[1] == elem.id) {
@@ -685,34 +702,40 @@ export default {
 
     function selectRoute(elem) {
       var route = elem;
-      var points = elem.getAttributeNS(seNs, 'route').split(' ');
-      var startElem = getElem(points[0]),
-        endElem = getElem(points[1]),
-        control = getElem(points[2]);
+      var pattr = elem.getAttributeNS(seNs, 'points');
+      if (pattr) {
+        var points = pattr.trim().split(' ');
+        var startElem = getElem(points[0]),
+          endElem = getElem(points[1]),
+          control = getElem(points[2]);
 
-      var selectedElems = svgCanvas.getSelectedElems();
-      var toSelectedElems = [];
-      if (!selectedElems.includes(startElem)) {
-        toSelectedElems.push(startElem);
-      }
-      if (!selectedElems.includes(endElem)) {
-        toSelectedElems.push(endElem);
-      }
-      if (control && !selectedElems.includes(control)) {
-        toSelectedElems.push(control);
+        var selectedElems = svgCanvas.getSelectedElems();
+        var toSelectedElems = [];
+        if (startElem && !selectedElems.includes(startElem)) {
+          toSelectedElems.push(startElem);
+        }
+        if (endElem && !selectedElems.includes(endElem)) {
+          toSelectedElems.push(endElem);
+        }
+        if (control && !selectedElems.includes(control)) {
+          toSelectedElems.push(control);
+        }
+
+        if (toSelectedElems.length > 0) {
+          svgCanvas.addToSelection(toSelectedElems);
+        }
+
+        var move = elem.pathSegList.getItem(0);
+        var curve = elem.pathSegList.getItem(1);
+
+        $('#wcsline_x1').val(move.x);
+        $('#wcsline_y1').val(move.y);
+        $('#wcsline_width').val(curve.x - move.x);
+        $('#wcsline_height').val(curve.x - move.y);
+
       }
 
-      if (toSelectedElems.length > 0) {
-        svgCanvas.addToSelection(toSelectedElems);
-      }
 
-      var move = elem.pathSegList.getItem(0);
-      var curve = elem.pathSegList.getItem(1);
-
-      $('#wcsline_x1').val(move.x);
-      $('#wcsline_y1').val(move.y);
-      $('#wcsline_width').val(curve.x - move.x);
-      $('#wcsline_height').val(curve.x - move.y);
 
       var Direction = route.getAttributeNS(seNs, 'Direction');
       if (Direction == 10) {
@@ -732,26 +755,29 @@ export default {
       var curve = elem.pathSegList.getItem(1);
 
       var startElem, endElem, control;
-      var points = elem.getAttributeNS(seNs, 'route').split(' ');
-      if (points.length >= 2) {
-        startElem = getElem(points[0]);
-        endElem = getElem(points[1]);
-      }
-      if (points.length >= 3) {
-        control = getElem(points[2]);
-      }
+      var pattr = elem.getAttributeNS(seNs, 'points');
+      if (pattr) {
+        var points = pattr.trim().split(' ');
+        if (points.length >= 2) {
+          startElem = getElem(points[0]);
+          endElem = getElem(points[1]);
+        }
+        if (points.length >= 3) {
+          control = getElem(points[2]);
+        }
 
-      if (startElem) {
-        startElem.setAttribute('cx', move.x);
-        startElem.setAttribute('cy', move.y);
-      }
-      if (endElem) {
-        endElem.setAttribute('cx', curve.x);
-        endElem.setAttribute('cy', curve.y);
-      }
-      if (control) {
-        control.setAttribute('cx', curve.x1);
-        control.setAttribute('cy', curve.y1);
+        if (startElem) {
+          startElem.setAttribute('cx', move.x);
+          startElem.setAttribute('cy', move.y);
+        }
+        if (endElem) {
+          endElem.setAttribute('cx', curve.x);
+          endElem.setAttribute('cy', curve.y);
+        }
+        if (control) {
+          control.setAttribute('cx', curve.x1);
+          control.setAttribute('cy', curve.y1);
+        }
       }
     }
 
@@ -772,30 +798,45 @@ export default {
       if (type == 'point') {
         var routers = $(svgcontent).find('.route');
         routers.each(function () {
-          var points = this.getAttributeNS(seNs, 'route').split(' ');
-          var pos;
-          if (points.length >= 2) {
-            if (points[0] == elem.id) {
-              pos = 'start';
-              var endElem = getElem(points[1]);
-              if (endElem) endElem.remove();
-            } else if (points[1] == elem.id) {
-              pos = 'end';
-              var startElem = getElem(points[0]);
-              if (startElem) startElem.remove();
+          var routeAtrr = this.getAttributeNS(seNs, 'points');
+          if (routeAtrr) {
+            var points = routeAtrr.trim().split(' ');
+            var pos;
+            if (points.length >= 2) {
+              if (points[0] == elem.id) {
+                pos = 'start';
+                var endElem = getElem(points[1]);
+                if (endElem) {
+                  if (endElem.getAttributeNS(seNs, 'nebor')) {
+                    var bebor = getElem(endElem.getAttributeNS(seNs, 'nebor'));
+                    bebor.remove();
+                  }
+                  endElem.remove();
+                }
+              } else if (points[1] == elem.id) {
+                pos = 'end';
+                var startElem = getElem(points[0]);
+                if (startElem) {
+                  if (startElem.getAttributeNS(seNs, 'nebor')) {
+                    var bebor = getElem(startElem.getAttributeNS(seNs, 'nebor'));
+                    bebor.remove();
+                  }
+                  startElem.remove();
+                }
+              }
             }
+            if (pos && points.length >= 3) {
+              var control = getElem(points[2]);
+              if (control) control.remove();
+            }
+            if (pos) this.remove();
           }
-          if (pos && points.length >= 3) {
-            var control = getElem(points[2]);
-            if (control) control.remove();
-          }
-          if (pos) this.remove();
         });
       } else if (type == 'control') {
         var pathid = elem.getAttributeNS(seNs, 'path');
         var route = getElem(pathid);
         if (route) {
-          var elemids = route.getAttributeNS(seNs, 'route').split(' ');
+          var elemids = route.getAttributeNS(seNs, 'points').split(' ');
           if (elemids.length > 2) {
             var startElem = getElem(elemids[0]);
             if (startElem) startElem.remove();
@@ -848,7 +889,7 @@ export default {
         var curve = selRoute.pathSegList.getItem(1);
 
         var startElem, endElem, control;
-        var points = selRoute.getAttributeNS(seNs, 'route').split(' ');
+        var points = selRoute.getAttributeNS(seNs, 'points').trim().split(' ');
         if (points.length >= 2) {
           startElem = getElem(points[0]);
           endElem = getElem(points[1]);

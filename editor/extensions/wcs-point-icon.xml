@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg">
-<!--
+    <!--
   Sample icons file. This file looks like an SVG file with groups as its
   children. Each group element has an ID that must match the ID of the button given
   in the extension. The SVG inside the group makes up the actual icon, and
@@ -7,16 +7,39 @@
 
   Multiple icons can be included, each within their own group.
 -->
-  <g id="point">
-      <svg width="102" height="102" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:se="http://svg-edit.googlecode.com"
-          xmlns:xlink="http://www.w3.org/1999/xlink">
-          <!-- Created with SVG-edit - https://github.com/SVG-Edit/svgedit-->
-          <title>line_horizontal</title>
-          <g class="layer">
-              <title>Layer 1</title>
-                  <circle cx="51" cy="51" fill="#000000" fill-opacity="0" id="svg_1" r="6" stroke="#00ffff" stroke-width="4" />
-              
-          </g>
-      </svg>
-  </g>
+    <g id="point">
+        <svg width="102" height="102" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:se="http://svg-edit.googlecode.com"
+            xmlns:xlink="http://www.w3.org/1999/xlink">
+            <!-- Created with SVG-edit - https://github.com/SVG-Edit/svgedit-->
+            <title>line_horizontal</title>
+            <g class="layer">
+                <title>Layer 1</title>
+                <circle cx="51" cy="51" fill="#000000" fill-opacity="0" id="svg_1" r="20" stroke="#00ffff" stroke-width="4" />
+            </g>
+        </svg>
+    </g>
+    <g id="point_control">
+        <svg width="102" height="102" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <!-- Created with SVG-edit - https://github.com/SVG-Edit/svgedit-->
+            <title>line_horizontal</title>
+            <g class="layer">
+                <title>Layer 1</title>
+                <circle cx="50" cy="80" fill="#000000" fill-opacity="0" id="svg_1" r="10" stroke="#00ffff" stroke-width="4" />
+                <image height="42" id="svg_2" width="34" x="33" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAqCAYAAADWFImvAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjQ2REU3N0M3NjQ5ODExRThCRUE4REU0OEE1NEY2OEVGIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjQ2REU3N0M4NjQ5ODExRThCRUE4REU0OEE1NEY2OEVGIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NDZERTc3QzU2NDk4MTFFOEJFQThERTQ4QTU0RjY4RUYiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NDZERTc3QzY2NDk4MTFFOEJFQThERTQ4QTU0RjY4RUYiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5FRvNLAAAE5ElEQVR42rxYW0xcVRRdM8wDoYMF6hQBU9raArE+qjb6gdhotEDRaPxpjak1rbVtam2iadQPI40mStKf8mH5qnyAxg8TTVuBtNg6xrfU1hJRg0yFAsOzDAzMZZi57n3mDEzb4T5gxn2ycu6957HX7HP2PvuM5dnBRpgQN6GK8ChhA6GIkCXb/AQv4TLhPKGZMKA34ee3PS9qW8QYgUcIhwkVPGaBPiskHiTsJIQJXxFqCR49BbaIqtm+hnCMsBXmJY1QLXGKcJDwjwaRBZlsJxyPM/1SZKu06j5CU2IiiQe+Q6hBcoV/EG/IOwlHbiISvtkib6eARLzUyP3zvtYe2X5jhxTJe3K/fJLIIqsJ9fj/hHX9QOjmFyvvEYk6givuPdVgXXUxVpay3gauy4z4eoqk3FOwwxNbmsNmRjosaah3V6LYlkOxk4JnTw/5AjlDTg5+U3w4MNRCv1g1Ot0bbAQrbVY3oZI3rVEUpLlQbM8VJMZ3vQjlsc24tm8XMDqK+5wrkWvNgIn5qh7uaXCzRao0wraQnVl3Y5nVIZ7blQEMzk5FGzo7kfH1N7AHFQrmrUBvr7AKW+Oh9Hzc78wT3SYjM/jY//uCQZXPLyIiDjBNWWVfjurMtdFTL5CJE+Ny0nXroFQ8AfVMG0KVFXAWForPNCcqMtaiMnONeD8Z6BLfNGQzW2SDHpF3h79Foc1FZneLlZ9b/4ICLGugYOn1wsEksrPFZz42Ynrbgz4xPqxqMrmL3bdIz9UUNYKDg2fxb8gfVTTncxy4+4F7/qQlGaF3y3Xt3P/QUJsYr6NjNVvEZWRrD89OY4+vFaWOXMwflL2YjjyOdEsfKbsd6dYz9K1ULMPZwBUcG2sX4wyIi/eIxaifdc/4BdY7suWXX0h5H02gwmkhy+AnQYS94eRkt6lgwmnABNW5Wp22ZZUgS3rNBWUQ/rAiWzYiHFmPNMtfUNVVsFg3ze2RB9JXYqPTHU3dyGs+9XdqqZjgpenWI1KWUYAtmUXi+cuJLnw0dlG2FMFm/ZnqS7Q9VlGdL71GxTZXCZ52RT2tJeBF4/gfWiq8HNA69ILOof5z6FBGxAhVIvqswocpOrlsVNv56JIWme9zKTgsxuvouGwNQz1HgBYm1RBe6mtB/2xAKA9LNdNUDgQ/QPnMM3ht+qh4h3RvLtx/d3+rGK+j4zznI5zgzupF16uhAF642ox7nSsQy2EmqLRbv0PI4cOvyvdQqNxChds9U32oG70oxukI6z7Ne8QnU/9qvREdwRGBO+xRj19O5UPbm6gPNWG/fQcyqbA1eHM2Xus06jDNA8V7fLEMrdYIkZhcmZnA/r42lDpz8NytT+IpexX98mkcH+vAheAQRmcVM55bK5NnwcQjU37D14bP/H+LelNGHvJteeii479m6Eezucjp4ZJXPDfmrHzvKOcoZ2oqdb6KqKZGcvx6NS5nnWvgZHavTPkNyxbvF4vNzPbGX7hs6vWZVJO8d6TyOhHbF016V84j8jL0eopInCC8leCmpy6URyIFZJjE7vhMYn5pVM2kNplkFiRh5G+JZJHRJKFnkWSR0SWRyGuSTcYQCcyd28YvQkdTQcIsETNkTJFYDBEjZEyTWCwRLTJM4mWzJJZCJBGZGInwYiazLTE+xLwpZykkkkEkRsa6mOWIl/8EGADyH4OsfMBFOwAAAABJRU5ErkJggg=="
+                    y="20" />
+            </g>
+        </svg>
+    </g>
+    <g id="point_charge">
+        <svg width="102" height="102" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <!-- Created with SVG-edit - https://github.com/SVG-Edit/svgedit-->
+            <title>line_horizontal</title>
+            <g class="layer">
+                <title>Layer 1</title>
+                <circle cx="50" cy="80" fill="#000000" fill-opacity="0" id="svg_1" r="10" stroke="#00ffff" stroke-width="4" />
+                <image height="42" id="svg_3" width="34" x="33" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAqCAYAAADWFImvAAADi0lEQVRYhb2YXUgUURTHf7tOZR8afWCIUbZKPWQQEUFfWPQS6ltW2EMEZhR9QCSBBYFRL1FBBJER1EsGQRRRJlRgLplUYFCxRKFGJVpK5ZZm7c7pYWbd2XU/7h21A5edOXPu//7m3Jk7565HnqxEw3KAEqAYKALygWz7Wj/QCbwGHgONQHdaxVUtABiIqACsBQ4DGwEjScxsuy0HdgBh4D5wCvCnG8CLCCmaD5G7iDQjUoaIkSbe2TLsPs22hi9hnAJIBSJtiJRqDJ6sldpa25KBJJuaY0CtwpTpWDZwDSgEjsdfTARyZBwgnFaL9fycjAUxY0Aq4gPGyU4A7cD1KIiYkeMFQN1/gIhYHdAKdNggwxk5D2Rpy81YAcvi+EM/oXUTDH1J1TPLHrMMwIspYMoaTCm1jzUaULBv5BDvzsFgj4pGKQ+WrrUzYoK1WOlbznqYviTW970NPt4AlBZKgGrA75HGohzgM8lXzMTm8cKqmzCtMOoz/0BLOfzq0FEKAXkGppRoQwDklcRCALyvg2C7rpIBlBiIWawN4Z0AhXtjfcF30H4Zx1uoY+sMTCnS7jZvM0yZ63AIBE6DJxMyMkfG/+1Pp7jYI3cWfcX6aqpZxmTY8BAmzVKLf38JAmfTRfUZiKm3dvi2q0N0P7Ig0k9XloEpHmWIidOhYKda7I8APD8I4bBSuIFIEFC7xcIqmKCQwMFueFoFoQElWSBoIGaHMkj/W2g7GuubOh8W7oqehwehdQ8MdKlCAHQamPIGq7xTCL810rekxnEi8OwQ9L3UgQB47UWkyXXl5cmA/E1RuVen4FODG63HBiL3sZZZ/dU1d0P0DfpwGwIXtCXssRu8iPQg0ugqI/lbLaneF9aUuMtsI1s+9BiYJlglf5nWfUzJhdxiCHZCcyWEhtxkIzL2cBXvR+SeXjbKrdfTXwm/e91mo4GKT34nCIgcQCSoJgD4toJ/F3wLuIUIIrI/khYnSDsiu5VE5qyGwEXoanILgT3WcM0Qv52ox9p3pN5OhIfg7VW3z0Tkuah3OhLta45jbYYOJZXpaR0NxBWgJt6ZbKdXbf8mh3EPsROr7I4xb4pO1cCZ/wEB6f+WGKvMpIRQARkLmLQQkHpq4mHcTJMShA6IGxhlCF0QHRgtCDcgKjDaEG5BUsFcAap0IUYDkggmAqFWtseZflU2EgZg5mggxgIkAuPFxXQ47R+n886QTuG5WwAAAABJRU5ErkJggg=="
+                    y="20" />
+            </g>
+        </svg>
+    </g>
 </svg>
