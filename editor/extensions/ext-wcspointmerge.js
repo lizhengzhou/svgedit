@@ -119,13 +119,13 @@ export default {
       var routers = $(svgcontent).find('.route');
       var route, pos;
       routers.each(function () {
-        var points = this.getAttributeNS(seNs, 'route').split(' ');
+        var points = this.getAttributeNS(seNs, 'points').split(' ');
         if (points[0] == selElem.id || points[1] == selElem.id) {
           route = this;
           if (points[0] == selElem.id) pos = 'start';
           else if (points[1] == selElem.id) pos = 'end';
 
-          var points = route.getAttributeNS(seNs, 'route').split(' ');
+          var points = route.getAttributeNS(seNs, 'points').split(' ');
 
           var cx = mouseTarget.getAttribute('cx'),
             cy = mouseTarget.getAttribute('cy');
@@ -146,7 +146,7 @@ export default {
           }
 
           mouseTarget.before(route);
-          route.setAttributeNS(seNs, 'se:route', points.join(' '));
+          route.setAttributeNS(seNs, 'se:points', points.join(' '));
 
           selElem.remove();
         }
