@@ -31,6 +31,7 @@ export default {
       connections = [],
       selElems = [],
       selRoute = void 0,
+      selPoint=void 0,
       NS = S.NS,
       svgdoc = svgroot.ownerDocument;
     var initStroke = svgEditor.curConfig.initStroke;
@@ -287,6 +288,21 @@ export default {
               }
             }
           }
+        },
+        {
+          type: 'input',
+          panel: 'wcspoint_panel',
+          title: 'Code',
+          id: 'wcspoint_Code',
+          label: 'Code',
+          size: 3,
+          events: {
+            change: function change() {
+              if (selPoint) {
+                selPoint.setAttributeNS(seNs, 'se:Code', this.value);
+              }
+            }
+          }
         }
       ],
       callback: function callback() {
@@ -361,7 +377,12 @@ export default {
             selRoute = elem;
             showRoutePanel(true);
             selectRoute(selRoute);
-          } else {
+          }
+          else if (elem && elem.tagName === 'g' && elem.getAttribute('class') === 'pointgroup') {
+            selPoint = elem;
+            showPointPanel(true);
+          } 
+          else {
             showRoutePanel(false);
           }
         }
@@ -826,6 +847,13 @@ export default {
       }
       connRules.text(!on ? '' : '#xy_panel  { display: none !important; }');
       $('#wcsline_panel').toggle(on);
+    }
+
+    function showPointPanel(on){
+        $('#g_panel').toggle(!on);
+        $('#group_title').toggle(!on);
+        // $('#circle_panel').toggle(on);
+        $('#wcspoint_panel').toggle(on);
     }
 
     function setAttr(attr, val) {
