@@ -12,9 +12,10 @@ export default {
   init(S) {
     const svgEditor = this;
     const $ = jQuery;
-    const svgCanvas = svgEditor.canvas;
+    const svgCanvas = svgEditor.canvas,
+      addElem = S.addSvgElementFromJson;
     var seNs = svgCanvas.getEditorNS(true);
-    let selElem;
+    let selElem, line;
 
 
     return {
@@ -30,20 +31,62 @@ export default {
           }
         }
       }],
-
       mouseDown(opts) {
         if (svgCanvas.getMode() === 'wcspointmerge') {
           var mouseTarget = opts.event.target;
           if (mouseTarget && mouseTarget.tagName === 'circle' && mouseTarget.getAttribute('class') === 'point') {
             mouseTarget.setAttribute('fill', 'orange');
             selElem = mouseTarget;
+
+            const x = opts.start_x;
+            const y = opts.start_y;
+
+            line = addElem({
+              element: 'line',
+              attr: {
+                x1: x,
+                y1: y,
+                x2: x,
+                y2: y,
+                stroke: '#ff7f00',
+                'stroke-width': 4,
+                'stroke-dasharray': '5,5'
+              }
+            });
           }
         }
         return {
           started: true
         };
       },
+      mouseMove(opts) {
+        if (svgCanvas.getMode() === 'wcspointmerge') {
+          const zoom = svgCanvas.getZoom();
 
+          var x2 = opts.mouse_x / zoom,
+            y2 = opts.mouse_y / zoom;
+
+          if (line) {
+            var x1 = line.getAttribute('x1'),
+              y1 = line.getAttribute('y1');
+
+            if (x2 > x1) {
+              x2--;
+            } else {
+              x2++;
+            }
+
+            if (y2 > y1) {
+              y2--;
+            } else {
+              y2++;
+            }
+
+            line.setAttribute('x2', x2);
+            line.setAttribute('y2', y2);
+          }
+        }
+      },
       mouseUp(opts) {
         if (svgCanvas.getMode() === 'wcspointmerge') {
           var mouseTarget = opts.event.target;
@@ -55,6 +98,10 @@ export default {
 
           if (selElem) {
             selElem.setAttribute('fill', 'white');
+          }
+
+          if (line) {
+            line.remove();
           }
 
           return {
@@ -77,34 +124,33 @@ export default {
           route = this;
           if (points[0] == selElem.id) pos = 'start';
           else if (points[1] == selElem.id) pos = 'end';
+
+          var points = route.getAttributeNS(seNs, 'route').split(' ');
+
+          var cx = mouseTarget.getAttribute('cx'),
+            cy = mouseTarget.getAttribute('cy');
+
+          if (pos == 'start') {
+            points[0] = mouseTarget.id;
+
+            var move = route.pathSegList.getItem(0);
+            move.x = cx;
+            move.y = cy;
+
+          } else if (pos == 'end') {
+            points[1] = mouseTarget.id;
+
+            var curve = route.pathSegList.getItem(1);
+            curve.x = cx;
+            curve.y = cy;
+          }
+
+          mouseTarget.before(route);
+          route.setAttributeNS(seNs, 'se:route', points.join(' '));
+
+          selElem.remove();
         }
       });
-
-      if (route) {
-        var points = route.getAttributeNS(seNs, 'route').split(' ');
-
-        var cx = mouseTarget.getAttribute('cx'),
-          cy = mouseTarget.getAttribute('cy');
-
-        if (pos == 'start') {
-          points[0] = mouseTarget.id;
-
-          var move = route.pathSegList.getItem(0);
-          move.x = cx;
-          move.y = cy;
-
-        } else if (pos == 'end') {
-          points[1] = mouseTarget.id;
-
-          var curve = route.pathSegList.getItem(1);
-          curve.x = cx;
-          curve.y = cy;
-        }
-
-        route.setAttributeNS(seNs, 'se:route', points.join(' '));
-
-        selElem.remove();
-      }
     }
 
 
