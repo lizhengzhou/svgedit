@@ -354,7 +354,7 @@ export default {
         if (svgCanvas.getSelectedElems().length == 1) {
           var elems = svgCanvas.getSelectedElems();
           var elem = elems[0];
-          if (elem && elem.tagName === 'g' && elem.getAttribute('class') === 'pointgroup') {
+          if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
             //Point Group Changed
             pointMove(elem, opts);
           } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
@@ -371,6 +371,11 @@ export default {
         //}
       },
       selectedChanged: function selectedChanged(opts) {
+        if(svgCanvas.getSelectedElems().length == 0){
+          showPointPanel(false);
+          showRoutePanel(false);
+        }
+       
         if (svgCanvas.getSelectedElems().length == 1) {
           var elem = opts.elems[0];
           if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
@@ -378,12 +383,13 @@ export default {
             showRoutePanel(true);
             selectRoute(selRoute);
           }
-          else if (elem && elem.tagName === 'g' && elem.getAttribute('class') === 'pointgroup') {
+          else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
             selPoint = elem;
             showPointPanel(true);
-          } 
-          else {
+          }
+          else{
             showRoutePanel(false);
+            showPointPanel(false);
           }
         }
       },
@@ -395,7 +401,7 @@ export default {
           init();
         }
 
-        if (elem && elem.tagName === 'g' && elem.getAttribute('class') === 'pointgroup') {
+        if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
           //Point Group Changed
           pointMove(elem);
         } else if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
@@ -417,7 +423,7 @@ export default {
         });
       },
       elementTransition: function (opts) {
-        console.log(opts);
+        // console.log(opts);
         var elem = opts.elems[0];
         if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
           //route move
@@ -476,17 +482,18 @@ export default {
         }
       });
 
-      var startElem = addElem({
-        element: 'g',
-        attr: {
-          id: getNextId(),
-          'class': 'pointgroup'
-        }
-      });
+      // var startElem = addElem({
+      //   element: 'g',
+      //   attr: {
+      //     id: getNextId(),
+      //     'class': 'pointgroup'
+      //   }
+      // });
 
-      var circle = addElem({
+      var startElem = addElem({
         element: 'circle',
         attr: {
+          id: getNextId(),
           cx: x1,
           cy: y1,
           r: 8,
@@ -496,20 +503,21 @@ export default {
           'class': 'point'
         }
       })
-      startElem.append(circle);
+      // startElem.append(circle);
 
+
+      // var endElem = addElem({
+      //   element: 'g',
+      //   attr: {
+      //     id: getNextId(),
+      //     'class': 'pointgroup'
+      //   }
+      // });
 
       var endElem = addElem({
-        element: 'g',
-        attr: {
-          id: getNextId(),
-          'class': 'pointgroup'
-        }
-      });
-
-      var circle = addElem({
         element: 'circle',
         attr: {
+          id: getNextId(),
           cx: x2,
           cy: y2,
           r: 8,
@@ -519,7 +527,7 @@ export default {
           'class': 'point'
         }
       })
-      endElem.append(circle);
+      // endElem.append(circle);
 
       path.setAttributeNS(seNs, 'se:route', startElem.id + ' ' + endElem.id);
 
@@ -597,17 +605,18 @@ export default {
         }
       });
 
-      var startElem = addElem({
-        element: 'g',
-        attr: {
-          id: getNextId(),
-          'class': 'pointgroup'
-        }
-      });
+      // var startElem = addElem({
+      //   element: 'g',
+      //   attr: {
+      //     id: getNextId(),
+      //     'class': 'pointgroup'
+      //   }
+      // });
 
-      var circle = addElem({
+      var startElem = addElem({
         element: 'circle',
         attr: {
+          id: getNextId(),
           cx: x1,
           cy: y1,
           r: 8,
@@ -617,20 +626,21 @@ export default {
           'class': 'point'
         }
       })
-      startElem.append(circle);
+      // startElem.append(circle);
 
+
+      // var endElem = addElem({
+      //   element: 'g',
+      //   attr: {
+      //     id: getNextId(),
+      //     'class': 'pointgroup'
+      //   }
+      // });
 
       var endElem = addElem({
-        element: 'g',
-        attr: {
-          id: getNextId(),
-          'class': 'pointgroup'
-        }
-      });
-
-      var circle = addElem({
         element: 'circle',
         attr: {
+          id: getNextId(),
           cx: x2,
           cy: y2,
           r: 8,
@@ -640,7 +650,7 @@ export default {
           'class': 'point'
         }
       })
-      endElem.append(circle);
+      // endElem.append(circle);
 
       var control = addElem({
         element: 'circle',
@@ -694,9 +704,9 @@ export default {
       });
 
       if (route) {
-        if (elem.children.length > 0) {
-          var cx = opts ? opts.mouse_x / zoom : elem.children[0].getAttribute('cx'),
-            cy = opts ? opts.mouse_y / zoom : elem.children[0].getAttribute('cy');
+        //if (elem.children.length > 0) {
+          var cx = opts ? opts.mouse_x / zoom : elem.getAttribute('cx'),
+            cy = opts ? opts.mouse_y / zoom : elem.getAttribute('cy');
 
           if (pos == 'start') {
             var move = route.pathSegList.getItem(0);
@@ -707,7 +717,7 @@ export default {
             curve.x = cx;
             curve.y = cy;
           }
-        }
+       // }
       }
     }
 
@@ -770,12 +780,12 @@ export default {
       }
 
       if (startElem) {
-        startElem.children[0].setAttribute('cx', move.x);
-        startElem.children[0].setAttribute('cy', move.y);
+        startElem.setAttribute('cx', move.x);
+        startElem.setAttribute('cy', move.y);
       }
       if (endElem) {
-        endElem.children[0].setAttribute('cx', curve.x);
-        endElem.children[0].setAttribute('cy', curve.y);
+        endElem.setAttribute('cx', curve.x);
+        endElem.setAttribute('cy', curve.y);
       }
       if (control) {
         control.setAttribute('cx', curve.x1);
@@ -845,7 +855,7 @@ export default {
       if (!connRules.length) {
         connRules = $('<style id="wcsline_rules"></style>').appendTo('head');
       }
-      connRules.text(!on ? '' : '#xy_panel  { display: none !important; }');
+      connRules.text(!on ? '' : '#xy_panel #g_panel  { display: none !important; }');
       $('#wcsline_panel').toggle(on);
     }
 
@@ -896,28 +906,28 @@ export default {
 
         if (this.id == 'wcsline_x1') {
           if (startElem) {
-            startElem.children[0].setAttribute('cx', this.value);
+            startElem.setAttribute('cx', this.value);
             move.x = this.value;
           }
         } else if (this.id == 'wcsline_y1') {
           if (startElem) {
-            startElem.children[0].setAttribute('cy', this.value);
+            startElem.setAttribute('cy', this.value);
             move.y = this.value;
           }
         } else if (this.id == 'wcsline_width') {
           if (startElem && endElem) {
-            var cx = startElem.children[0].getAttribute('cx');
+            var cx = startElem.getAttribute('cx');
             cx = parseFloat(cx) + parseFloat(this.value);
 
-            endElem.children[0].setAttribute('cx', cx);
+            endElem.setAttribute('cx', cx);
             curve.x = cx;
           }
         } else if (this.id == 'wcsline_height') {
           if (startElem && endElem) {
-            var cy = startElem.children[0].getAttribute('cy');
+            var cy = startElem.getAttribute('cy');
             cy = parseFloat(cy) + parseFloat(this.value);
 
-            endElem.children[0].setAttribute('cy', cy);
+            endElem.setAttribute('cy', cy);
             curve.y = cy;
           }
         }

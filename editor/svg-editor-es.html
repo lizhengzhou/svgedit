@@ -146,31 +146,31 @@
         </div>
         <!-- Buttons when a single element is selected -->
         <div id="selected_panel">
-          <div class="toolset">
-            <div class="tool_sep"></div>
-            <div class="push_button" id="tool_clone" title="Duplicate Element [D]"></div>
+          <!-- <div class="toolset">
+            <div class="tool_sep"></div> -->
+            <!-- <div class="push_button" id="tool_clone" title="Duplicate Element [D]"></div>
             <div class="push_button" id="tool_delete" title="Delete Element [Delete/Backspace]"></div>
             <div class="tool_sep"></div>
             <div class="push_button" id="tool_move_top" title="Bring to Front [ Ctrl+Shift+] ]"></div>
-            <div class="push_button" id="tool_move_bottom" title="Send to Back [ Ctrl+Shift+[ ]"></div>
-            <div class="push_button" id="tool_topath" title="Convert to Path"></div>
-            <div class="push_button" id="tool_reorient" title="Reorient path"></div>
-            <div class="push_button" id="tool_make_link" title="Make (hyper)link"></div>
-            <div class="tool_sep"></div>
-            <label id="idLabel" title="Identify the element">
+            <div class="push_button" id="tool_move_bottom" title="Send to Back [ Ctrl+Shift+[ ]"></div> -->
+            <!-- <div class="push_button" id="tool_topath" title="Convert to Path"></div> -->
+            <!-- <div class="push_button" id="tool_reorient" title="Reorient path"></div> -->
+            <!-- <div class="push_button" id="tool_make_link" title="Make (hyper)link"></div> -->
+            <!-- <div class="tool_sep"></div> -->
+            <!-- <label id="idLabel" title="Identify the element">
               <span>id:</span>
               <input id="elem_id" class="attr_changer" data-attr="id" size="10" type="text" />
-            </label>
-            <label id="classLabel" title="Element class">
+            </label> -->
+            <!-- <label id="classLabel" title="Element class">
               <span>class:</span>
               <input id="elem_class" class="attr_changer" data-attr="class" size="10" type="text" />
-            </label>
-          </div>
-          <label id="tool_angle" title="Change rotation angle" class="toolset">
+            </label> -->
+          <!-- </div> -->
+          <!-- <label id="tool_angle" title="Change rotation angle" class="toolset">
             <span id="angleLabel" class="icon_label"></span>
             <input id="angle" size="2" value="0" type="text" />
-          </label>
-          <div class="toolset" id="tool_blur" title="Change gaussian blur value">
+          </label> -->
+          <!-- <div class="toolset" id="tool_blur" title="Change gaussian blur value">
             <label>
               <span id="blurLabel" class="icon_label"></span>
               <input id="blur" size="2" value="0" type="text" />
@@ -183,11 +183,11 @@
                 </li>
               </ul>
             </div>
-          </div>
-          <div class="dropdown toolset" id="tool_position" title="Align Element to Page">
+          </div> -->
+          <!-- <div class="dropdown toolset" id="tool_position" title="Align Element to Page">
             <div id="cur_position" class="icon_label"></div>
             <button></button>
-          </div>
+          </div> -->
           <div id="xy_panel" class="toolset">
             <label>
               x:
@@ -200,7 +200,7 @@
           </div>
         </div>
         <!-- Buttons when multiple elements are selected -->
-        <div id="multiselected_panel">
+        <!-- <div id="multiselected_panel">
           <div class="tool_sep"></div>
           <div class="push_button" id="tool_clone_multi" title="Clone Elements [C]"></div>
           <div class="push_button" id="tool_delete_multi" title="Delete Selected Elements [Delete/Backspace]"></div>
@@ -223,8 +223,8 @@
             </select>
           </label>
           <div class="tool_sep"></div>
-        </div>
-        <div id="rect_panel">
+        </div> -->
+        <!-- <div id="rect_panel">
           <div class="toolset">
             <label id="rect_width_tool" title="Change rectangle width">
               <span id="rwidthLabel" class="icon_label"></span>
@@ -239,7 +239,7 @@
             <span class="icon_label"></span>
             <input id="rect_rx" size="3" value="0" type="text" data-attr="Corner Radius" />
           </label>
-        </div>
+        </div> -->
         <div id="image_panel">
           <div class="toolset">
             <label>
@@ -276,7 +276,7 @@
             </label>
           </div>
         </div>
-        <div id="ellipse_panel">
+        <!-- <div id="ellipse_panel">
           <div class="toolset">
             <label id="tool_ellipse_cx">cx:
               <input id="ellipse_cx" class="attr_changer" title="Change ellipse's cx coordinate" size="3" data-attr="cx" />
@@ -311,7 +311,7 @@
               <input id="line_y2" class="attr_changer" title="Change line's ending y coordinate" size="3" data-attr="y2" />
             </label>
           </div>
-        </div>
+        </div> -->
         <div id="text_panel">
           <div class="toolset">
             <div class="tool_button" id="tool_bold" title="Bold Text [B]">
@@ -343,28 +343,28 @@
           <input id="text" type="text" size="35" />
         </div>
         <!-- formerly gsvg_panel -->
-        <div id="container_panel">
-          <div class="tool_sep"></div>
+        <!-- <div id="container_panel">
+          <div class="tool_sep"></div> -->
           <!-- Add viewBox field here? -->
-          <label id="group_title" title="Group identification label">
+          <!-- <label id="group_title" title="Group identification label">
             <span>label:</span>
             <input id="g_title" data-attr="title" size="10" type="text" />
           </label>
-        </div>
-        <div id="use_panel">
+        </div> -->
+        <!-- <div id="use_panel">
           <div class="push_button" id="tool_unlink_use" title="Break link to reference element (make unique)"></div>
-        </div>
-        <div id="g_panel">
+        </div> -->
+        <!-- <div id="g_panel">
           <div class="push_button" id="tool_ungroup" title="Ungroup Elements [G]"></div>
-        </div>
+        </div> -->
         <!-- For anchor elements -->
-        <div id="a_panel">
+        <!-- <div id="a_panel">
           <label id="tool_link_url" title="Set link URL (leave empty to remove)">
             <span id="linkLabel" class="icon_label"></span>
             <input id="link_url" type="text" size="35" />
           </label>
-        </div>
-        <div id="path_node_panel">
+        </div> -->
+        <!-- <div id="path_node_panel">
           <div class="tool_sep"></div>
           <div id="tool_node_link" class="tool_button push_button_pressed" title="Link Control Points"></div>
           <div class="tool_sep"></div>
@@ -382,7 +382,7 @@
           <div class="tool_button" id="tool_node_delete" title="Delete Node"></div>
           <div class="tool_button" id="tool_openclose_path" title="Open/close sub-path"></div>
           <div class="tool_button" id="tool_add_subpath" title="Add sub-path"></div>
-        </div>
+        </div> -->
       </div>
       <!-- tools_top -->
       <div id="cur_context_panel">
