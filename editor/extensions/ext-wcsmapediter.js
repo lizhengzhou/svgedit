@@ -401,24 +401,28 @@ export default {
           init();
         }
 
-        if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
-          //Point Group Changed
-          pointMove(elem);
-        } else if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
-          //route move
-          routeMove(elem, opts);
-        } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
-          //be line control point move
-          controlMove(elem);
-        }
 
         opts.elems.forEach(function (elem) {
           if (elem && !svgcontent.getElementById(elem.id)) {
-            if (elem && elem.tagName === 'g' && elem.getAttribute('class') === 'pointgroup') {
-              routeDelete(elem, 'pointgroup');
+            if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
+              routeDelete(elem, 'point');
             } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
               routeDelete(elem, 'control');
             }
+          }
+          else{
+
+            if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
+              //Point Group Changed
+              pointMove(elem);
+            } else if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
+              //route move
+              routeMove(elem, opts);
+            } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
+              //be line control point move
+              controlMove(elem);
+            }
+
           }
         });
       },
@@ -807,7 +811,7 @@ export default {
     }
 
     function routeDelete(elem, type) {
-      if (type == 'pointgroup') {
+      if (type == 'point') {
         var routers = $(svgcontent).find('.route');
         routers.each(function () {
           var points = this.getAttributeNS(seNs, 'route').split(' ');
