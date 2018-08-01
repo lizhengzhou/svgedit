@@ -483,14 +483,6 @@ export default {
         }
       });
 
-      // var startElem = addElem({
-      //   element: 'g',
-      //   attr: {
-      //     id: getNextId(),
-      //     'class': 'pointgroup'
-      //   }
-      // });
-
       var startElem = addElem({
         element: 'circle',
         attr: {
@@ -504,16 +496,6 @@ export default {
           'class': 'point'
         }
       })
-      // startElem.append(circle);
-
-
-      // var endElem = addElem({
-      //   element: 'g',
-      //   attr: {
-      //     id: getNextId(),
-      //     'class': 'pointgroup'
-      //   }
-      // });
 
       var endElem = addElem({
         element: 'circle',
@@ -528,7 +510,6 @@ export default {
           'class': 'point'
         }
       })
-      // endElem.append(circle);
 
       path.setAttributeNS(seNs, 'se:route', startElem.id + ' ' + endElem.id);
 
@@ -606,14 +587,6 @@ export default {
         }
       });
 
-      // var startElem = addElem({
-      //   element: 'g',
-      //   attr: {
-      //     id: getNextId(),
-      //     'class': 'pointgroup'
-      //   }
-      // });
-
       var startElem = addElem({
         element: 'circle',
         attr: {
@@ -627,16 +600,6 @@ export default {
           'class': 'point'
         }
       })
-      // startElem.append(circle);
-
-
-      // var endElem = addElem({
-      //   element: 'g',
-      //   attr: {
-      //     id: getNextId(),
-      //     'class': 'pointgroup'
-      //   }
-      // });
 
       var endElem = addElem({
         element: 'circle',
@@ -651,7 +614,6 @@ export default {
           'class': 'point'
         }
       })
-      // endElem.append(circle);
 
       var control = addElem({
         element: 'circle',
@@ -862,17 +824,8 @@ export default {
     function showPointPanel(on) {
       $('#g_panel').toggle(!on);
       $('#group_title').toggle(!on);
-      // $('#circle_panel').toggle(on);
       $('#wcspoint_panel').toggle(on);
     }
-
-    function setAttr(attr, val) {
-      svgCanvas.changeSelectedAttribute(attr, val);
-      S.call('changed', selElems);
-    }
-
-
-
 
     function setRouteDirection() {
       var val = 0;
