@@ -49,11 +49,7 @@ export default {
           var mouseTarget = opts.event.target;
           if (mouseTarget && mouseTarget.tagName === 'circle' && mouseTarget.getAttribute('class') === 'point') {
             if (selElem && selElem != mouseTarget) {
-              // mouseTarget.setAttribute('fill','black');
               mergePoint(selElem, mouseTarget);
-              // mouseTarget.setAttribute('fill','white');
-              // selElem.setAttribute('fill','white');
-              // selElem.remove();
             }
           }
 
@@ -72,7 +68,7 @@ export default {
 
 
     function mergePoint(selElem, mouseTarget) {
-      $.alert('123');
+      // $.alert('123');
       var routers = $(svgcontent).find('.route');
       var route, pos;
       routers.each(function () {

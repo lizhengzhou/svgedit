@@ -696,23 +696,26 @@ export default {
       var routers = $(svgcontent).find('.route');
       var route, pos;
       routers.each(function () {
-        var points = this.getAttributeNS(seNs, 'route').split(' ');
-        if (points[0] == elem.id || points[1] == elem.id) {
-          route = this;
-          if (points[0] == elem.id) pos = 'start';
-          else if (points[1] == elem.id) pos = 'end';
+        var routeattr = this.getAttributeNS(seNs, 'route');
+        if (routeattr) {
+          var points = routeattr.split(' ');
+          if (points[0] == elem.id || points[1] == elem.id) {
+            route = this;
+            if (points[0] == elem.id) pos = 'start';
+            else if (points[1] == elem.id) pos = 'end';
 
-          var cx = opts ? opts.mouse_x / zoom : elem.getAttribute('cx'),
-            cy = opts ? opts.mouse_y / zoom : elem.getAttribute('cy');
+            var cx = opts ? opts.mouse_x / zoom : elem.getAttribute('cx'),
+              cy = opts ? opts.mouse_y / zoom : elem.getAttribute('cy');
 
-          if (pos == 'start') {
-            var move = route.pathSegList.getItem(0);
-            move.x = cx;
-            move.y = cy;
-          } else if (pos = 'end') {
-            var curve = route.pathSegList.getItem(1);
-            curve.x = cx;
-            curve.y = cy;
+            if (pos == 'start') {
+              var move = route.pathSegList.getItem(0);
+              move.x = cx;
+              move.y = cy;
+            } else if (pos = 'end') {
+              var curve = route.pathSegList.getItem(1);
+              curve.x = cx;
+              curve.y = cy;
+            }
           }
         }
       });
