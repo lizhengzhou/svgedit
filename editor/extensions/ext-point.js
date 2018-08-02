@@ -61,7 +61,7 @@ export default {
             }
           }
         }
-      ],     
+      ],
       mouseDown(opts) {
         var mode = svgCanvas.getMode();
         if (mode.split('_')[0] === 'point') {
@@ -100,7 +100,7 @@ export default {
               }
             });
 
-            point.setAttributeNS(seNs,'se:routes',route.id+' '+path.id);
+            point.setAttributeNS(seNs, 'se:routes', route.id + ' ' + path.id);
 
             if (mode.split('_')[1]) {
               var imgElem = addElem({
@@ -143,14 +143,13 @@ export default {
             endElem2.before(path);
             path.setAttributeNS(seNs, 'se:points', startElem2.id + ' ' + endElem2.id);
 
-            var endRoute=[];
-            var endRouteAttr=endElem2.getAttributeNS(seNs,'routes');
-            if(endRouteAttr)
-            {
-              endRoute=endRouteAttr.trim().split(' ');
+            var endRoute = [];
+            var endRouteAttr = endElem2.getAttributeNS(seNs, 'routes');
+            if (endRouteAttr) {
+              endRoute = endRouteAttr.trim().split(' ');
             }
             endRoute.push(path.id);
-            endElem2.setAttributeNS(seNs,'se:routes',endRoute.join(' '));
+            endElem2.setAttributeNS(seNs, 'se:routes', endRoute.join(' '));
 
             svgCanvas.setMode('select');
           }
@@ -172,10 +171,13 @@ export default {
               bebor.setAttribute('x', x - 17);
               bebor.setAttribute('y', y - 50);
             }
-          }else if (elem && elem.tagName === 'image' && elem.getAttributeNS(seNs, 'point')) {
+          } else if (elem && elem.tagName === 'image' && elem.getAttributeNS(seNs, 'point')) {
             var point = getElem(elem.getAttributeNS(seNs, 'point'));
             if (point) {
-              assignAttributes(point,{cx:x,cy:y+30});
+              assignAttributes(point, {
+                cx: x,
+                cy: y + 30
+              });
               // point.setAttribute('cx', x);
               // point.setAttribute('cy', y + 30);
               svgCanvas.call('changed', [point]);
@@ -183,7 +185,7 @@ export default {
           }
         }
       },
-      elementChanged:function elementChanged(opts){
+      elementChanged: function elementChanged(opts) {
         // opts.elems.forEach(function (elem) {
         //   if (elem && svgcontent.getElementById(elem.id)) {
         //     if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {

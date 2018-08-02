@@ -99,18 +99,16 @@ export default {
         var map = svgcontent;
         //To Do gennerate Routes and Points
         $(svgcontent).find('*').each(function () {
-              var elem=this;
-              if(elem.getAttribute('class')=='control')
-              {
-                elem.remove();
-              }
-              else if(elem.getAttribute('class')=='point'&& !elem.getAttributeNS(seNs,'nebor')){
-                elem.setAttribute('stroke','none');
-                elem.setAttribute('fill','none');                
-              }
+          var elem = this;
+          if (elem.getAttribute('class') == 'control') {
+            elem.remove();
+          } else if (elem.getAttribute('class') == 'point' && !elem.getAttributeNS(seNs, 'nebor')) {
+            elem.setAttribute('stroke', 'none');
+            elem.setAttribute('fill', 'none');
+          }
         });
 
-        var clearSvgStr=svgCanvas.svgCanvasToString();
+        var clearSvgStr = svgCanvas.svgCanvasToString();
 
         formData = new FormData();
         formData.append("monitor.svg", clearSvgStr);
@@ -450,7 +448,7 @@ export default {
         if (pointsAttr) {
           this.setAttribute('class', 'route');
 
-          var points=pointsAttr.trim().split(' ');
+          var points = pointsAttr.trim().split(' ');
 
           var startElem = getElem(points[0]),
             endElem = getElem(points[1]);
@@ -463,10 +461,9 @@ export default {
             endElem.setAttribute('class', 'point');
           }
 
-          if(points[2])
-          {
-            var control=getElem(points[2]);
-            if(control)control.setAttribute('class','control');
+          if (points[2]) {
+            var control = getElem(points[2]);
+            if (control) control.setAttribute('class', 'control');
           }
         }
       });
@@ -791,10 +788,10 @@ export default {
                 var points = routeattr.trim().split(' ');
                 if (points.length >= 2) {
                   if (points[0] == elem.id) {
-                    checkOrdeletePoint(points[1],routeid);
+                    checkOrdeletePoint(points[1], routeid);
                   } else if (points[1] == elem.id) {
-                    checkOrdeletePoint(points[0],routeid);
-                  }                 
+                    checkOrdeletePoint(points[0], routeid);
+                  }
                 }
 
                 if (points.length >= 3) {
@@ -819,33 +816,27 @@ export default {
           }
           route.remove();
         }
-      }
-      else if(type=='route'){
-          var pointsAttr=elem.getAttributeNS(seNs,'points');
-          if(pointsAttr)
-          {
-              var points=pointsAttr.trim().split(' ');
-              if(points.length>=2)
-              {
-                checkOrdeletePoint(points[0],elem.id);
-                checkOrdeletePoint(points[1],elem.id);                
-              }
-
-              if(points.length>=3)
-              {
-                var control = getElem(points[2]);
-                if (control) control.remove();
-              }
+      } else if (type == 'route') {
+        var pointsAttr = elem.getAttributeNS(seNs, 'points');
+        if (pointsAttr) {
+          var points = pointsAttr.trim().split(' ');
+          if (points.length >= 2) {
+            checkOrdeletePoint(points[0], elem.id);
+            checkOrdeletePoint(points[1], elem.id);
           }
+
+          if (points.length >= 3) {
+            var control = getElem(points[2]);
+            if (control) control.remove();
+          }
+        }
       }
     }
 
-    function checkOrdeletePoint(elemid,routeid)
-    {
-      if(!elemid)return;
-      var elem=getElem(elemid);
-      if(elem)
-      {
+    function checkOrdeletePoint(elemid, routeid) {
+      if (!elemid) return;
+      var elem = getElem(elemid);
+      if (elem) {
         var routeAttr = elem.getAttributeNS(seNs, 'routes');
         if (routeAttr) {
           var routes = routeAttr.trim().split(' ');
@@ -857,11 +848,11 @@ export default {
                 return v == routeid;
               });
               routes.splice(routeindex, 1);
-              elem.setAttributeNS(seNs, 'se:routes',routes.join(' '));
+              elem.setAttributeNS(seNs, 'se:routes', routes.join(' '));
             }
           }
         }
-      }     
+      }
     }
     // End draw functions
 
