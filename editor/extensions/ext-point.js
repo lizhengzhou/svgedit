@@ -143,6 +143,15 @@ export default {
             endElem2.before(path);
             path.setAttributeNS(seNs, 'se:points', startElem2.id + ' ' + endElem2.id);
 
+            var endRoute=[];
+            var endRouteAttr=endElem2.getAttributeNS(seNs,'routes');
+            if(endRouteAttr)
+            {
+              endRoute=endRouteAttr.trim().split(' ');
+            }
+            endRoute.push(path.id);
+            endElem2.setAttributeNS(seNs,'se:routes',endRoute.join(' '));
+
             svgCanvas.setMode('select');
           }
         }

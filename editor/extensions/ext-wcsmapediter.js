@@ -77,7 +77,7 @@ export default {
       save(win, data) {
 
         var formData = new FormData();
-        formData.append("svg", data);
+        formData.append("map.svg", data);
         // Save svg
         $.ajax({
           url: svgEditor.curConfig.serverApi + '/save',
@@ -98,7 +98,40 @@ export default {
 
         var map = svgcontent;
         //To Do gennerate Routes and Points
+        $(svgcontent).find('*').each(function () {
+              var elem=this;
+              if(elem.getAttribute('class')=='control')
+              {
+                elem.remove();
+              }
+              else if(elem.getAttribute('class')=='point'&& !elem.getAttributeNS(seNs,'nebor')){
+                elem.setAttribute('stroke','none');
+                elem.setAttribute('fill','none');                
+              }
+        });
 
+        var clearSvgStr=svgCanvas.svgCanvasToString();
+
+        formData = new FormData();
+        formData.append("monitor.svg", clearSvgStr);
+        // Save svg
+        $.ajax({
+          url: svgEditor.curConfig.serverApi + '/save',
+          type: "POST",
+          async: true,
+          dataType: "json",
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function (data) {
+            console.log(data);
+          },
+          error: function (err) {
+            console.log(err);
+          }
+        });
+
+        svgCanvas.setSvgString(data);
 
       }
     });
@@ -410,11 +443,14 @@ export default {
 
     // Do on reset
     function init() {
+      return;
       // Make sure all routes have data set
       $(svgcontent).find('*').each(function () {
-        var points = this.getAttributeNS(seNs, 'points');
-        if (points) {
+        var pointsAttr = this.getAttributeNS(seNs, 'points');
+        if (pointsAttr) {
           this.setAttribute('class', 'route');
+
+          var points=pointsAttr.trim().split(' ');
 
           var startElem = getElem(points[0]),
             endElem = getElem(points[1]);
@@ -425,6 +461,12 @@ export default {
 
           if (endElem) {
             endElem.setAttribute('class', 'point');
+          }
+
+          if(points[2])
+          {
+            var control=getElem(points[2]);
+            if(control)control.setAttribute('class','control');
           }
         }
       });
@@ -802,21 +844,24 @@ export default {
     {
       if(!elemid)return;
       var elem=getElem(elemid);
-      var routeAttr = elem.getAttributeNS(seNs, 'routes');
-      if (routeAttr) {
-        var routes = routeAttr.trim().split(' ');
-        if (routes && routes.length > 0) {
-          if (routes.length == 1) {
-            elem.remove();
-          } else {
-            var routeindex = routes.findIndex(function (v) {
-              return v == routeid;
-            });
-            routes.splice(routeindex, 1);
-            elem.setAttributeNS(seNs, 'se:routes',routes.join(' '));
+      if(elem)
+      {
+        var routeAttr = elem.getAttributeNS(seNs, 'routes');
+        if (routeAttr) {
+          var routes = routeAttr.trim().split(' ');
+          if (routes && routes.length > 0) {
+            if (routes.length == 1) {
+              elem.remove();
+            } else {
+              var routeindex = routes.findIndex(function (v) {
+                return v == routeid;
+              });
+              routes.splice(routeindex, 1);
+              elem.setAttributeNS(seNs, 'se:routes',routes.join(' '));
+            }
           }
         }
-      }
+      }     
     }
     // End draw functions
 
