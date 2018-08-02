@@ -13,13 +13,13 @@ export default {
     const svgEditor = this;
     const $ = jQuery;
     const svgCanvas = svgEditor.canvas,
-      addElem = S.addSvgElementFromJson;
+      addElem = S.addSvgElementFromJson,
+      getElem = S.getElem;
     var seNs = svgCanvas.getEditorNS(true);
     let selElem, line;
 
-
     return {
-      name: 'dot',
+      name: 'wcspointmerge',
       svgicons: svgEditor.curConfig.extIconsPath + 'wcspointmerge-icon.xml',
       buttons: [{
         id: 'wcspointmerge',
@@ -27,12 +27,16 @@ export default {
         title: 'Merge two Points',
         events: {
           click() {
+            if (svgCanvas.getSelectedElems().length > 0) {
+              svgCanvas.clearSelection();
+            }
             svgCanvas.setMode('wcspointmerge');
           }
         }
       }],
       mouseDown(opts) {
         if (svgCanvas.getMode() === 'wcspointmerge') {
+
           var mouseTarget = opts.event.target;
           if (mouseTarget && mouseTarget.tagName === 'circle' && mouseTarget.getAttribute('class') === 'point') {
             mouseTarget.setAttribute('fill', 'orange');
@@ -109,48 +113,52 @@ export default {
           };
         }
       }
-
     };
 
 
 
     function mergePoint(selElem, mouseTarget) {
-      // $.alert('123');
-      var routers = $(svgcontent).find('.route');
-      var route, pos;
-      routers.each(function () {
-        var points = this.getAttributeNS(seNs, 'points').split(' ');
-        if (points[0] == selElem.id || points[1] == selElem.id) {
-          route = this;
-          if (points[0] == selElem.id) pos = 'start';
-          else if (points[1] == selElem.id) pos = 'end';
 
-          var points = route.getAttributeNS(seNs, 'points').split(' ');
+      var cx = mouseTarget.getAttribute('cx'),
+        cy = mouseTarget.getAttribute('cy');
 
-          var cx = mouseTarget.getAttribute('cx'),
-            cy = mouseTarget.getAttribute('cy');
+      var targetRoutes = [];
+      var targetroutesAttr = mouseTarget.getAttributeNS(seNs, 'routes');
+      if (targetroutesAttr) {
+        targetRoutes = targetroutesAttr.trim().split(' ');
+      }
 
-          if (pos == 'start') {
-            points[0] = mouseTarget.id;
-
-            var move = route.pathSegList.getItem(0);
-            move.x = cx;
-            move.y = cy;
-
-          } else if (pos == 'end') {
-            points[1] = mouseTarget.id;
-
-            var curve = route.pathSegList.getItem(1);
-            curve.x = cx;
-            curve.y = cy;
+      var routersAttr = selElem.getAttributeNS(seNs, 'routes');
+      if (routersAttr) {
+        var routers = routersAttr.trim().split(' ');
+        routers.forEach(function (routeid) {
+          var route = getElem(routeid);
+          var move = route.pathSegList.getItem(0);
+          var curve = route.pathSegList.getItem(1);
+          var routeattr = route.getAttributeNS(seNs, 'points');
+          if (routeattr) {
+            var points = routeattr.split(' ');
+            if (points.length >= 2) {
+              if (points[0] == selElem.id) {
+                points[0] = mouseTarget.id;
+                move.x = cx;
+                move.y = cy;
+              } else if (points[1] == selElem.id) {
+                points[1] = mouseTarget.id;
+                curve.x = cx;
+                curve.y = cy;
+              }
+            }
           }
-
+          targetRoutes.push(route.id);
           mouseTarget.before(route);
           route.setAttributeNS(seNs, 'se:points', points.join(' '));
 
           selElem.remove();
-        }
-      });
+        });
+      }
+
+      mouseTarget.setAttributeNS(seNs, 'se:routes', targetRoutes.join(' '));
     }
 
 

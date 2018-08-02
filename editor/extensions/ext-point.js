@@ -100,6 +100,8 @@ export default {
               }
             });
 
+            point.setAttributeNS(seNs,'se:routes',route.id+' '+path.id);
+
             if (mode.split('_')[1]) {
               var imgElem = addElem({
                 element: 'image',
