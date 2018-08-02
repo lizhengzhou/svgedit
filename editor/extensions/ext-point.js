@@ -148,6 +148,13 @@ export default {
             var endRouteAttr = endElem2.getAttributeNS(seNs, 'routes');
             if (endRouteAttr) {
               endRoute = endRouteAttr.trim().split(' ');
+              if(endRoute&&endRoute.length>0)
+              {
+                var endRouteIndex = endRoute.findIndex(function (v) {
+                  return v == route.id;
+                });
+                endRoute.splice(endRouteIndex, 1);                
+              }
             }
             endRoute.push(path.id);
             endElem2.setAttributeNS(seNs, 'se:routes', endRoute.join(' '));
