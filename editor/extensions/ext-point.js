@@ -127,7 +127,7 @@ export default {
 
               imgElem.setAttributeNS(seNs, 'se:point', point.id);
               point.setAttributeNS(seNs, 'se:nebor', imgElem.id);
-              point.setAttributeNS(seNs, 'se:'+mode.split('_')[1], true);
+              point.setAttributeNS(seNs, 'se:' + mode.split('_')[1], true);
             }
 
             var points = route.getAttributeNS(seNs, 'points').split(' ');
@@ -179,35 +179,28 @@ export default {
                 cx: x,
                 cy: y + 30
               });
-              // point.setAttribute('cx', x);
-              // point.setAttribute('cy', y + 30);
               svgCanvas.call('changed', [point]);
             }
           }
         }
       },
       elementChanged: function elementChanged(opts) {
-        // opts.elems.forEach(function (elem) {
-        //   if (elem && svgcontent.getElementById(elem.id)) {
-        //     if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
-        //       if (elem.getAttributeNS(seNs, 'nebor')) {
-        //         var cx = elem.getAttribute('cx'),
-        //           cy = elem.getAttribute('cy');
-        //         var bebor = getElem(elem.getAttributeNS(seNs, 'nebor'));
-        //         bebor.setAttribute('x', parseFloat(cx) - 17);
-        //         bebor.setAttribute('y', parseFloat(cy) - 50);
-        //       }
-        //     }else if (elem && elem.tagName === 'image' && elem.getAttributeNS(seNs, 'point')) {
-        //       var point = getElem(elem.getAttributeNS(seNs, 'point'));
-        //       if (point) {
-        //         var x = elem.getAttribute('x'),
-        //           y = elem.getAttribute('y');
-        //         point.setAttribute('cx', parseFloat(x) + 17);
-        //         point.setAttribute('cy', parseFloat(y) + 50);
-        //       }
-        //     }
-        //   }
-        // });
+        opts.elems.forEach(function (elem) {
+          if (!svgcontent.getElementById(elem.id)) {
+            if (elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
+              if (elem.getAttributeNS(seNs, 'nebor')) {
+                var bebor = getElem(elem.getAttributeNS(seNs, 'nebor'));
+                if (bebor) bebor.remove();
+              }
+            } else if (elem.tagName === 'image' && elem.getAttributeNS(seNs, 'point')) {
+              var point = getElem(elem.getAttributeNS(seNs, 'point'));
+              if (point) {
+                point.remove();
+                svgCanvas.call('changed', [point]);
+              }
+            }
+          }
+        });
       }
     };
 
