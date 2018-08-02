@@ -96,41 +96,112 @@ export default {
         });
 
 
-        var map = svgcontent;
-        //To Do gennerate Routes and Points
-        $(svgcontent).find('*').each(function () {
-          var elem = this;
-          if (elem.getAttribute('class') == 'control') {
-            elem.remove();
-          } else if (elem.getAttribute('class') == 'point' && !elem.getAttributeNS(seNs, 'nebor')) {
-            elem.setAttribute('stroke', 'none');
-            elem.setAttribute('fill', 'none');
-          }
+        var map = {};
+        map.Routes = [];
+        map.Points = [];
+
+        new Promise(function (resolve, reject) {
+          $(svgcontent).find('.route').each(function () {
+            var route = {};
+
+            route.svgId = this.id;
+
+            var pointsAttr = this.getAttributeNS(seNs, 'points');
+            var points = pointsAttr.trim().split(' ');
+            var control = getElem(points[2]);
+
+            route.startSvgId = points[0];
+            route.endSvgId = points[1];
+
+            route.Direction = this.getAttributeNS(seNs, 'Direction');
+            route.Speed = this.getAttributeNS(seNs, 'Direction');
+
+            if (control) {
+              route.ControlX = parseInt(control.getAttribute('cx')),
+              route.ControlY = parseInt(control.getAttribute('cy'));
+            }
+
+            map.Routes.push(route);
+          });
+
+          $(svgcontent).find('.point').each(function () {
+            var point = {};
+
+            point.svgId = this.id;
+            point.Code = this.getAttributeNS(seNs, 'Code');
+            point.PositionX = parseInt(this.getAttribute('cx'));
+            point.PositionY = parseInt(this.getAttribute('cy'));
+            if (point.Code) point.IsKey = true;
+            point.IsCharge = this.getAttributeNS(seNs, 'IsCharge');
+            point.IsControl = this.getAttributeNS(seNs, 'IsControl');
+            point.IsMaterial = this.getAttributeNS(seNs, 'IsMaterial');
+            point.IsDefault = this.getAttributeNS(seNs, 'IsDefault');
+
+            map.Points.push(point);
+          });
+
+          console.log(map);
+
+          
+          $.ajax({
+            url: svgEditor.curConfig.serverApi + '/SaveMap',
+            type: 'post',
+            dataType: "json",
+            contentType:"application/json",
+            data: JSON.stringify(map),
+            success: function (data) {
+              if(data)
+              {
+                $.alert('保存成功');
+              }
+            },
+            error: function (request) {
+              var data=JSON.parse(request.responseText);
+              $.alert(data.Message);
+            }
         });
 
-        var clearSvgStr = svgCanvas.svgCanvasToString();
-
-        formData = new FormData();
-        formData.append("monitor.svg", clearSvgStr);
-        // Save svg
-        $.ajax({
-          url: svgEditor.curConfig.serverApi + '/save',
-          type: "POST",
-          async: true,
-          dataType: "json",
-          data: formData,
-          contentType: false,
-          processData: false,
-          success: function (data) {
-            console.log(data);
-          },
-          error: function (err) {
-            console.log(err);
-          }
+          resolve();
         });
 
-        svgCanvas.setSvgString(data);
+        new Promise(function (resolve, reject) {
 
+          //To Do gennerate Monitor
+          $(svgcontent).find('.control').each(function () {
+            this.remove();
+          });
+          $(svgcontent).find('.point').each(function () {
+            if (!this.getAttributeNS(seNs, 'nebor')) {
+              this.setAttribute('stroke', 'none');
+              this.setAttribute('fill', 'none');
+            }
+          });
+
+          var clearSvgStr = svgCanvas.svgCanvasToString();
+
+          var formData = new FormData();
+          formData.append("monitor.svg", clearSvgStr);
+          // Save svg
+          $.ajax({
+            url: svgEditor.curConfig.serverApi + '/save',
+            type: "POST",
+            async: true,
+            dataType: "json",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+              console.log(data);
+            },
+            error: function (err) {
+              console.log(err);
+            }
+          });
+
+          svgCanvas.setSvgString(data);
+
+          resolve();
+        });
       }
     });
 

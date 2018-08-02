@@ -18,7 +18,7 @@
             </g>
         </svg>
     </g>
-    <g id="point_control">
+    <g id="point_IsControl">
         <svg width="102" height="102" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <!-- Created with SVG-edit - https://github.com/SVG-Edit/svgedit-->
             <title>line_horizontal</title>
@@ -30,7 +30,7 @@
             </g>
         </svg>
     </g>
-    <g id="point_charge">
+    <g id="point_IsCharge">
         <svg width="102" height="102" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <!-- Created with SVG-edit - https://github.com/SVG-Edit/svgedit-->
             <title>line_horizontal</title>

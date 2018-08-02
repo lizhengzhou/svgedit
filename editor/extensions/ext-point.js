@@ -40,24 +40,24 @@ export default {
           }
         },
         {
-          id: 'point_control',
+          id: 'point_IsControl',
           type: 'mode',
           title: 'Draw a Control Point',
           position: '5',
           events: {
             click() {
-              svgCanvas.setMode('point_control');
+              svgCanvas.setMode('point_IsControl');
             }
           }
         },
         {
-          id: 'point_charge',
+          id: 'point_IsCharge',
           type: 'mode',
           title: 'Draw a Charge Point',
           position: '5',
           events: {
             click() {
-              svgCanvas.setMode('point_charge');
+              svgCanvas.setMode('point_IsCharge');
             }
           }
         }
@@ -116,7 +116,7 @@ export default {
 
               var href = imgSrc.control;
               switch (mode.split('_')[1]) {
-                case 'charge':
+                case 'IsCharge':
                   href = imgSrc.charge;
                   break;
                 default:
@@ -126,7 +126,8 @@ export default {
               svgUtils.preventClickDefault(imgElem);
 
               imgElem.setAttributeNS(seNs, 'se:point', point.id);
-              point.setAttributeNS(seNs, 'se:nebor', imgElem.id)
+              point.setAttributeNS(seNs, 'se:nebor', imgElem.id);
+              point.setAttributeNS(seNs, 'se:'+mode.split('_')[1], true);
             }
 
             var points = route.getAttributeNS(seNs, 'points').split(' ');
