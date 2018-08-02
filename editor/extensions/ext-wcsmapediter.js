@@ -351,32 +351,15 @@ export default {
         }
       },
       mouseMove: function mouseMove(opts) {
-
-        const zoom = svgCanvas.getZoom();
-        const x = opts.mouse_x / zoom;
-        const y = opts.mouse_y / zoom;
-
         if (svgCanvas.getSelectedElems().length == 1) {
           var elems = svgCanvas.getSelectedElems();
           var elem = elems[0];
           if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
             //Point Group Changed
-            pointMove(elem, opts);
-            if (elem.getAttributeNS(seNs, 'nebor')) {
-              var bebor = getElem(elem.getAttributeNS(seNs, 'nebor'));
-              bebor.setAttribute('x', x - 17);
-              bebor.setAttribute('y', y - 50);
-            }
+            pointMove(elem, opts);           
           } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
             //be line control point move
             controlMove(elem, opts);
-          } else if (elem && elem.tagName === 'image' && elem.getAttributeNS(seNs, 'point')) {
-            var point = getElem(elem.getAttributeNS(seNs, 'point'));
-            if (point) {
-              point.setAttribute('cx', x);
-              point.setAttribute('cy', y + 30);
-              pointMove(point);
-            }
           }
         }
       },
@@ -429,6 +412,7 @@ export default {
             if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
               //Point Group Changed
               pointMove(elem);
+              
             } else if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
               //route move
               routeMove(elem, opts);
@@ -436,7 +420,6 @@ export default {
               //be line control point move
               controlMove(elem);
             }
-
           }
         });
       },

@@ -18,6 +18,7 @@ export default {
     var getNextId = S.getNextId,
       getElem = S.getElem;
     var svgUtils = svgCanvas.getPrivateMethods();
+    var assignAttributes = svgCanvas.assignAttributes;
 
     const imgSrc = {
       'control': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAqCAYAAADWFImvAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjQ2REU3N0M3NjQ5ODExRThCRUE4REU0OEE1NEY2OEVGIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjQ2REU3N0M4NjQ5ODExRThCRUE4REU0OEE1NEY2OEVGIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NDZERTc3QzU2NDk4MTFFOEJFQThERTQ4QTU0RjY4RUYiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NDZERTc3QzY2NDk4MTFFOEJFQThERTQ4QTU0RjY4RUYiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5FRvNLAAAE5ElEQVR42rxYW0xcVRRdM8wDoYMF6hQBU9raArE+qjb6gdhotEDRaPxpjak1rbVtam2iadQPI40mStKf8mH5qnyAxg8TTVuBtNg6xrfU1hJRg0yFAsOzDAzMZZi57n3mDEzb4T5gxn2ycu6957HX7HP2PvuM5dnBRpgQN6GK8ChhA6GIkCXb/AQv4TLhPKGZMKA34ee3PS9qW8QYgUcIhwkVPGaBPiskHiTsJIQJXxFqCR49BbaIqtm+hnCMsBXmJY1QLXGKcJDwjwaRBZlsJxyPM/1SZKu06j5CU2IiiQe+Q6hBcoV/EG/IOwlHbiISvtkib6eARLzUyP3zvtYe2X5jhxTJe3K/fJLIIqsJ9fj/hHX9QOjmFyvvEYk6givuPdVgXXUxVpay3gauy4z4eoqk3FOwwxNbmsNmRjosaah3V6LYlkOxk4JnTw/5AjlDTg5+U3w4MNRCv1g1Ot0bbAQrbVY3oZI3rVEUpLlQbM8VJMZ3vQjlsc24tm8XMDqK+5wrkWvNgIn5qh7uaXCzRao0wraQnVl3Y5nVIZ7blQEMzk5FGzo7kfH1N7AHFQrmrUBvr7AKW+Oh9Hzc78wT3SYjM/jY//uCQZXPLyIiDjBNWWVfjurMtdFTL5CJE+Ny0nXroFQ8AfVMG0KVFXAWForPNCcqMtaiMnONeD8Z6BLfNGQzW2SDHpF3h79Foc1FZneLlZ9b/4ICLGugYOn1wsEksrPFZz42Ynrbgz4xPqxqMrmL3bdIz9UUNYKDg2fxb8gfVTTncxy4+4F7/qQlGaF3y3Xt3P/QUJsYr6NjNVvEZWRrD89OY4+vFaWOXMwflL2YjjyOdEsfKbsd6dYz9K1ULMPZwBUcG2sX4wyIi/eIxaifdc/4BdY7suWXX0h5H02gwmkhy+AnQYS94eRkt6lgwmnABNW5Wp22ZZUgS3rNBWUQ/rAiWzYiHFmPNMtfUNVVsFg3ze2RB9JXYqPTHU3dyGs+9XdqqZjgpenWI1KWUYAtmUXi+cuJLnw0dlG2FMFm/ZnqS7Q9VlGdL71GxTZXCZ52RT2tJeBF4/gfWiq8HNA69ILOof5z6FBGxAhVIvqswocpOrlsVNv56JIWme9zKTgsxuvouGwNQz1HgBYm1RBe6mtB/2xAKA9LNdNUDgQ/QPnMM3ht+qh4h3RvLtx/d3+rGK+j4zznI5zgzupF16uhAF642ox7nSsQy2EmqLRbv0PI4cOvyvdQqNxChds9U32oG70oxukI6z7Ne8QnU/9qvREdwRGBO+xRj19O5UPbm6gPNWG/fQcyqbA1eHM2Xus06jDNA8V7fLEMrdYIkZhcmZnA/r42lDpz8NytT+IpexX98mkcH+vAheAQRmcVM55bK5NnwcQjU37D14bP/H+LelNGHvJteeii479m6Eezucjp4ZJXPDfmrHzvKOcoZ2oqdb6KqKZGcvx6NS5nnWvgZHavTPkNyxbvF4vNzPbGX7hs6vWZVJO8d6TyOhHbF016V84j8jL0eopInCC8leCmpy6URyIFZJjE7vhMYn5pVM2kNplkFiRh5G+JZJHRJKFnkWSR0SWRyGuSTcYQCcyd28YvQkdTQcIsETNkTJFYDBEjZEyTWCwRLTJM4mWzJJZCJBGZGInwYiazLTE+xLwpZykkkkEkRsa6mOWIl/8EGADyH4OsfMBFOwAAAABJRU5ErkJggg==',
@@ -143,6 +144,56 @@ export default {
             svgCanvas.setMode('select');
           }
         }
+      },
+      mouseMove: function mouseMove(opts) {
+
+        const zoom = svgCanvas.getZoom();
+        const x = opts.mouse_x / zoom;
+        const y = opts.mouse_y / zoom;
+
+        if (svgCanvas.getSelectedElems().length == 1) {
+          var elems = svgCanvas.getSelectedElems();
+          var elem = elems[0];
+          if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
+            //Point Group Changed
+            if (elem.getAttributeNS(seNs, 'nebor')) {
+              var bebor = getElem(elem.getAttributeNS(seNs, 'nebor'));
+              bebor.setAttribute('x', x - 17);
+              bebor.setAttribute('y', y - 50);
+            }
+          }else if (elem && elem.tagName === 'image' && elem.getAttributeNS(seNs, 'point')) {
+            var point = getElem(elem.getAttributeNS(seNs, 'point'));
+            if (point) {
+              assignAttributes(point,{cx:x,cy:y+30});
+              // point.setAttribute('cx', x);
+              // point.setAttribute('cy', y + 30);
+              svgCanvas.call('changed', [point]);
+            }
+          }
+        }
+      },
+      elementChanged:function elementChanged(opts){
+        // opts.elems.forEach(function (elem) {
+        //   if (elem && svgcontent.getElementById(elem.id)) {
+        //     if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
+        //       if (elem.getAttributeNS(seNs, 'nebor')) {
+        //         var cx = elem.getAttribute('cx'),
+        //           cy = elem.getAttribute('cy');
+        //         var bebor = getElem(elem.getAttributeNS(seNs, 'nebor'));
+        //         bebor.setAttribute('x', parseFloat(cx) - 17);
+        //         bebor.setAttribute('y', parseFloat(cy) - 50);
+        //       }
+        //     }else if (elem && elem.tagName === 'image' && elem.getAttributeNS(seNs, 'point')) {
+        //       var point = getElem(elem.getAttributeNS(seNs, 'point'));
+        //       if (point) {
+        //         var x = elem.getAttribute('x'),
+        //           y = elem.getAttribute('y');
+        //         point.setAttribute('cx', parseFloat(x) + 17);
+        //         point.setAttribute('cy', parseFloat(y) + 50);
+        //       }
+        //     }
+        //   }
+        // });
       }
     };
 
