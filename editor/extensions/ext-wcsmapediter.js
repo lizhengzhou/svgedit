@@ -91,7 +91,8 @@ export default {
             console.log(data);
           },
           error: function (err) {
-            console.log(err);
+            var data=JSON.parse(request.responseText);
+              $.alert(data.Message);
           }
         });
 
