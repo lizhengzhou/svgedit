@@ -78,6 +78,10 @@ export default {
       },
       save(win, data) {
 
+        if (svgCanvas.getSelectedElems().length > 0) {
+          svgCanvas.clearSelection();
+        }
+
         var formData = new FormData();
         formData.append("map.svg", data);
         // Save svg
@@ -172,12 +176,6 @@ export default {
           //To Do gennerate Monitor
           $(svgcontent).find('.control').each(function () {
             this.remove();
-          });
-          $(svgcontent).find('.point').each(function () {
-            if (!this.getAttributeNS(seNs, 'nebor')) {
-              this.setAttribute('stroke', 'none');
-              this.setAttribute('fill', 'none');
-            }
           });
 
           var clearSvgStr = svgCanvas.svgCanvasToString();
@@ -560,40 +558,12 @@ export default {
 
     // Do on reset
     function init() {
-       //滚动到可视区域
-      scrollToWorkArea();
-      // Make sure all routes have data set
-      $(svgcontent).find('*').each(function () {
-        var pointsAttr = this.getAttributeNS(seNs, 'points');
-        if (pointsAttr) {
-          this.setAttribute('class', 'route');
-
-          var points = pointsAttr.trim().split(' ');
-
-          var startElem = getElem(points[0]),
-            endElem = getElem(points[1]);
-
-          if (startElem) {
-            startElem.setAttribute('class', 'point');
-            if(!startElem.getAttributeNS(seNs,'nebor'))
-            {
-              startElem.setAttribute('display','none');
-            }  
-          }
-
-          if (endElem) {
-            if(!endElem.getAttributeNS(seNs,'nebor'))
-            {
-              endElem.setAttribute('display','none');
-            }  
-            endElem.setAttribute('class', 'point');
-          }
-
-          if (points[2]) {
-            var control = getElem(points[2]);
-            if (control) control.setAttribute('class', 'control');
-          }
-        }
+      svgCanvas.changeSelectedAttribute('display','none',$(svgcontent).find('.point'));
+      $(svgcontent).find('.point').each(function () {
+        if(this.hasAttributeNS(seNs,'nebor'))
+        {
+          this.setAttribute('display','inline');
+        }  
       });
     }
 
@@ -1076,11 +1046,6 @@ export default {
     }
 
 
-    function scrollToWorkArea(){
-      const dims = svgEditor.curConfig.dimensions; 
-      $("#workarea").scrollLeft(dims[0]);
-      $("#workarea").scrollTop(dims[1]);
-    }
     //End utils  Functions
 
 
