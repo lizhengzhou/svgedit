@@ -12,11 +12,6 @@ SVG-edit是一个快速的，基于Web的，javascript驱动的SVG绘图编辑�
 
 ## 安装
 
-Note that steps 1-2 below are only necessary if you wish to integrate
-SVG-edit into your own npm package; otherwise, you can skip those steps
-and instead of looking within `node_modules/svgedit`, look within your
-copy of the svgedit Git repo.
-
 请注意，只有在您希望集成SVG-edit到你自己的npm包中时，才需要执行以下1-2步骤;
 否则，您可以跳过这些步骤到svgedit Git拷贝中操作，而不是
 `node_modules/svgedit`目录。
