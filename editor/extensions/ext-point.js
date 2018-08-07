@@ -226,7 +226,7 @@ export default {
               }
             }
           }else{
-            if (selElem.tagName==='point' && elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
+            if (selElem&&selElem.tagName==='point' && elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
               //Point Group Changed
               if (elem.getAttributeNS(seNs, 'nebor')) {
                 var x=elem.getAttribute('cx'),

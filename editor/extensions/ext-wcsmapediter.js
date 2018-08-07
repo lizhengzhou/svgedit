@@ -34,6 +34,16 @@ export default {
     var initStroke = svgEditor.curConfig.initStroke;
     var seNs = svgCanvas.getEditorNS(true);
 
+    const {
+      MoveElementCommand,
+      InsertElementCommand,
+      RemoveElementCommand,
+      ChangeElementCommand,
+      BatchCommand,
+      UndoManager,
+      HistoryEventTypes
+    } = svgUtils;
+
     init();
 
 
@@ -1019,19 +1029,29 @@ export default {
           if (points.length >= 3) {
             control = getElem(points[2]);
           }
-
+          const batchCmd = new BatchCommand('Set RouteXYWH');
           if (this.id == 'wcsline_x1') {
             if (startElem) {
+              batchCmd.addSubCommand(new ChangeElementCommand(startElem,{'cx':startElem.getAttribute('cx')}));
+              batchCmd.addSubCommand(new ChangeElementCommand(selRoute,{'d':selRoute.getAttribute('d')}));
+
               startElem.setAttribute('cx', this.value);
               move.x = this.value;
             }
           } else if (this.id == 'wcsline_y1') {
             if (startElem) {
+              batchCmd.addSubCommand(new ChangeElementCommand(startElem,{'cy':startElem.getAttribute('cy')}));
+              batchCmd.addSubCommand(new ChangeElementCommand(selRoute,{'d':selRoute.getAttribute('d')}));
+
               startElem.setAttribute('cy', this.value);
               move.y = this.value;
             }
           } else if (this.id == 'wcsline_width') {
             if (startElem && endElem) {
+
+              batchCmd.addSubCommand(new ChangeElementCommand(endElem,{'cx':endElem.getAttribute('cx')}));
+              batchCmd.addSubCommand(new ChangeElementCommand(selRoute,{'d':selRoute.getAttribute('d')}));
+
               var cx = startElem.getAttribute('cx');
               cx = parseFloat(cx) + parseFloat(this.value);
 
@@ -1040,6 +1060,10 @@ export default {
             }
           } else if (this.id == 'wcsline_height') {
             if (startElem && endElem) {
+
+              batchCmd.addSubCommand(new ChangeElementCommand(endElem,{'cy':endElem.getAttribute('cy')}));
+              batchCmd.addSubCommand(new ChangeElementCommand(selRoute,{'d':selRoute.getAttribute('d')}));
+
               var cy = startElem.getAttribute('cy');
               cy = parseFloat(cy) + parseFloat(this.value);
 
@@ -1047,6 +1071,10 @@ export default {
               curve.y = cy;
             }
           }
+          if(!batchCmd.isEmpty())
+          {
+            svgCanvas.undoMgr.addCommandToHistory(batchCmd);
+          }          
         }
         svgCanvas.addToSelection(selElems);
       }
