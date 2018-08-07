@@ -97,6 +97,7 @@ export default {
           if (mouseTarget && mouseTarget.tagName === 'circle' && mouseTarget.getAttribute('class') === 'point') {
             if (selElem && selElem != mouseTarget) {
               mergePoint(selElem, mouseTarget);
+              svgCanvas.setMode('select');
             }
           }
 

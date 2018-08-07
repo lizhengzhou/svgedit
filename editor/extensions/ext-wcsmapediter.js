@@ -34,6 +34,8 @@ export default {
     var initStroke = svgEditor.curConfig.initStroke;
     var seNs = svgCanvas.getEditorNS(true);
 
+    //滚动到可视区域
+    scrollToWorkArea();
 
     var langList = {
       en: [{
@@ -444,6 +446,16 @@ export default {
             //be line control point move
             controlMove(elem, opts);
           }
+          else if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
+            var pointsAttr = elem.getAttributeNS(seNs, 'points');
+            if (pointsAttr) {
+              var points = pointsAttr.trim().split(' ');
+              if (points.length >= 2) {
+                getElem(points[0]).setAttribute('display','none');
+                getElem(points[1]).setAttribute('display','none');
+              }
+            }
+          }
         }
       },
       // This is triggered from anywhere, but "started" must have been set
@@ -457,6 +469,13 @@ export default {
         if (svgCanvas.getSelectedElems().length == 0) {
           showPointPanel(false);
           showRoutePanel(false);
+
+          $(svgcontent).find('.point').each(function () {
+            if(!this.getAttributeNS(seNs,'nebor'))
+            {
+              this.setAttribute('display','none');
+            }            
+          });
         }
         if (svgCanvas.getSelectedElems().length == 1) {
           var elem = opts.elems[0];
@@ -485,6 +504,25 @@ export default {
         }
 
         opts.elems.forEach(function (elem) {
+          if (elem && svgcontent.getElementById(elem.id)) {
+            if (elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
+              var r=elem.getAttribute('r');
+              if(r!=4)
+              {
+                elem.setAttribute('r',4);
+              }
+            }
+            else if (elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
+              var r=elem.getAttribute('r');
+              if(r!=6)
+              {
+                elem.setAttribute('r',6);
+              }
+            }
+          }
+        });
+
+        opts.elems.forEach(function (elem) {
           if (elem && !svgcontent.getElementById(elem.id)) {
             if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
               routeDelete(elem, 'point');
@@ -501,6 +539,15 @@ export default {
             } else if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
               //route move
               routeMove(elem);
+
+              var pointsAttr = elem.getAttributeNS(seNs, 'points');
+              if (pointsAttr) {
+                var points = pointsAttr.trim().split(' ');
+                if (points.length >= 2) {
+                  getElem(points[0]).setAttribute('display','inline');
+                  getElem(points[1]).setAttribute('display','inline');
+                }
+              }
             } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
               //be line control point move
               controlMove(elem);
@@ -513,7 +560,6 @@ export default {
 
     // Do on reset
     function init() {
-      return;
       // Make sure all routes have data set
       $(svgcontent).find('*').each(function () {
         var pointsAttr = this.getAttributeNS(seNs, 'points');
@@ -527,9 +573,17 @@ export default {
 
           if (startElem) {
             startElem.setAttribute('class', 'point');
+            if(!startElem.getAttributeNS(seNs,'nebor'))
+            {
+              startElem.setAttribute('display','none');
+            }  
           }
 
           if (endElem) {
+            if(!endElem.getAttributeNS(seNs,'nebor'))
+            {
+              endElem.setAttribute('display','none');
+            }  
             endElem.setAttribute('class', 'point');
           }
 
@@ -578,7 +632,7 @@ export default {
           id: getNextId(),
           cx: x1,
           cy: y1,
-          r: 8,
+          r: 4,
           stroke: '#00ffff',
           'stroke-width': 4,
           fill: '#fff',
@@ -594,7 +648,7 @@ export default {
           id: getNextId(),
           cx: x2,
           cy: y2,
-          r: 8,
+          r: 4,
           stroke: '#00ffff',
           'stroke-width': 4,
           fill: '#fff',
@@ -682,7 +736,7 @@ export default {
           id: getNextId(),
           cx: x1,
           cy: y1,
-          r: 8,
+          r: 4,
           stroke: '#00ffff',
           'stroke-width': 4,
           fill: '#fff',
@@ -698,7 +752,7 @@ export default {
           id: getNextId(),
           cx: x2,
           cy: y2,
-          r: 8,
+          r: 4,
           stroke: '#00ffff',
           'stroke-width': 4,
           fill: '#fff',
@@ -714,7 +768,7 @@ export default {
           id: getNextId(),
           cx: cx,
           cy: cy,
-          r: 8,
+          r: 4,
           stroke: 'none',
           fill: 'red',
           'class': 'control'
@@ -777,6 +831,15 @@ export default {
     }
 
     function selectRoute(elem) {
+      var pointsAttr = elem.getAttributeNS(seNs, 'points');
+      if (pointsAttr) {
+        var points = pointsAttr.trim().split(' ');
+        if (points.length >= 2) {
+          getElem(points[0]).setAttribute('display','inline');
+          getElem(points[1]).setAttribute('display','inline');
+        }
+      }
+
       var move = elem.pathSegList.getItem(0);
       var curve = elem.pathSegList.getItem(1);
 
@@ -1010,6 +1073,12 @@ export default {
       }
     }
 
+
+    function scrollToWorkArea(){
+      const dims = svgEditor.curConfig.dimensions; 
+      $("#workarea").scrollLeft(dims[0]);
+      $("#workarea").scrollTop(dims[1]);
+    }
     //End utils  Functions
 
 

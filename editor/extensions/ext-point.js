@@ -92,7 +92,7 @@ export default {
                 id: getNextId(),
                 cx: x,
                 cy: y,
-                r: 8,
+                r: 4,
                 stroke: '#00ffff',
                 'stroke-width': 4,
                 fill: '#fff',
@@ -193,6 +193,24 @@ export default {
       },
       elementChanged: function elementChanged(opts) {
         opts.elems.forEach(function (elem) {
+          if (svgcontent.getElementById(elem.id)) {
+            if (elem.tagName === 'image' && elem.getAttributeNS(seNs, 'point')) {
+              var w=elem.getAttribute('width'),
+                h=elem.getAttribute('height');
+              if(w!=34)
+              {
+                elem.setAttribute('width',34);
+              }
+
+              if(h!=42)
+              {
+                elem.setAttribute('height',42);
+              }
+            }
+          }
+        });
+        
+        opts.elems.forEach(function (elem) {
           if (!svgcontent.getElementById(elem.id)) {
             if (elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
               if (elem.getAttributeNS(seNs, 'nebor')) {
@@ -204,6 +222,18 @@ export default {
               if (point) {
                 point.remove();
                 svgCanvas.call('changed', [point]);
+              }
+            }
+          }else{
+            if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
+              //Point Group Changed
+              if (elem.getAttributeNS(seNs, 'nebor')) {
+                var x=elem.getAttribute('cx'),
+                  y=elem.getAttribute('cy');
+
+                var bebor = getElem(elem.getAttributeNS(seNs, 'nebor'));
+                bebor.setAttribute('x', x - 17);
+                bebor.setAttribute('y', y - 50);
               }
             }
           }

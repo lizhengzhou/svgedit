@@ -856,6 +856,7 @@ editor.init = function () {
       source: 'source.png',
       docprops: 'document-properties.png',
       wireframe: 'wireframe.png',
+      mapsave: 'save.png',
 
       undo: 'undo.png',
       redo: 'redo.png',
@@ -914,6 +915,7 @@ editor.init = function () {
       '#tool_source': 'source',
       '#tool_docprops > div': 'docprops',
       '#tool_wireframe': 'wireframe',
+      '#tool_mapsave':'mapsave',
 
       '#tool_undo': 'undo',
       '#tool_redo': 'redo',
@@ -3120,6 +3122,7 @@ editor.init = function () {
       svgCanvas.addToSelection([elem], true);
     } else {
       svgCanvas.changeSelectedAttribute(attr, val);
+      svgCanvas.call('changed',svgCanvas.getSelectedElems());
     }
     this.blur();
   });
@@ -4612,12 +4615,19 @@ editor.init = function () {
         } else {
           clickSave();
         }
-      }, evt: 'mouseup', key: ['S', true]},
+      }, evt: 'mouseup'},
       {sel: '#tool_export', fn: clickExport, evt: 'mouseup'},
       {sel: '#tool_open', fn: clickOpen, evt: 'mouseup', key: ['O', true]},
       {sel: '#tool_import', fn: clickImport, evt: 'mouseup'},
       {sel: '#tool_source', fn: showSourceEditor, evt: 'click', key: ['U', true]},
       {sel: '#tool_wireframe', fn: clickWireframe, evt: 'click', key: ['F', true]},
+      {sel: '#tool_mapsave', fn () {
+        if (editingsource) {
+          saveSourceEditor();
+        } else {
+          clickSave();
+        }
+      }, evt: 'click', key: ['S', true]},
       {sel: '#tool_source_cancel,.overlay,#tool_docprops_cancel,#tool_prefs_cancel', fn: cancelOverlays, evt: 'click', key: ['esc', false, false], hidekey: true},
       {sel: '#tool_source_save', fn: saveSourceEditor, evt: 'click'},
       {sel: '#tool_docprops_save', fn: saveDocProperties, evt: 'click'},
