@@ -463,9 +463,15 @@
 </g>
 
 <g id="mapsave">
-  <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-     <image height="24" id="svg_1" width="24" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAADAElEQVR4AWKgO8hpLZ/rWzkR0Bs5wFYWBWF4Y2zsjW00XNu2zer21bZt27Ztt/fdGuutnaR2Z9+c5N307Dtd797kzxzM+b+5MzP7lF1hu45zLgt3jcxbJLa3Dv62uX+0ttIJLZ+1FwGl89bpHYt6SV2bngXvQT+5B15GCXDT2OXjeYnNsJrlg4e/ZX5dZqAcI6yfMgrbPKoTsHWQ84az5rHEXC+pG9Tju+CCVRIcVXNe4qzvnv8lwBMz42INd4/yhxZO3Sbur+7jmZHro3MnJE6zZ81jtp6ENALqYUC1DJKweZRzmNWzvbz7pwGXdWw+arnYZATHcnu2nxu6crr4Jzfd8uGeTzkBPAtvhVuGVl3PzCXRPw14aKKTY2atYSfRUoft0jfmcMhoTknF2Rdu6ZhizrcyYAKMnF6r6uirw9LSkoJYgGdhLXiukIsQJkB2ccrW3gqmp6dJ4tTUlCg54Jpzjgh4Gd2O52JO/7t+EmUeCFFiAZRDw4MJYHJqUqwcxQK8iBTI+SENbxIHBgcIwC/AGwF3WIB8nm+FoaEhqnJsBUo5tpMArruKw4ZHgbXwJLiB+pO2NikCbFkAGB0dpQCdvTypEAFXHLPgmlM2RgRhRAC55zvqxTfYAYU5YM8MjfWZ/W9pr8MK5RA5CM3xHO/FXHyLHpbWFvQcsGcenu7kcmRkBBOJZmZmFCAMczEf36IHelFzwJ4VFRXB2NjY1sTEOEYKhOrq5+UQbAvuKWPUoGzQX7582crOzkKApwhQVn2V3d7eDvPz82IySw18FYE0C7UKd2g+ODQAs7OzIAgCvFF5FUYNGCv5m0JPCjAwMIDkHSWVSncUz/OU0IsJaGpqgvfv34O3tzcEBQVBbFwMZGVlQU5ODpSWlkJZWRnU19dDR0cHVFVVQW9vLyt+H9DX1wd+fn4QGBgI8fHxkJycDGlpaVBSUgLV1dVQV1f3+4Dm5mbSjvr6OrkZPhDV2NiI+j1Aa2vrFl78BWEntijA7bs37+DB35TMc/+u//F9BRkK1rtSWvo6AAAAAElFTkSuQmCC" />
-  </svg>
+<svg width="1000" height="1000" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <metadata>Svg Vector Icons : http://www.sfont.cn</metadata>
+ <g class="layer">
+  <title>Layer 1</title>
+  <g id="svg_1">
+   <path d="m922,10l-844,0c-52.6,0 -68,15.4 -68,68l0,748.9l163.1,163.1l45.3,0l0,-287.8l458.9,0l0,287.8l244.7,0c52.5,0 68,-15.5 68,-68l0,-844c0,-52.6 -15.5,-68 -68,-68zm-83.9,492.9l-678.5,0l0,-444.2l678.5,0l0,444.2zm-522.2,487.1l108.8,0l0,-188.2l-108.8,0l0,188.2z" id="svg_2"/>
+  </g>
+ </g>
+</svg>
 </g>
 
 <g id="undo">
