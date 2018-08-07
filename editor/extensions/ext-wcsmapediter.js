@@ -497,11 +497,11 @@ export default {
           showPointPanel(false);
           showRoutePanel(false);
 
-          $(svgcontent).find('.point').each(function () {
-            if (!this.getAttributeNS(seNs, 'nebor')) {
-              this.setAttribute('display', 'none');
-            }
-          });
+          // $(svgcontent).find('.point').each(function () {
+          //   if (!this.getAttributeNS(seNs, 'nebor')) {
+          //     this.setAttribute('display', 'none');
+          //   }
+          // });
         }
         if (svgCanvas.getSelectedElems().length == 1) {
           var elem = opts.elems[0];
@@ -583,12 +583,12 @@ export default {
 
     // Do on reset
     function init() {
-      svgCanvas.changeSelectedAttribute('display', 'none', $(svgcontent).find('.point'));
-      $(svgcontent).find('.point').each(function () {
-        if (this.hasAttributeNS(seNs, 'nebor')) {
-          this.setAttribute('display', 'inline');
-        }
-      });
+      // svgCanvas.changeSelectedAttribute('display', 'none', $(svgcontent).find('.point'));
+      // $(svgcontent).find('.point').each(function () {
+      //   if (this.hasAttributeNS(seNs, 'nebor')) {
+      //     this.setAttribute('display', 'inline');
+      //   }
+      // });
     }
 
     //draw Mode Functions
