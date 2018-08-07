@@ -209,7 +209,8 @@ export default {
             }
           }
         });
-        
+        var selElems= svgCanvas.getSelectedElems();
+        var selElem=selElems[0];
         opts.elems.forEach(function (elem) {
           if (!svgcontent.getElementById(elem.id)) {
             if (elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
@@ -225,7 +226,7 @@ export default {
               }
             }
           }else{
-            if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
+            if (selElem.tagName==='point' && elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
               //Point Group Changed
               if (elem.getAttributeNS(seNs, 'nebor')) {
                 var x=elem.getAttribute('cx'),

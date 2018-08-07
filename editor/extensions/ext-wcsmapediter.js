@@ -35,7 +35,7 @@ export default {
     var seNs = svgCanvas.getEditorNS(true);
 
     init();
-   
+
 
     var langList = {
       en: [{
@@ -97,8 +97,8 @@ export default {
             console.log(data);
           },
           error: function (err) {
-            var data=JSON.parse(request.responseText);
-              $.alert(data.Message);
+            var data = JSON.parse(request.responseText);
+            $.alert(data.Message);
           }
         });
 
@@ -125,7 +125,7 @@ export default {
 
             if (control) {
               route.ControlX = parseInt(control.getAttribute('cx')),
-              route.ControlY = parseInt(control.getAttribute('cy'));
+                route.ControlY = parseInt(control.getAttribute('cy'));
             }
 
             map.Routes.push(route);
@@ -149,24 +149,23 @@ export default {
 
           console.log(map);
 
-          
+
           $.ajax({
             url: svgEditor.curConfig.serverApi + '/SaveMap',
             type: 'post',
             dataType: "json",
-            contentType:"application/json",
+            contentType: "application/json",
             data: JSON.stringify(map),
             success: function (data) {
-              if(data)
-              {
+              if (data) {
                 $.alert('保存成功');
               }
             },
             error: function (request) {
-              var data=JSON.parse(request.responseText);
+              var data = JSON.parse(request.responseText);
               $.alert(data.Message);
             }
-        });
+          });
 
           resolve();
         });
@@ -434,34 +433,54 @@ export default {
         }
       },
       mouseMove: function mouseMove(opts) {
-        if (svgCanvas.getSelectedElems().length == 1) {
-          var elems = svgCanvas.getSelectedElems();
-          var elem = elems[0];
-          if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
-            //Point Group Changed
-            pointMove(elem, opts);
-          } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
-            //be line control point move
-            controlMove(elem, opts);
-          }
-          else if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
-            var pointsAttr = elem.getAttributeNS(seNs, 'points');
-            if (pointsAttr) {
-              var points = pointsAttr.trim().split(' ');
-              if (points.length >= 2) {
-                getElem(points[0]).setAttribute('display','none');
-                getElem(points[1]).setAttribute('display','none');
+        if (svgCanvas.getMode() === 'select') {
+
+          if (svgCanvas.getSelectedElems().length == 1) {
+            var elems = svgCanvas.getSelectedElems();
+            var elem = elems[0];
+            if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
+              //Point Group Changed
+              pointMove(elem, opts);
+            } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
+              //be line control point move
+              controlMove(elem, opts);
+            } else if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
+              var pointsAttr = elem.getAttributeNS(seNs, 'points');
+              if (pointsAttr) {
+                var points = pointsAttr.trim().split(' ');
+                if (points.length >= 2) {
+                  getElem(points[0]).setAttribute('display', 'none');
+                  getElem(points[1]).setAttribute('display', 'none');
+                }
               }
             }
           }
+          return {
+            started: true
+          };
         }
       },
       // This is triggered from anywhere, but "started" must have been set
       // to true (see above). Note that "opts" is an object with event info
       mouseUp(opts) {
         // Check the mode on mouseup
-        //if (svgCanvas.getMode() === 'line_horizontal') {          
-        //}
+        if (svgCanvas.getMode() === 'select') {
+          if (svgCanvas.getSelectedElems().length == 1) {
+            var elems = svgCanvas.getSelectedElems();
+            var elem = elems[0];
+
+            if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
+              var pointsAttr = elem.getAttributeNS(seNs, 'points');
+              if (pointsAttr) {
+                var points = pointsAttr.trim().split(' ');
+                if (points.length >= 2) {
+                  getElem(points[0]).setAttribute('display', 'inline');
+                  getElem(points[1]).setAttribute('display', 'inline');
+                }
+              }
+            }
+          }
+        }
       },
       selectedChanged: function selectedChanged(opts) {
         if (svgCanvas.getSelectedElems().length == 0) {
@@ -469,10 +488,9 @@ export default {
           showRoutePanel(false);
 
           $(svgcontent).find('.point').each(function () {
-            if(!this.getAttributeNS(seNs,'nebor'))
-            {
-              this.setAttribute('display','none');
-            }            
+            if (!this.getAttributeNS(seNs, 'nebor')) {
+              this.setAttribute('display', 'none');
+            }
           });
         }
         if (svgCanvas.getSelectedElems().length == 1) {
@@ -504,17 +522,14 @@ export default {
         opts.elems.forEach(function (elem) {
           if (elem && svgcontent.getElementById(elem.id)) {
             if (elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
-              var r=elem.getAttribute('r');
-              if(r!=4)
-              {
-                elem.setAttribute('r',4);
+              var r = elem.getAttribute('r');
+              if (r != 4) {
+                elem.setAttribute('r', 4);
               }
-            }
-            else if (elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
-              var r=elem.getAttribute('r');
-              if(r!=6)
-              {
-                elem.setAttribute('r',6);
+            } else if (elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
+              var r = elem.getAttribute('r');
+              if (r != 6) {
+                elem.setAttribute('r', 6);
               }
             }
           }
@@ -542,8 +557,8 @@ export default {
               if (pointsAttr) {
                 var points = pointsAttr.trim().split(' ');
                 if (points.length >= 2) {
-                  getElem(points[0]).setAttribute('display','inline');
-                  getElem(points[1]).setAttribute('display','inline');
+                  getElem(points[0]).setAttribute('display', 'inline');
+                  getElem(points[1]).setAttribute('display', 'inline');
                 }
               }
             } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
@@ -558,18 +573,18 @@ export default {
 
     // Do on reset
     function init() {
-      svgCanvas.changeSelectedAttribute('display','none',$(svgcontent).find('.point'));
+      svgCanvas.changeSelectedAttribute('display', 'none', $(svgcontent).find('.point'));
       $(svgcontent).find('.point').each(function () {
-        if(this.hasAttributeNS(seNs,'nebor'))
-        {
-          this.setAttribute('display','inline');
-        }  
+        if (this.hasAttributeNS(seNs, 'nebor')) {
+          this.setAttribute('display', 'inline');
+        }
       });
     }
 
     //draw Mode Functions
     //draw Horiaontal Line
     function drawLine(opts, IsHoriaontal = true) {
+      
       const x = opts.start_x;
       const y = opts.start_y;
 
@@ -803,14 +818,6 @@ export default {
     }
 
     function selectRoute(elem) {
-      var pointsAttr = elem.getAttributeNS(seNs, 'points');
-      if (pointsAttr) {
-        var points = pointsAttr.trim().split(' ');
-        if (points.length >= 2) {
-          getElem(points[0]).setAttribute('display','inline');
-          getElem(points[1]).setAttribute('display','inline');
-        }
-      }
 
       var move = elem.pathSegList.getItem(0);
       var curve = elem.pathSegList.getItem(1);

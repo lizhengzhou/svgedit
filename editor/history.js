@@ -72,15 +72,15 @@ export class MoveElementCommand {
    * Re-positions the element
    * @param {{handleHistoryEvent: function}} handler
   */
-  apply (handler) {
+  apply (handler,batch) {
     // TODO(codedread): Refactor this common event code into a base HistoryCommand class.
-    if (handler) {
+    if (handler&&!batch) {
       handler.handleHistoryEvent(HistoryEventTypes.BEFORE_APPLY, this);
     }
 
     this.elem = this.newParent.insertBefore(this.elem, this.newNextSibling);
 
-    if (handler) {
+    if (handler&&!batch) {
       handler.handleHistoryEvent(HistoryEventTypes.AFTER_APPLY, this);
     }
   }
@@ -89,14 +89,14 @@ export class MoveElementCommand {
    * Positions the element back to its original location
    * @param {{handleHistoryEvent: function}} handler
   */
-  unapply (handler) {
-    if (handler) {
+  unapply (handler,batch) {
+    if (handler&&!batch) {
       handler.handleHistoryEvent(HistoryEventTypes.BEFORE_UNAPPLY, this);
     }
 
     this.elem = this.oldParent.insertBefore(this.elem, this.oldNextSibling);
 
-    if (handler) {
+    if (handler&&!batch) {
       handler.handleHistoryEvent(HistoryEventTypes.AFTER_UNAPPLY, this);
     }
   }
@@ -121,8 +121,8 @@ export class InsertElementCommand {
   constructor (elem, text) {
     this.elem = elem;
     this.text = text || ('Create ' + elem.tagName);
-    this.parent = elem.parentNode;
-    this.nextSibling = this.elem.nextSibling;
+    this.parent = this.elem.parentNode;
+    this.nextSibling = elem.nextSibling;
   }
 
   type () {
@@ -134,28 +134,28 @@ export class InsertElementCommand {
   }
 
   // Re-Inserts the new element
-  apply (handler) {
-    if (handler) {
+  apply (handler,batch) {
+    if (handler&&!batch) {
       handler.handleHistoryEvent(HistoryEventTypes.BEFORE_APPLY, this);
     }
 
     this.elem = this.parent.insertBefore(this.elem, this.nextSibling);
 
-    if (handler) {
+    if (handler&&!batch) {
       handler.handleHistoryEvent(HistoryEventTypes.AFTER_APPLY, this);
     }
   }
 
   // Removes the element
-  unapply (handler) {
-    if (handler) {
+  unapply (handler,batch) {
+    if (handler&&!batch) {
       handler.handleHistoryEvent(HistoryEventTypes.BEFORE_UNAPPLY, this);
     }
 
     this.parent = this.elem.parentNode;
     this.elem = this.elem.parentNode.removeChild(this.elem);
 
-    if (handler) {
+    if (handler&&!batch) {
       handler.handleHistoryEvent(HistoryEventTypes.AFTER_UNAPPLY, this);
     }
   }
@@ -196,8 +196,8 @@ export class RemoveElementCommand {
   }
 
   // Re-removes the new element
-  apply (handler) {
-    if (handler) {
+  apply (handler,batch) {
+    if (handler&&!batch) {
       handler.handleHistoryEvent(HistoryEventTypes.BEFORE_APPLY, this);
     }
 
@@ -205,14 +205,14 @@ export class RemoveElementCommand {
     this.parent = this.elem.parentNode;
     this.elem = this.parent.removeChild(this.elem);
 
-    if (handler) {
+    if (handler&&!batch) {
       handler.handleHistoryEvent(HistoryEventTypes.AFTER_APPLY, this);
     }
   }
 
   // Re-adds the new element
-  unapply (handler) {
-    if (handler) {
+  unapply (handler,batch) {
+    if (handler&&!batch) {
       handler.handleHistoryEvent(HistoryEventTypes.BEFORE_UNAPPLY, this);
     }
 
@@ -224,7 +224,7 @@ export class RemoveElementCommand {
     }
     this.parent.insertBefore(this.elem, this.nextSibling); // Don't use `before` or `prepend` as `this.nextSibling` may be `null`
 
-    if (handler) {
+    if (handler&&!batch) {
       handler.handleHistoryEvent(HistoryEventTypes.AFTER_UNAPPLY, this);
     }
   }
@@ -271,8 +271,8 @@ export class ChangeElementCommand {
   }
 
   // Performs the stored change action
-  apply (handler) {
-    if (handler) {
+  apply (handler,batch) {
+    if (handler&&!batch) {
       handler.handleHistoryEvent(HistoryEventTypes.BEFORE_APPLY, this);
     }
 
@@ -312,7 +312,7 @@ export class ChangeElementCommand {
       }
     }
 
-    if (handler) {
+    if (handler&&!batch) {
       handler.handleHistoryEvent(HistoryEventTypes.AFTER_APPLY, this);
     }
 
@@ -320,8 +320,8 @@ export class ChangeElementCommand {
   }
 
   // Reverses the stored change action
-  unapply (handler) {
-    if (handler) {
+  unapply (handler,batch) {
+    if (handler&&!batch) {
       handler.handleHistoryEvent(HistoryEventTypes.BEFORE_UNAPPLY, this);
     }
 
@@ -361,7 +361,7 @@ export class ChangeElementCommand {
     // Remove transformlist to prevent confusion that causes bugs like 575.
     removeElementFromListMap(this.elem);
 
-    if (handler) {
+    if (handler&&!batch) {
       handler.handleHistoryEvent(HistoryEventTypes.AFTER_UNAPPLY, this);
     }
 
@@ -408,7 +408,7 @@ export class BatchCommand {
 
     const len = this.stack.length;
     for (let i = 0; i < len; ++i) {
-      this.stack[i].apply(handler);
+      this.stack[i].apply(handler,true);
     }
 
     if (handler) {
@@ -423,7 +423,7 @@ export class BatchCommand {
     }
 
     for (let i = this.stack.length - 1; i >= 0; i--) {
-      this.stack[i].unapply(handler);
+      this.stack[i].unapply(handler,true);
     }
 
     if (handler) {
