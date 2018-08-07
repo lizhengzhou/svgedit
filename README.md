@@ -1,39 +1,43 @@
 # ![alt text](https://svg-edit.github.io/svgedit/images/logo48x48.svg "svg-edit logo of a pencil") SVG-edit
 
-SVG-edit is a fast, web-based, javascript-driven SVG drawing editor that works in any modern browser.
+SVG-edit是一个快速的，基于Web的，javascript驱动的SVG绘图编辑器，适用于任何现代浏览器。
 
-## Demo
+## 示例
 
-### [Try SVG-edit here](https://svg-edit.github.io/svgedit/releases/svg-edit-2.8.1/svg-editor.html)
+### [点击尝试](http://admin.wcs2.mooho.com.cn/editor/editor/svg-editor-es.html)
 
-(Also available as a [download](https://github.com/SVG-Edit/svgedit/releases/download/svg-edit-2.8.1/svg-edit-2.8.1.zip) in [releases](https://github.com/SVG-Edit/svgedit/releases)).
+(也可以在 [发布版本](https://github.com/SVG-Edit/svgedit/releases))[下载](https://github.com/SVG-Edit/svgedit/releases/download/svg-edit-2.8.1/svg-edit-2.8.1.zip) .
 
-You may also try the [pre-release](https://svg-edit.github.io/svgedit/releases/svg-edit-3.0.0-alpha.4/editor/svg-editor.html) (or the [ES6-Module](https://svg-edit.github.io/svgedit/releases/svg-edit-3.0.0-alpha.4/editor/svg-editor.html) version, assuming a modern browser).
+你也可以尝试 [预发布版本](https://svg-edit.github.io/svgedit/releases/svg-edit-3.0.0-alpha.4/editor/svg-editor.html) (或者 [ES6-模块打包](https://svg-edit.github.io/svgedit/releases/svg-edit-3.0.0-alpha.4/editor/svg-editor.html) 版本, 适应最新浏览器).
 
-## Installation
+## 安装
 
 Note that steps 1-2 below are only necessary if you wish to integrate
 SVG-edit into your own npm package; otherwise, you can skip those steps
 and instead of looking within `node_modules/svgedit`, look within your
 copy of the svgedit Git repo.
 
-1. Set up an npm package of your own: `npm init` (complete the fields).
-1. Install SVG-edit into your package: `npm i svgedit`
-1. Copy `svgedit-config-sample-es.js` (in the SVG-edit project root;
-    see `node_modules/svgedit`) to `svgedit-config-es.js`.
-  1. This will enable `svg-editor-es.html` to work, an HTML file directly
-    using ES6 modules. Note that this file only works on modern browsers.
-    The config file now imports the SVG edit code, minimizing the scripts
-    that need to be referenced in the HTML file.
-1. To also build a rolled-up, Babelified, non-ES Modules (IIFE)
-  JavaScript file which will allow `svg-editor.html` to work, a file
-  which does not rely on ES6 Modules support, follow these steps:
-  1. Run `npm install` within the `node_modules/svgedit` directory to
-    install the build tools for SVG-edit.
-  1. Run `npm run build-config` within the `node_modules/svgedit` directory.
-1. If you wish to make changes to the HTML, modify `svg-editor-es.html` and
-  then run `npm run build-html` to have the changes properly copied to
-  `svg-editor.html`.
+请注意，只有在您希望集成SVG-edit到你自己的npm包中时，才需要执行以下1-2步骤;
+否则，您可以跳过这些步骤到svgedit Git拷贝中操作，而不是
+`node_modules/svgedit`目录。
+
+
+1. 初始化npm包安装环境: `npm init` (填写引号中内容).
+1. 安装SVG-edit包到你的项目中: `npm i svgedit`
+1. 复制 `svgedit-config-sample-es.js` (在SVG-edit项目根目录;
+    查看 `node_modules/svgedit`) 重命名为 `svgedit-config-es.js`.
+  1.  这将使`svg-editor-es.html`能够通过ES6模块直接运行HTML文件。 
+    请注意，此方式仅适用于现代浏览器。HTML文件会引用创建的js配置文件。
+   
+1. 如果你还是想创建一个rolled-up，Babelified的，
+  允许`svg-editor.html`工作的非ES模块（IIFE），
+  一个不依赖于ES6模块支持的JavaScript文件，请按照下列步骤操作：  
+  1. 在目录 `node_modules/svgedit` 下运行 `npm install` 
+     安装SVG-edit构建工具 .
+  1. 在`node_modules/svgedit` 目录中运行 `npm run build-config` 指令.
+1. 如果您想对HTML进行更改，请修改`svg-editor-es.html`，
+   然后运行`npm run build-html`将更改复制到`SVG-editor.html`。
+  
 
 ## Recent news
   * 2018-05-26 Published 3.0.0-alpha.2 with ES6 Modules support
