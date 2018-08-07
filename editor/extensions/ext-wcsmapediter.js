@@ -1030,47 +1030,46 @@ export default {
             control = getElem(points[2]);
           }
           const batchCmd = new BatchCommand('Set RouteXYWH');
+          var od=selRoute.getAttribute('d');
+          
           if (this.id == 'wcsline_x1') {
             if (startElem) {
-              batchCmd.addSubCommand(new ChangeElementCommand(startElem,{'cx':startElem.getAttribute('cx')}));
-              batchCmd.addSubCommand(new ChangeElementCommand(selRoute,{'d':selRoute.getAttribute('d')}));
-
+              var ocx=startElem.getAttribute('cx');
               startElem.setAttribute('cx', this.value);
+              batchCmd.addSubCommand(new ChangeElementCommand(startElem,{'cx':ocx}));
               move.x = this.value;
             }
           } else if (this.id == 'wcsline_y1') {
             if (startElem) {
-              batchCmd.addSubCommand(new ChangeElementCommand(startElem,{'cy':startElem.getAttribute('cy')}));
-              batchCmd.addSubCommand(new ChangeElementCommand(selRoute,{'d':selRoute.getAttribute('d')}));
-
+              var ocy=startElem.getAttribute('cy');            
               startElem.setAttribute('cy', this.value);
+              batchCmd.addSubCommand(new ChangeElementCommand(startElem,{'cy':ocy}));
               move.y = this.value;
             }
           } else if (this.id == 'wcsline_width') {
             if (startElem && endElem) {
-
-              batchCmd.addSubCommand(new ChangeElementCommand(endElem,{'cx':endElem.getAttribute('cx')}));
-              batchCmd.addSubCommand(new ChangeElementCommand(selRoute,{'d':selRoute.getAttribute('d')}));
-
+              var ocx=endElem.getAttribute('cx');
+              
               var cx = startElem.getAttribute('cx');
               cx = parseFloat(cx) + parseFloat(this.value);
 
               endElem.setAttribute('cx', cx);
+              batchCmd.addSubCommand(new ChangeElementCommand(endElem,{'cx':ocx}));
               curve.x = cx;
             }
           } else if (this.id == 'wcsline_height') {
             if (startElem && endElem) {
-
-              batchCmd.addSubCommand(new ChangeElementCommand(endElem,{'cy':endElem.getAttribute('cy')}));
-              batchCmd.addSubCommand(new ChangeElementCommand(selRoute,{'d':selRoute.getAttribute('d')}));
+              var ocy=endElem.getAttribute('cy');              
 
               var cy = startElem.getAttribute('cy');
               cy = parseFloat(cy) + parseFloat(this.value);
 
               endElem.setAttribute('cy', cy);
+              batchCmd.addSubCommand(new ChangeElementCommand(endElem,{'cy':ocy}));
               curve.y = cy;
             }
           }
+          batchCmd.addSubCommand(new ChangeElementCommand(selRoute,{'d':od}));
           if(!batchCmd.isEmpty())
           {
             svgCanvas.undoMgr.addCommandToHistory(batchCmd);
