@@ -34,8 +34,8 @@ export default {
     var initStroke = svgEditor.curConfig.initStroke;
     var seNs = svgCanvas.getEditorNS(true);
 
-    //滚动到可视区域
-    scrollToWorkArea();
+    init();
+   
 
     var langList = {
       en: [{
@@ -560,6 +560,8 @@ export default {
 
     // Do on reset
     function init() {
+       //滚动到可视区域
+      scrollToWorkArea();
       // Make sure all routes have data set
       $(svgcontent).find('*').each(function () {
         var pointsAttr = this.getAttributeNS(seNs, 'points');
