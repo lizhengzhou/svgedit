@@ -34,37 +34,37 @@ SVG-edit是一个快速的，基于Web的，javascript驱动的SVG绘图编辑�
    然后运行`npm run build-html`将更改复制到`SVG-editor.html`。
   
 
-## Recent news
-  * 2018-05-26 Published 3.0.0-alpha.2 with ES6 Modules support
-  * 2017-07 Added to Packagist: https://packagist.org/packages/svg-edit/svgedit
-  * 2015-12-02 SVG-edit 2.8.1 was released.
-  * 2015-11-24 SVG-edit 2.8 was released.
-  * 2015-11-24 Code, issue tracking, and docs are being moved to github (previously [code.google.com](https://code.google.com/p/svg-edit)).
-  * 2014-04-17 2.7 and stable branches updated to reflect 2.7.1 important bug fixes for the embedded editor.
-  * 2014-04-07 SVG-edit 2.7 was released.
-  * 2013-01-15 SVG-edit 2.6 was released.
+## 最近更新
+  * 2018-05-26 发布 SVG-edit 3.0.0-alpha.2，支持ES6模块
+  * 2017-07 添加到Packagist: https://packagist.org/packages/svg-edit/svgedit
+  * 2015-12-02 发布 SVG-edit 2.8.1.
+  * 2015-11-24 发布 SVG-edit 2.8.
+  * 2015-11-24 代码，问题跟踪和文档正在转移到github上 (之前在 [code.google.com](https://code.google.com/p/svg-edit)).
+  * 2014-04-17 稳定分支2.7更新，修复嵌入式编辑器的2.7.1版本重要错误。
+  * 2014-04-07 发布 SVG-edit 2.7.
+  * 2013-01-15 发布 SVG-edit 2.6.
 
-## Videos
+## 视频
 
-  * [SVG-edit 2.4 Part 1](https://www.youtube.com/watch?v=zpC7b1ZJvvM)
-  * [SVG-edit 2.4 Part 2](https://www.youtube.com/watch?v=mDzZEoGUDe8)
-  * [SVG-edit 2.3 Features](https://www.youtube.com/watch?v=RVIcIy5fXOc)
-  * [Introduction to SVG-edit](https://www.youtube.com/watch?v=ZJKmEI06YiY) (Version 2.2)
+  * [SVG-edit 2.4 部分 1](https://www.youtube.com/watch?v=zpC7b1ZJvvM)
+  * [SVG-edit 2.4 部分 2](https://www.youtube.com/watch?v=mDzZEoGUDe8)
+  * [SVG-edit 2.3 特征](https://www.youtube.com/watch?v=RVIcIy5fXOc)
+  * [SVG-edit简介](https://www.youtube.com/watch?v=ZJKmEI06YiY) (版本 2.2)
 
-## Supported browsers
+## 支持的浏览器
 
-The following browsers had been tested for 2.6 or earlier and will probably continue to work with 2.8.
+以下浏览器已经经过2.6或更早版本的测试，版本2.8基本也可以正常使用。
   * Firefox 1.5+
   * Opera 9.50+
   * Safari 4+
   * Chrome 1+
   * IE 9+ and Edge
 
-## Further reading and more information
+## 进一步阅读和更多信息
 
- * See [docs](docs/) for more documentation. See the [JSDocs for our latest release](https://svg-edit.github.io/svgedit/releases/svg-edit-3.0.0-alpha.4/docs/jsdoc/index.html).
- * [Acknowledgements](docs/Acknowledgements.md) lists open source projects used in svg-edit.
- * See [AUTHORS](AUTHORS) file for authors.
- * [Stackoverflow](https://stackoverflow.com/tags/svg-edit) group.
- * Join the [svg-edit mailing list](https://groups.google.com/forum/#!forum/svg-edit).
- * Join us on `#svg-edit` on `freenode.net` (or use the [web client](https://webchat.freenode.net/?channels=svg-edit)).
+ * 参考 [doc](docs/) 目录查看文档. 查看[最新版本的JSDocs文档](https://svg-edit.github.io/svgedit/releases/svg-edit-3.0.0-alpha.4/docs/jsdoc/index.html).
+ * [致谢](docs/Acknowledgements.md) 列出了svg-edit中使用的开源项目.
+ * 查看 [作者](AUTHORS)清单.
+ * [Stackoverflow](https://stackoverflow.com/tags/svg-edit) 组.
+ * 加入 [svg-edit 邮件列表](https://groups.google.com/forum/#!forum/svg-edit).
+ * 加入我们 `#svg-edit` 在 `freenode.net` (或者用 [网页客户端](https://webchat.freenode.net/?channels=svg-edit)).
