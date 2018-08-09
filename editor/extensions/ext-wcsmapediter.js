@@ -5,8 +5,8 @@
  *
  * Licensed under the MIT License
  *
- * Copyright(c) 2010 Alexis Deveria
- *
+ * Copyright(c) 2018 Zhengzhou Li
+ * All rights reserved
  */
 
 /*
@@ -14,8 +14,8 @@
 */
 export default {
   /*
-  * WCS 地图编辑插件
-  */
+   * WCS 地图编辑插件
+   */
   name: 'Wcs Map Editer',
   /**
    * 
@@ -41,7 +41,9 @@ export default {
     var curConfig = svgEditor.curConfig;
     var seNs = svgCanvas.getEditorNS(true);
 
-    const {lang}=svgEditor.curPrefs;
+    const {
+      lang
+    } = svgEditor.curPrefs;
 
     //导入undo/redo
     const {
@@ -62,29 +64,29 @@ export default {
       en: [{
         id: 'line_horizontal',
         title: 'Draw horizontal line'
-      },{
+      }, {
         id: 'line_vertical',
         title: 'Draw vertical line'
       }],
       zh_CN: [{
         id: 'line_horizontal',
         title: '画横线'
-      },{
+      }, {
         id: 'line_vertical',
         title: '画竖线'
-      },{
+      }, {
         id: 'line_arc_upleft',
         title: '画左上弧线'
-      },{
+      }, {
         id: 'line_arc_upright',
         title: '画右上弧线'
-      },{
+      }, {
         id: 'line_arc_downleft',
         title: '画左下弧线'
-      },{
+      }, {
         id: 'line_arc_downright',
         title: '画右下弧线'
-      },{
+      }, {
         id: 'line_arc_downright',
         title: '画右下弧线'
       }]
@@ -157,7 +159,7 @@ export default {
           var map = {};
           map.Routes = [];
           map.Points = [];
-  
+
           $(svgcontent).find('.route').each(function () {
             var route = {};
 
@@ -229,7 +231,7 @@ export default {
 
           /**
            * 隐藏控制点
-          */
+           */
           $(svgcontent).find('.control').each(function () {
             this.setAttribute('display', 'none');
           });
@@ -308,24 +310,19 @@ export default {
            */
           title: getTitle('line_horizontal'),
           /**
-           * 按钮位置
-           */
-          position: '11',
-          /**
            * 按钮事件
            */
           events: {
             click() {
               //单击按钮时执行的操作。
-              //对于“模式”按钮，任何其他按钮都将
+                      //对于“模式”按钮，任何其他按钮都将
               //自动被压缩。
               svgCanvas.setMode('line_horizontal');
             }
           }
-        }, {         
+        }, {
           id: 'line_vertical',
           type: 'mode',
-          position: '12',
           title: getTitle('line_vertical'),
           events: {
             click() {
@@ -336,7 +333,6 @@ export default {
         {
           id: 'line_arc_upleft',
           type: 'mode',
-          position: '21',
           title: getTitle('line_arc_upleft'),
           events: {
             click() {
@@ -347,7 +343,6 @@ export default {
         {
           id: 'line_arc_upright',
           type: 'mode',
-          position: '22',
           title: getTitle('line_arc_upright'),
           events: {
             click() {
@@ -358,7 +353,6 @@ export default {
         {
           id: 'line_arc_downleft',
           type: 'mode',
-          position: '23',
           title: getTitle('line_arc_downleft'),
           events: {
             click() {
@@ -369,7 +363,6 @@ export default {
         {
           id: 'line_arc_downright',
           type: 'mode',
-          position: '24',
           title: getTitle('line_arc_downright'),
           events: {
             click() {
@@ -548,6 +541,10 @@ export default {
           data: langList[lang]
         };
       },
+      /**
+       * 
+       * @param {鼠标按下事件} opts 
+       */
       mouseDown(opts) {
         var mode = svgCanvas.getMode();
         if (mode === 'line_horizontal') {
@@ -568,6 +565,10 @@ export default {
           };
         }
       },
+      /**
+       * 只有在mouseDown函数返回true的时候才会触发
+       * @param {鼠标移动事件} opts 
+       */
       mouseMove: function mouseMove(opts) {
         if (svgCanvas.getMode() === 'select') {
 
@@ -596,10 +597,11 @@ export default {
           };
         }
       },
-      // This is triggered from anywhere, but "started" must have been set
-      // to true (see above). Note that "opts" is an object with event info
+      /**
+       * 只有在mouseDown函数返回true的时候才会触发
+       * @param {鼠标抬起事件} opts 
+       */
       mouseUp(opts) {
-        // Check the mode on mouseup
         if (svgCanvas.getMode() === 'select') {
           if (svgCanvas.getSelectedElems().length == 1) {
             var elems = svgCanvas.getSelectedElems();
@@ -618,16 +620,14 @@ export default {
           }
         }
       },
+      /**
+       * 元素选择变化时触发
+       * @param {选择元素事件} opts 
+       */
       selectedChanged: function selectedChanged(opts) {
         if (svgCanvas.getSelectedElems().length == 0) {
           showPointPanel(false);
           showRoutePanel(false);
-
-          // $(svgcontent).find('.point').each(function () {
-          //   if (!this.getAttributeNS(seNs, 'nebor')) {
-          //     this.setAttribute('display', 'none');
-          //   }
-          // });
         }
         if (svgCanvas.getSelectedElems().length == 1) {
           var elem = opts.elems[0];
@@ -647,6 +647,10 @@ export default {
           }
         }
       },
+      /**
+       * 元素有修改时触发
+       * @param {元素修改事件} opts 
+       */
       elementChanged: function elementChanged(opts) {
         var elem = opts.elems[0];
         if (elem && elem.tagName === 'svg' && elem.id === 'svgcontent') {
@@ -709,12 +713,8 @@ export default {
 
     // 初始化方法，在刷新或打开地图时导入svg字符串后执行
     function init() {
-      // svgCanvas.changeSelectedAttribute('display', 'none', $(svgcontent).find('.point'));
-      // $(svgcontent).find('.point').each(function () {
-      //   if (this.hasAttributeNS(seNs, 'nebor')) {
-      //     this.setAttribute('display', 'inline');
-      //   }
-      // });
+
+
     }
 
     /**
@@ -1071,17 +1071,17 @@ export default {
           var route = getElem(routeid);
           if (route) {
             firstPoint = route;
-            if(firstPoint)parentNode = firstPoint.parentNode;
+            if (firstPoint) parentNode = firstPoint.parentNode;
             var routeattr = route.getAttributeNS(seNs, 'points');
             if (routeattr) {
               var points = routeattr.trim().split(' ');
               if (points.length >= 2) {
                 if (points[0] == elem.id) {
                   var cmd = checkOrdeletePoint(points[1], routeid);
-                  if(cmd)cmdArr.push(cmd);
+                  if (cmd) cmdArr.push(cmd);
                 } else if (points[1] == elem.id) {
                   var cmd = checkOrdeletePoint(points[0], routeid);
-                  if(cmd)cmdArr.push(cmd);
+                  if (cmd) cmdArr.push(cmd);
                 }
               }
 
@@ -1118,7 +1118,7 @@ export default {
       var route = getElem(pathid);
       if (route) {
         firstPoint = route;
-        if(firstPoint)parentNode = firstPoint.parentNode;
+        if (firstPoint) parentNode = firstPoint.parentNode;
         var elemids = route.getAttributeNS(seNs, 'points').split(' ');
         if (elemids.length > 2) {
           var startElem = getElem(elemids[0]);
@@ -1156,7 +1156,7 @@ export default {
         var points = pointsAttr.trim().split(' ');
         if (points.length >= 2) {
           firstPoint = getElem(points[1]);
-          if(firstPoint)parentNode = firstPoint.parentNode;
+          if (firstPoint) parentNode = firstPoint.parentNode;
           var cmd = checkOrdeletePoint(points[0], elem.id);
           if (cmd) cmdArr.push(cmd);
           cmd = checkOrdeletePoint(points[1], elem.id);
@@ -1327,7 +1327,7 @@ export default {
     /**
      * 获取多语言标题
      */
-    function getTitle(id,curLang=lang) {
+    function getTitle(id, curLang = lang) {
       var list = langList[lang];
       for (var i in list) {
         if (list.hasOwnProperty(i) && list[i].id === id) {

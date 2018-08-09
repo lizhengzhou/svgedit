@@ -1,13 +1,17 @@
 /* globals jQuery */
 /*
  * ext-wcspointmerge.js
- *
+ * https://github.com/lizhengzhou/svgedit.git
+ * Licensed under the MIT License
  *
  * Copyright(c) 2010 CloudCanvas, Inc.
  * All rights reserved
  *
  */
 export default {
+  /**
+   * WCS地图插件——点合并工具
+   */
   name: 'wcspointmerge',
   init(S) {
     const svgEditor = this;
@@ -18,13 +22,29 @@ export default {
     var seNs = svgCanvas.getEditorNS(true);
     let selElem, line;
 
+    const {
+      lang
+    } = svgEditor.curPrefs;
+
+    //多语言处理
+    var langList = {
+      en: [{
+        id: 'wcspointmerge',
+        title: 'Merge two Points'
+      }],
+      zh_CN: [{
+        id: 'wcspointmerge',
+        title: '合并两个点'
+      }]
+    };
+
     return {
       name: 'wcspointmerge',
       svgicons: svgEditor.curConfig.extIconsPath + 'wcspointmerge-icon.xml',
       buttons: [{
         id: 'wcspointmerge',
         type: 'mode',
-        title: 'Merge two Points',
+        title: getTitle('wcspointmerge'),
         events: {
           click() {
             if (svgCanvas.getSelectedElems().length > 0) {
@@ -117,7 +137,11 @@ export default {
     };
 
 
-
+    /**
+     * 
+     * @param {起始点} selElem 
+     * @param {目标点} mouseTarget 
+     */
     function mergePoint(selElem, mouseTarget) {
 
       var cx = mouseTarget.getAttribute('cx'),
@@ -162,6 +186,18 @@ export default {
       mouseTarget.setAttributeNS(seNs, 'se:routes', targetRoutes.join(' '));
     }
 
+     /**
+     * 获取多语言标题
+     */
+    function getTitle(id, curLang = lang) {
+      var list = langList[lang];
+      for (var i in list) {
+        if (list.hasOwnProperty(i) && list[i].id === id) {
+          return list[i].title;
+        }
+      }
+      return id;
+    }
 
   }
 };
