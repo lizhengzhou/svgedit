@@ -187,6 +187,12 @@ export default {
             this.remove();
           });
 
+           $(svgcontent).find('.point').each(function () {
+            if (!this.getAttributeNS(seNs, 'nebor')) {
+              this.setAttribute('display', 'none');
+            }
+          });
+
           var clearSvgStr = svgCanvas.svgCanvasToString();
 
           var formData = new FormData();
