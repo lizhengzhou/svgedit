@@ -951,18 +951,36 @@ export default {
     }
 
     function routeDeleteByRoute(elem) {
+
+      var cmdArr = [];
+      var firstPoint, parentNode;
       var pointsAttr = elem.getAttributeNS(seNs, 'points');
       if (pointsAttr) {
         var points = pointsAttr.trim().split(' ');
         if (points.length >= 2) {
-          checkOrdeletePoint(points[0], elem.id);
-          checkOrdeletePoint(points[1], elem.id);
+          firstPoint = getElem(points[1]);
+          if(firstPoint)parentNode = firstPoint.parentNode;
+          var cmd = checkOrdeletePoint(points[0], elem.id);
+          if (cmd) cmdArr.push(cmd);
+          cmd = checkOrdeletePoint(points[1], elem.id);
+          if (cmd) cmdArr.push(cmd);
         }
 
         if (points.length >= 3) {
           var control = getElem(points[2]);
-          if (control) control.remove();
+          if (control) {
+            cmdArr.push(new RemoveElementCommand(control, control.nextSibling, control.parentNode));
+            control.remove();
+          }
         }
+      }
+      if (cmdArr.length > 0) {
+        const batchCmd = new BatchCommand('routeDeleteByRoute');
+        batchCmd.addSubCommand(new RemoveElementCommand(elem, firstPoint, parentNode));
+        cmdArr.forEach((v) => {
+          batchCmd.addSubCommand(v);
+        });
+        svgCanvas.undoMgr.addCommandToHistory(batchCmd);
       }
     }
 
@@ -975,7 +993,9 @@ export default {
           var routes = routeAttr.trim().split(' ');
           if (routes && routes.length > 0) {
             if (routes.length == 1) {
+              var comand = new RemoveElementCommand(elem, elem.nextSibling, elem.parentNode)
               elem.remove();
+              return comand;
             } else {
               var routeindex = routes.findIndex(function (v) {
                 return v == routeid;
