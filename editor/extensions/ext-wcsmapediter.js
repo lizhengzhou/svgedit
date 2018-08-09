@@ -857,6 +857,17 @@ export default {
     function selectPoint(elem) {
       var code = elem.getAttributeNS(seNs, 'Code');
       $('#wcspoint_code').val(code);
+
+      var routersAttr = elem.getAttributeNS(seNs, 'routes');
+      if (routersAttr) {
+        var routers = routersAttr.trim().split(' ');
+        routers.forEach(function (routeid) {
+          var route = getElem(routeid);
+          if (route) {
+            elem.before(route);
+          }
+        });
+      }
     }
 
     function routeMove(elem, opts) {
@@ -906,52 +917,88 @@ export default {
     }
 
     function routeDeleteByPoint(elem) {
+      var cmdArr = [];
+      var firstPoint, parentNode;
       var routersAttr = elem.getAttributeNS(seNs, 'routes');
       if (routersAttr) {
         var routers = routersAttr.trim().split(' ');
         routers.forEach(function (routeid) {
           var route = getElem(routeid);
           if (route) {
+            firstPoint = route;
+            if(firstPoint)parentNode = firstPoint.parentNode;
             var routeattr = route.getAttributeNS(seNs, 'points');
             if (routeattr) {
               var points = routeattr.trim().split(' ');
               if (points.length >= 2) {
                 if (points[0] == elem.id) {
-                  checkOrdeletePoint(points[1], routeid);
+                  var cmd = checkOrdeletePoint(points[1], routeid);
+                  if(cmd)cmdArr.push(cmd);
                 } else if (points[1] == elem.id) {
-                  checkOrdeletePoint(points[0], routeid);
+                  var cmd = checkOrdeletePoint(points[0], routeid);
+                  if(cmd)cmdArr.push(cmd);
                 }
               }
 
               if (points.length >= 3) {
                 var control = getElem(points[2]);
-                if (control) control.remove();
+                if (control) {
+                  cmdArr.push(new RemoveElementCommand(control, control.nextSibling, control.parentNode));
+                  control.remove();
+                }
               }
             }
+            cmdArr.push(new RemoveElementCommand(route, route.nextSibling, route.parentNode));
             route.remove();
           }
         });
+      }
+      if (cmdArr.length > 0) {
+        const batchCmd = new BatchCommand('routeDeleteByPoint');
+        batchCmd.addSubCommand(new RemoveElementCommand(elem, firstPoint, parentNode));
+        cmdArr.forEach((v) => {
+          batchCmd.addSubCommand(v);
+        });
+        svgCanvas.undoMgr.addCommandToHistory(batchCmd);
       }
     }
 
 
     function routeDeleteByControl(elem) {
+      var cmdArr = [];
+      var firstPoint, parentNode;
       var pathid = elem.getAttributeNS(seNs, 'path');
       var route = getElem(pathid);
       if (route) {
+        firstPoint = route;
+        if(firstPoint)parentNode = firstPoint.parentNode;
         var elemids = route.getAttributeNS(seNs, 'points').split(' ');
         if (elemids.length > 2) {
           var startElem = getElem(elemids[0]);
-          if (startElem) startElem.remove();
+          if (startElem) {
+            cmdArr.push(new RemoveElementCommand(startElem, startElem.nextSibling, startElem.parentNode));
+            startElem.remove();
+          }
           var endElem = getElem(elemids[1]);
-          if (endElem) endElem.remove();
+          if (endElem) {
+            cmdArr.push(new RemoveElementCommand(endElem, endElem.nextSibling, endElem.parentNode));
+            endElem.remove();
+          }
         }
+        cmdArr.push(new RemoveElementCommand(route, route.nextSibling, route.parentNode));
         route.remove();
+      }
+      if (cmdArr.length > 0) {
+        const batchCmd = new BatchCommand('routeDeleteByControl');
+        batchCmd.addSubCommand(new RemoveElementCommand(elem, firstPoint, parentNode));
+        cmdArr.forEach((v) => {
+          batchCmd.addSubCommand(v);
+        });
+        svgCanvas.undoMgr.addCommandToHistory(batchCmd);
       }
     }
 
     function routeDeleteByRoute(elem) {
-
       var cmdArr = [];
       var firstPoint, parentNode;
       var pointsAttr = elem.getAttributeNS(seNs, 'points');
