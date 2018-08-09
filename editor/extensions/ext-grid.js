@@ -18,7 +18,7 @@ export default {
     const svgdoc = document.getElementById('svgcanvas').ownerDocument,
       {assignAttributes} = svgCanvas,
       hcanvas = document.createElement('canvas'),
-      canvBG = $('#canvasBackground'),
+      canvBG = $('#svgroot'),
       units = getTypeMap(), // Assumes prior `init()` call on `units.js` module
       intervals = [0.01, 0.1, 1, 10, 100, 1000];
     let showGrid = svgEditor.curConfig.showGrid || false;
