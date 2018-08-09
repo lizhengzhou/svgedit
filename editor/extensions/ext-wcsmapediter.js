@@ -13,7 +13,14 @@
     WCS Map Editer Plugin
 */
 export default {
+  /*
+  * WCS 地图编辑插件
+  */
   name: 'Wcs Map Editer',
+  /**
+   * 
+   * @param {编辑器上下文} S 
+   */
   init(S) {
     var $ = jQuery;
     var elData = $.data;
@@ -31,9 +38,12 @@ export default {
       selPoint = void 0,
       NS = S.NS,
       svgdoc = svgroot.ownerDocument;
-    var initStroke = svgEditor.curConfig.initStroke;
+    var curConfig = svgEditor.curConfig;
     var seNs = svgCanvas.getEditorNS(true);
 
+    const {lang}=svgEditor.curPrefs;
+
+    //导入undo/redo
     const {
       MoveElementCommand,
       InsertElementCommand,
@@ -44,32 +54,51 @@ export default {
       HistoryEventTypes
     } = svgUtils;
 
+    //刷新初始化
     init();
 
-
+    //多语言处理
     var langList = {
       en: [{
         id: 'line_horizontal',
         title: 'Draw horizontal line'
-      }],
-      zh_CN: [{
-        id: 'line_horizontal',
-        title: '画横线'
-      }],
-      en: [{
+      },{
         id: 'line_vertical',
         title: 'Draw vertical line'
       }],
       zh_CN: [{
+        id: 'line_horizontal',
+        title: '画横线'
+      },{
         id: 'line_vertical',
         title: '画竖线'
+      },{
+        id: 'line_arc_upleft',
+        title: '画左上弧线'
+      },{
+        id: 'line_arc_upright',
+        title: '画右上弧线'
+      },{
+        id: 'line_arc_downleft',
+        title: '画左下弧线'
+      },{
+        id: 'line_arc_downright',
+        title: '画右下弧线'
+      },{
+        id: 'line_arc_downright',
+        title: '画右下弧线'
       }]
     };
 
     /*
-     * 
+     * 绑定编辑器open和save事件，
+     * 从后台svgEditor.curConfig.serverApi
+     * 获取map.svg和保存地图到~/map/map.svg
      */
     svgEditor.setCustomHandlers({
+      /**
+       * 打开地图处理
+       */
       open() {
         $.ajax({
           url: svgEditor.curConfig.serverApi + '/open',
@@ -86,15 +115,24 @@ export default {
         });
 
       },
+      /**
+       * 
+       * @param {窗口对象} win 
+       * @param {待保存的SVG字符串} data 
+       */
       save(win, data) {
-
+        /**
+         * 取消选择
+         */
         if (svgCanvas.getSelectedElems().length > 0) {
           svgCanvas.clearSelection();
         }
-
+        /**
+         * 提交编辑SVG数据到后台保存成map.svg图片文件
+         */
         var formData = new FormData();
         formData.append("map.svg", data);
-        // Save svg
+
         $.ajax({
           url: svgEditor.curConfig.serverApi + '/save',
           type: "POST",
@@ -112,12 +150,14 @@ export default {
           }
         });
 
-
-        var map = {};
-        map.Routes = [];
-        map.Points = [];
-
+        /**
+         * 异步处理svg获取点和线清单
+         */
         new Promise(function (resolve, reject) {
+          var map = {};
+          map.Routes = [];
+          map.Points = [];
+  
           $(svgcontent).find('.route').each(function () {
             var route = {};
 
@@ -159,7 +199,9 @@ export default {
 
           console.log(map);
 
-
+          /***
+           * 提交地图数据到后台
+           */
           $.ajax({
             url: svgEditor.curConfig.serverApi + '/SaveMap',
             type: 'post',
@@ -180,24 +222,37 @@ export default {
           resolve();
         });
 
+        /**
+         * 处理svg编辑图片生成监控图片并上传保存
+         */
         new Promise(function (resolve, reject) {
 
-          //To Do gennerate Monitor
+          /**
+           * 隐藏控制点
+          */
           $(svgcontent).find('.control').each(function () {
-            this.remove();
+            this.setAttribute('display', 'none');
           });
-
+          /**
+           * 隐藏普通点
+           */
           $(svgcontent).find('.point').each(function () {
             if (!this.getAttributeNS(seNs, 'nebor')) {
               this.setAttribute('display', 'none');
             }
           });
 
+          /**
+           * 获取svg字符串
+           */
           var clearSvgStr = svgCanvas.svgCanvasToString();
 
+          /**
+           * 提交并保存监控图片monitor.svg
+           */
           var formData = new FormData();
           formData.append("monitor.svg", clearSvgStr);
-          // Save svg
+
           $.ajax({
             url: svgEditor.curConfig.serverApi + '/save',
             type: "POST",
@@ -214,6 +269,9 @@ export default {
             }
           });
 
+          /**
+           * 用原始svg编辑图片重置编辑器状态
+           */
           svgCanvas.setSvgString(data);
 
           resolve();
@@ -221,45 +279,56 @@ export default {
       }
     });
 
+    /**
+     * 编辑器配置对象
+     */
     var extConfig = {
+      /**
+       * 编辑器名称
+       */
       name: 'Wcs Map Editer',
-      // For more notes on how to make an icon file, see the source of
-      // the helloworld-icon.xml
+      /***
+       * 插件图标文件，注意ID对应关系
+       */
       svgicons: svgEditor.curConfig.extIconsPath + 'wcs-map-editer-icon.xml',
-      // Multiple buttons can be added in this array
+      /**
+       * 工具栏按钮
+       */
       buttons: [{
-          // Must match the icon ID in wcs-map-editer-icon.xml
+          /**
+           * 按钮ID，必须和上面图标文件中图标的ID一致
+           */
           id: 'line_horizontal',
-          // This indicates that the button will be added to the "mode"
-          // button panel on the left side
+          /**
+           * 标识当前按钮会被添加到左边工具栏
+           */
           type: 'mode',
-          // Tooltip text
-          title: "Draw horizontal line",
+          /**
+           * 按钮标题，鼠标放上去会显示
+           */
+          title: getTitle('line_horizontal'),
+          /**
+           * 按钮位置
+           */
           position: '11',
-          // Events
+          /**
+           * 按钮事件
+           */
           events: {
             click() {
-              // The action taken when the button is clicked on.
-              // For "mode" buttons, any other button will
-              // automatically be de-pressed.              
+              //单击按钮时执行的操作。
+              //对于“模式”按钮，任何其他按钮都将
+              //自动被压缩。
               svgCanvas.setMode('line_horizontal');
             }
           }
-        }, {
-          // Must match the icon ID in helloworld-icon.xml
+        }, {         
           id: 'line_vertical',
-          // This indicates that the button will be added to the "mode"
-          // button panel on the left side
           type: 'mode',
           position: '12',
-          // Tooltip text
-          title: "Draw vertical line",
-          // Events
+          title: getTitle('line_vertical'),
           events: {
             click() {
-              // The action taken when the button is clicked on.
-              // For "mode" buttons, any other button will
-              // automatically be de-pressed.              
               svgCanvas.setMode('line_vertical');
             }
           }
@@ -268,7 +337,7 @@ export default {
           id: 'line_arc_upleft',
           type: 'mode',
           position: '21',
-          title: "Draw arc line",
+          title: getTitle('line_arc_upleft'),
           events: {
             click() {
               svgCanvas.setMode('line_arc_upleft');
@@ -279,7 +348,7 @@ export default {
           id: 'line_arc_upright',
           type: 'mode',
           position: '22',
-          title: "Draw arc line",
+          title: getTitle('line_arc_upright'),
           events: {
             click() {
               svgCanvas.setMode('line_arc_upright');
@@ -290,7 +359,7 @@ export default {
           id: 'line_arc_downleft',
           type: 'mode',
           position: '23',
-          title: "Draw arc line",
+          title: getTitle('line_arc_downleft'),
           events: {
             click() {
               svgCanvas.setMode('line_arc_downleft');
@@ -301,7 +370,7 @@ export default {
           id: 'line_arc_downright',
           type: 'mode',
           position: '24',
-          title: "Draw arc line",
+          title: getTitle('line_arc_downright'),
           events: {
             click() {
               svgCanvas.setMode('line_arc_downright');
@@ -309,15 +378,39 @@ export default {
           }
         },
         {
+          /**
+           * 属性ID按钮
+           */
           id: 'uparrow',
+          /**
+           * 按钮图标
+           */
           svgicon: 'uparrow',
+          /**
+           * 按钮标题
+           */
           title: 'forword direction',
+          /**
+           * 按钮类型为属性按钮
+           */
           type: 'context',
+          /**
+           * 按钮事件
+           */
           events: {
             click: setRouteDirection
           },
+          /**
+           * 该属性属于哪个面板
+           */
           panel: 'wcsline_panel',
+          /**
+           * 该属性属于哪个清单
+           */
           list: 'direction_list',
+          /**
+           * 是否默认选择
+           */
           isDefault: true
         },
         {
@@ -333,14 +426,38 @@ export default {
           isDefault: true
         }
       ],
+      /**
+       * 属性面板输入元素
+       */
       context_tools: [{
+          /**
+           * 输入文本框
+           */
           type: 'input',
+          /**
+           * 属于哪个面板
+           */
           panel: 'wcsline_panel',
+          /**
+           * 线起始点坐标
+           */
           title: 'X',
+          /**
+           * 属性ID
+           */
           id: 'wcsline_x1',
+          /**
+           * Label
+           */
           label: 'X',
+          /**
+           * 大小
+           */
           size: 3,
           events: {
+            /**
+             * 修改事件
+             */
             change: SetRouteXYWH
           }
         },
@@ -420,10 +537,13 @@ export default {
           }
         }
       ],
+      /**
+       *  To DO 
+       */
       callback: function callback() {
         $('#wcsline_panel').hide();
       },
-      addLangData: function addLangData(lang) {
+      addlangData: function addlangData(lang) {
         return {
           data: langList[lang]
         };
@@ -587,7 +707,7 @@ export default {
     };
 
 
-    // Do on reset
+    // 初始化方法，在刷新或打开地图时导入svg字符串后执行
     function init() {
       // svgCanvas.changeSelectedAttribute('display', 'none', $(svgcontent).find('.point'));
       // $(svgcontent).find('.point').each(function () {
@@ -597,8 +717,11 @@ export default {
       // });
     }
 
-    //draw Mode Functions
-    //draw Horiaontal Line
+    /**
+     * 
+     * @param {鼠标点击事件} opts 
+     * @param {直线方向，默认横向} IsHoriaontal 
+     */
     function drawLine(opts, IsHoriaontal = true) {
 
       const x = opts.start_x;
@@ -681,11 +804,11 @@ export default {
       };
     }
 
-    /*
-     *  draw arc line
-     *  opts where mouse down
-     *  direction where the control point will place
-     * */
+    /**
+     * 
+     * @param {鼠标点击事件} opts 
+     * @param {弧线方向，默认控制点在弧线左上方} direction 
+     */
     function drawArcLine(opts, direction = 'upleft') {
       const x = opts.start_x;
       const y = opts.start_y;
@@ -801,6 +924,11 @@ export default {
       };
     }
 
+    /**
+     * 
+     * @param {鼠标拖动的svg元素} elem 
+     * @param {拖动事件} opts 
+     */
     function pointMove(elem, opts) {
       const zoom = svgCanvas.getZoom();
       var cx = opts ? opts.mouse_x / zoom : elem.getAttribute('cx'),
@@ -832,7 +960,10 @@ export default {
         });
       }
     }
-
+    /**
+     * 
+     * @param {鼠标选择的线} elem 
+     */
     function selectRoute(elem) {
 
       var move = elem.pathSegList.getItem(0);
@@ -853,7 +984,10 @@ export default {
       var speed = elem.getAttributeNS(seNs, 'Speed');
       $('#wcsline_speed').val(speed);
     }
-
+    /**
+     * 
+     * @param {鼠标选择的点} elem 
+     */
     function selectPoint(elem) {
       var code = elem.getAttributeNS(seNs, 'Code');
       $('#wcspoint_code').val(code);
@@ -869,7 +1003,11 @@ export default {
         });
       }
     }
-
+    /**
+     * 
+     * @param {鼠标移动的线} elem 
+     * @param {鼠标移动事件} opts 
+     */
     function routeMove(elem, opts) {
       var move = elem.pathSegList.getItem(0);
       var curve = elem.pathSegList.getItem(1);
@@ -900,7 +1038,11 @@ export default {
         }
       }
     }
-
+    /**
+     * 
+     * @param {鼠标移动的控制点} elem 
+     * @param {鼠标移动事件} opts 
+     */
     function controlMove(elem, opts) {
       const zoom = svgCanvas.getZoom();
       var routeid = elem.getAttributeNS(seNs, 'path');
@@ -915,7 +1057,10 @@ export default {
         contollSeg.y1 = y1;
       }
     }
-
+    /**
+     * 
+     * @param {删除点} elem 
+     */
     function routeDeleteByPoint(elem) {
       var cmdArr = [];
       var firstPoint, parentNode;
@@ -963,7 +1108,9 @@ export default {
       }
     }
 
-
+    /**
+     * @param {删除控制点} elem 
+     */
     function routeDeleteByControl(elem) {
       var cmdArr = [];
       var firstPoint, parentNode;
@@ -997,7 +1144,10 @@ export default {
         svgCanvas.undoMgr.addCommandToHistory(batchCmd);
       }
     }
-
+    /**
+     * 
+     * @param {删除线} elem 
+     */
     function routeDeleteByRoute(elem) {
       var cmdArr = [];
       var firstPoint, parentNode;
@@ -1030,7 +1180,10 @@ export default {
         svgCanvas.undoMgr.addCommandToHistory(batchCmd);
       }
     }
-
+    /**
+     * @param {待检测点ID} elemid
+     * @param {当前删除的线} routeid
+     */
     function checkOrdeletePoint(elemid, routeid) {
       if (!elemid) return;
       var elem = getElem(elemid);
@@ -1054,11 +1207,11 @@ export default {
         }
       }
     }
-    // End draw functions
 
-
-
-    //utils  Functions
+    /**
+     * 
+     * @param {是否显示线的属性面板} on 
+     */
     function showRoutePanel(on) {
       var connRules = $('#wcsline_rules');
       if (!connRules.length) {
@@ -1067,13 +1220,18 @@ export default {
       connRules.text(!on ? '' : '#xy_panel { display: none !important; }');
       $('#wcsline_panel').toggle(on);
     }
-
+    /**
+     * 
+     * @param {是否显示点属性面板} on 
+     */
     function showPointPanel(on) {
       $('#g_panel').toggle(!on);
       $('#group_title').toggle(!on);
       $('#wcspoint_panel').toggle(on);
     }
-
+    /**
+     * 根据属性面板修改的值设置线方向
+     */
     function setRouteDirection() {
       var val = 0;
       if (this.id == 'uparrow') {
@@ -1085,7 +1243,9 @@ export default {
         selRoute.setAttributeNS(seNs, 'se:Direction', val);
       }
     }
-
+    /**
+     * 根据属性面板修改的值设置起始结束点位置值
+     */
     function SetRouteXYWH() {
       if (selRoute) {
         var selElems = svgCanvas.getSelectedElems();
@@ -1164,10 +1324,18 @@ export default {
       }
     }
 
-
-    //End utils  Functions
-
-
+    /**
+     * 获取多语言标题
+     */
+    function getTitle(id,curLang=lang) {
+      var list = langList[lang];
+      for (var i in list) {
+        if (list.hasOwnProperty(i) && list[i].id === id) {
+          return list[i].title;
+        }
+      }
+      return id;
+    }
 
     return extConfig;
   }
