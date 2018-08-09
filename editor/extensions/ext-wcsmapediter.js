@@ -187,7 +187,7 @@ export default {
             this.remove();
           });
 
-           $(svgcontent).find('.point').each(function () {
+          $(svgcontent).find('.point').each(function () {
             if (!this.getAttributeNS(seNs, 'nebor')) {
               this.setAttribute('display', 'none');
             }
@@ -554,11 +554,11 @@ export default {
         opts.elems.forEach(function (elem) {
           if (elem && !svgcontent.getElementById(elem.id)) {
             if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
-              routeDelete(elem, 'point');
+              routeDeleteByPoint(elem);
             } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
-              routeDelete(elem, 'control');
+              routeDeleteByControl(elem);
             } else if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
-              routeDelete(elem, 'route');
+              routeDeleteByRoute(elem);
             }
           } else {
             if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
@@ -600,7 +600,7 @@ export default {
     //draw Mode Functions
     //draw Horiaontal Line
     function drawLine(opts, IsHoriaontal = true) {
-      
+
       const x = opts.start_x;
       const y = opts.start_y;
 
@@ -905,60 +905,63 @@ export default {
       }
     }
 
-    function routeDelete(elem, type) {
-      if (type == 'point') {
-        var routersAttr = elem.getAttributeNS(seNs, 'routes');
-        if (routersAttr) {
-          var routers = routersAttr.trim().split(' ');
-          routers.forEach(function (routeid) {
-            var route = getElem(routeid);
-            if (route) {
-              var routeattr = route.getAttributeNS(seNs, 'points');
-              if (routeattr) {
-                var points = routeattr.trim().split(' ');
-                if (points.length >= 2) {
-                  if (points[0] == elem.id) {
-                    checkOrdeletePoint(points[1], routeid);
-                  } else if (points[1] == elem.id) {
-                    checkOrdeletePoint(points[0], routeid);
-                  }
-                }
-
-                if (points.length >= 3) {
-                  var control = getElem(points[2]);
-                  if (control) control.remove();
+    function routeDeleteByPoint(elem) {
+      var routersAttr = elem.getAttributeNS(seNs, 'routes');
+      if (routersAttr) {
+        var routers = routersAttr.trim().split(' ');
+        routers.forEach(function (routeid) {
+          var route = getElem(routeid);
+          if (route) {
+            var routeattr = route.getAttributeNS(seNs, 'points');
+            if (routeattr) {
+              var points = routeattr.trim().split(' ');
+              if (points.length >= 2) {
+                if (points[0] == elem.id) {
+                  checkOrdeletePoint(points[1], routeid);
+                } else if (points[1] == elem.id) {
+                  checkOrdeletePoint(points[0], routeid);
                 }
               }
-              route.remove();
-            }
-          });
-        }
-      } else if (type == 'control') {
-        var pathid = elem.getAttributeNS(seNs, 'path');
-        var route = getElem(pathid);
-        if (route) {
-          var elemids = route.getAttributeNS(seNs, 'points').split(' ');
-          if (elemids.length > 2) {
-            var startElem = getElem(elemids[0]);
-            if (startElem) startElem.remove();
-            var endElem = getElem(elemids[1]);
-            if (endElem) endElem.remove();
-          }
-          route.remove();
-        }
-      } else if (type == 'route') {
-        var pointsAttr = elem.getAttributeNS(seNs, 'points');
-        if (pointsAttr) {
-          var points = pointsAttr.trim().split(' ');
-          if (points.length >= 2) {
-            checkOrdeletePoint(points[0], elem.id);
-            checkOrdeletePoint(points[1], elem.id);
-          }
 
-          if (points.length >= 3) {
-            var control = getElem(points[2]);
-            if (control) control.remove();
+              if (points.length >= 3) {
+                var control = getElem(points[2]);
+                if (control) control.remove();
+              }
+            }
+            route.remove();
           }
+        });
+      }
+    }
+
+
+    function routeDeleteByControl(elem) {
+      var pathid = elem.getAttributeNS(seNs, 'path');
+      var route = getElem(pathid);
+      if (route) {
+        var elemids = route.getAttributeNS(seNs, 'points').split(' ');
+        if (elemids.length > 2) {
+          var startElem = getElem(elemids[0]);
+          if (startElem) startElem.remove();
+          var endElem = getElem(elemids[1]);
+          if (endElem) endElem.remove();
+        }
+        route.remove();
+      }
+    }
+
+    function routeDeleteByRoute(elem) {
+      var pointsAttr = elem.getAttributeNS(seNs, 'points');
+      if (pointsAttr) {
+        var points = pointsAttr.trim().split(' ');
+        if (points.length >= 2) {
+          checkOrdeletePoint(points[0], elem.id);
+          checkOrdeletePoint(points[1], elem.id);
+        }
+
+        if (points.length >= 3) {
+          var control = getElem(points[2]);
+          if (control) control.remove();
         }
       }
     }
@@ -1036,50 +1039,59 @@ export default {
             control = getElem(points[2]);
           }
           const batchCmd = new BatchCommand('Set RouteXYWH');
-          var od=selRoute.getAttribute('d');
-          
+          var od = selRoute.getAttribute('d');
+
           if (this.id == 'wcsline_x1') {
             if (startElem) {
-              var ocx=startElem.getAttribute('cx');
+              var ocx = startElem.getAttribute('cx');
               startElem.setAttribute('cx', this.value);
-              batchCmd.addSubCommand(new ChangeElementCommand(startElem,{'cx':ocx}));
+              batchCmd.addSubCommand(new ChangeElementCommand(startElem, {
+                'cx': ocx
+              }));
               move.x = this.value;
             }
           } else if (this.id == 'wcsline_y1') {
             if (startElem) {
-              var ocy=startElem.getAttribute('cy');            
+              var ocy = startElem.getAttribute('cy');
               startElem.setAttribute('cy', this.value);
-              batchCmd.addSubCommand(new ChangeElementCommand(startElem,{'cy':ocy}));
+              batchCmd.addSubCommand(new ChangeElementCommand(startElem, {
+                'cy': ocy
+              }));
               move.y = this.value;
             }
           } else if (this.id == 'wcsline_width') {
             if (startElem && endElem) {
-              var ocx=endElem.getAttribute('cx');
-              
+              var ocx = endElem.getAttribute('cx');
+
               var cx = startElem.getAttribute('cx');
               cx = parseFloat(cx) + parseFloat(this.value);
 
               endElem.setAttribute('cx', cx);
-              batchCmd.addSubCommand(new ChangeElementCommand(endElem,{'cx':ocx}));
+              batchCmd.addSubCommand(new ChangeElementCommand(endElem, {
+                'cx': ocx
+              }));
               curve.x = cx;
             }
           } else if (this.id == 'wcsline_height') {
             if (startElem && endElem) {
-              var ocy=endElem.getAttribute('cy');              
+              var ocy = endElem.getAttribute('cy');
 
               var cy = startElem.getAttribute('cy');
               cy = parseFloat(cy) + parseFloat(this.value);
 
               endElem.setAttribute('cy', cy);
-              batchCmd.addSubCommand(new ChangeElementCommand(endElem,{'cy':ocy}));
+              batchCmd.addSubCommand(new ChangeElementCommand(endElem, {
+                'cy': ocy
+              }));
               curve.y = cy;
             }
           }
-          batchCmd.addSubCommand(new ChangeElementCommand(selRoute,{'d':od}));
-          if(!batchCmd.isEmpty())
-          {
+          batchCmd.addSubCommand(new ChangeElementCommand(selRoute, {
+            'd': od
+          }));
+          if (!batchCmd.isEmpty()) {
             svgCanvas.undoMgr.addCommandToHistory(batchCmd);
-          }          
+          }
         }
         svgCanvas.addToSelection(selElems);
       }
