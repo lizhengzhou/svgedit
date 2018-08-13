@@ -1,4 +1,3 @@
-/* globals jQuery */
 /*
  * ext-wcspointmerge.js
  * https://github.com/lizhengzhou/svgedit.git
@@ -13,21 +12,20 @@ export default {
    * WCS地图插件——点合并工具
    */
   name: 'wcspointmerge',
-  init(S) {
+  init (S) {
     const svgEditor = this;
-    const $ = jQuery;
     const svgCanvas = svgEditor.canvas,
       addElem = S.addSvgElementFromJson,
       getElem = S.getElem;
-    var seNs = svgCanvas.getEditorNS(true);
+    const seNs = svgCanvas.getEditorNS(true);
     let selElem, line;
 
     const {
       lang
     } = svgEditor.curPrefs;
 
-    //多语言处理
-    var langList = {
+    // 多语言处理
+    const langList = {
       en: [{
         id: 'wcspointmerge',
         title: 'Merge two Points'
@@ -46,7 +44,7 @@ export default {
         type: 'mode',
         title: getTitle('wcspointmerge'),
         events: {
-          click() {
+          click () {
             if (svgCanvas.getSelectedElems().length > 0) {
               svgCanvas.clearSelection();
             }
@@ -54,10 +52,9 @@ export default {
           }
         }
       }],
-      mouseDown(opts) {
+      mouseDown (opts) {
         if (svgCanvas.getMode() === 'wcspointmerge') {
-
-          var mouseTarget = opts.event.target;
+          const mouseTarget = opts.event.target;
           if (mouseTarget && mouseTarget.tagName === 'circle' && mouseTarget.getAttribute('class') === 'point') {
             mouseTarget.setAttribute('fill', 'orange');
             selElem = mouseTarget;
@@ -83,15 +80,15 @@ export default {
           started: true
         };
       },
-      mouseMove(opts) {
+      mouseMove (opts) {
         if (svgCanvas.getMode() === 'wcspointmerge') {
           const zoom = svgCanvas.getZoom();
 
-          var x2 = opts.mouse_x / zoom,
+          let x2 = opts.mouse_x / zoom,
             y2 = opts.mouse_y / zoom;
 
           if (line) {
-            var x1 = line.getAttribute('x1'),
+            const x1 = line.getAttribute('x1'),
               y1 = line.getAttribute('y1');
 
             if (x2 > x1) {
@@ -111,11 +108,11 @@ export default {
           }
         }
       },
-      mouseUp(opts) {
+      mouseUp (opts) {
         if (svgCanvas.getMode() === 'wcspointmerge') {
-          var mouseTarget = opts.event.target;
+          const mouseTarget = opts.event.target;
           if (mouseTarget && mouseTarget.tagName === 'circle' && mouseTarget.getAttribute('class') === 'point') {
-            if (selElem && selElem != mouseTarget) {
+            if (selElem && selElem !== mouseTarget) {
               mergePoint(selElem, mouseTarget);
               svgCanvas.setMode('select');
             }
@@ -136,48 +133,46 @@ export default {
       }
     };
 
-
     /**
-     * 
-     * @param {起始点} selElem 
-     * @param {目标点} mouseTarget 
+     *
+     * @param {起始点} selElem
+     * @param {目标点} mouseTarget
      */
-    function mergePoint(selElem, mouseTarget) {
-
-      var cx = mouseTarget.getAttribute('cx'),
+    function mergePoint (selElem, mouseTarget) {
+      const cx = mouseTarget.getAttribute('cx'),
         cy = mouseTarget.getAttribute('cy');
 
-      var targetRoutes = [];
-      var targetroutesAttr = mouseTarget.getAttributeNS(seNs, 'routes');
+      let targetRoutes = [];
+      const targetroutesAttr = mouseTarget.getAttributeNS(seNs, 'routes');
       if (targetroutesAttr) {
         targetRoutes = targetroutesAttr.trim().split(' ');
       }
 
-      var routersAttr = selElem.getAttributeNS(seNs, 'routes');
+      const routersAttr = selElem.getAttributeNS(seNs, 'routes');
       if (routersAttr) {
-        var routers = routersAttr.trim().split(' ');
+        const routers = routersAttr.trim().split(' ');
         routers.forEach(function (routeid) {
-          var route = getElem(routeid);
-          var move = route.pathSegList.getItem(0);
-          var curve = route.pathSegList.getItem(1);
-          var routeattr = route.getAttributeNS(seNs, 'points');
+          const route = getElem(routeid);
+          const move = route.pathSegList.getItem(0);
+          const curve = route.pathSegList.getItem(1);
+          const routeattr = route.getAttributeNS(seNs, 'points');
           if (routeattr) {
-            var points = routeattr.split(' ');
+            const points = routeattr.split(' ');
             if (points.length >= 2) {
-              if (points[0] == selElem.id) {
+              if (points[0] === selElem.id) {
                 points[0] = mouseTarget.id;
                 move.x = cx;
                 move.y = cy;
-              } else if (points[1] == selElem.id) {
+              } else if (points[1] === selElem.id) {
                 points[1] = mouseTarget.id;
                 curve.x = cx;
                 curve.y = cy;
               }
+              route.setAttributeNS(seNs, 'se:points', points.join(' '));
             }
           }
           targetRoutes.push(route.id);
           mouseTarget.before(route);
-          route.setAttributeNS(seNs, 'se:points', points.join(' '));
 
           selElem.remove();
         });
@@ -186,18 +181,17 @@ export default {
       mouseTarget.setAttributeNS(seNs, 'se:routes', targetRoutes.join(' '));
     }
 
-     /**
+    /**
      * 获取多语言标题
      */
-    function getTitle(id, curLang = lang) {
-      var list = langList[lang];
-      for (var i in list) {
+    function getTitle (id, curLang = lang) {
+      const list = langList[lang];
+      for (const i in list) {
         if (list.hasOwnProperty(i) && list[i].id === id) {
           return list[i].title;
         }
       }
       return id;
     }
-
   }
 };
