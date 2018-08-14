@@ -138,7 +138,7 @@ if (window.opera) {
  * @param {Object} config - An object that contains configuration data
  */
 class SvgCanvas {
-  constructor(container, config) {
+  constructor (container, config) {
     // Alias Namespace constants
 
     // Default configuration options
@@ -364,17 +364,17 @@ class SvgCanvas {
     // initialize from units.js
     // send in an object implementing the ElementContainer interface (see units.js)
     unitsInit({
-      getBaseUnit() {
+      getBaseUnit () {
         return curConfig.baseUnit;
       },
       getElement: getElem,
-      getHeight() {
+      getHeight () {
         return svgcontent.getAttribute('height') / currentZoom;
       },
-      getWidth() {
+      getWidth () {
         return svgcontent.getAttribute('width') / currentZoom;
       },
-      getRoundDigits() {
+      getRoundDigits () {
         return saveOptions.round_digits;
       }
     });
@@ -399,20 +399,20 @@ class SvgCanvas {
       getSVGContent,
       addSvgElementFromJson,
       getSelectedElements,
-      getDOMDocument() {
+      getDOMDocument () {
         return svgdoc;
       },
-      getDOMContainer() {
+      getDOMContainer () {
         return container;
       },
-      getSVGRoot() {
+      getSVGRoot () {
         return svgroot;
       },
       // TODO: replace this mostly with a way to get the current drawing.
-      getBaseUnit() {
+      getBaseUnit () {
         return curConfig.baseUnit;
       },
-      getSnappingStep() {
+      getSnappingStep () {
         return curConfig.snappingStep;
       }
     });
@@ -433,10 +433,10 @@ class SvgCanvas {
       return curConfig.gridSnapping;
     };
     coordsInit({
-      getDrawing() {
+      getDrawing () {
         return getCurrentDrawing();
       },
-      getSVGRoot() {
+      getSVGRoot () {
         return svgroot;
       },
       getGridSnapping
@@ -444,13 +444,13 @@ class SvgCanvas {
     this.remapElement = remapElement;
 
     recalculateInit({
-      getSVGRoot() {
+      getSVGRoot () {
         return svgroot;
       },
-      getStartTransform() {
+      getStartTransform () {
         return startTransform;
       },
-      setStartTransform(transform) {
+      setStartTransform (transform) {
         startTransform = transform;
       }
     });
@@ -462,7 +462,7 @@ class SvgCanvas {
 
     // Implement the svgedit.history.HistoryEventHandler interface.
     const undoMgr = canvas.undoMgr = new UndoManager({
-      handleHistoryEvent(eventType, cmd) {
+      handleHistoryEvent (eventType, cmd) {
         const EventTypes = HistoryEventTypes;
         // TODO: handle setBlurOffsets.
         if (eventType === EventTypes.BEFORE_UNAPPLY || eventType === EventTypes.BEFORE_APPLY) {
@@ -547,13 +547,13 @@ class SvgCanvas {
 
     // import from select.js
     selectInit(curConfig, {
-      createSVGElement(jsonMap) {
+      createSVGElement (jsonMap) {
         return canvas.addSvgElementFromJson(jsonMap);
       },
-      svgRoot() {
+      svgRoot () {
         return svgroot;
       },
-      svgContent() {
+      svgContent () {
         return svgcontent;
       },
       getCurrentZoom
@@ -721,7 +721,7 @@ class SvgCanvas {
         return selectorManager.selectorParentGroup;
       }
 
-      while (mouseTarget.parentNode !== (currentGroup || currentLayer)) {
+      while (mouseTarget && mouseTarget.parentNode !== (currentGroup || currentLayer)) {
         mouseTarget = mouseTarget.parentNode;
       }
 
@@ -741,7 +741,7 @@ class SvgCanvas {
 
     canvas.pathActions = pathActions;
 
-    function resetD(p) {
+    function resetD (p) {
       p.setAttribute('d', pathActions.convertPath(p));
     }
     pathModule.init({
@@ -758,20 +758,20 @@ class SvgCanvas {
       getGridSnapping,
       getOpacity,
       getSelectedElements,
-      getContainer() {
+      getContainer () {
         return container;
       },
-      setStarted(s) {
+      setStarted (s) {
         started = s;
       },
-      getRubberBox() {
+      getRubberBox () {
         return rubberBox;
       },
-      setRubberBox(rb) {
+      setRubberBox (rb) {
         rubberBox = rb;
         return rubberBox;
       },
-      addPtsToSelection({
+      addPtsToSelection ({
         closedSubpath,
         grips
       }) {
@@ -784,7 +784,7 @@ class SvgCanvas {
         });
         call('selected', grips);
       },
-      endChanges({
+      endChanges ({
         cmd,
         elem
       }) {
@@ -795,21 +795,21 @@ class SvgCanvas {
       getId,
       getNextId,
       getMouseTarget,
-      getCurrentMode() {
+      getCurrentMode () {
         return currentMode;
       },
-      setCurrentMode(cm) {
+      setCurrentMode (cm) {
         currentMode = cm;
         return currentMode;
       },
-      getDrawnPath() {
+      getDrawnPath () {
         return drawnPath;
       },
-      setDrawnPath(dp) {
+      setDrawnPath (dp) {
         drawnPath = dp;
         return drawnPath;
       },
-      getSVGRoot() {
+      getSVGRoot () {
         return svgroot;
       }
     });
@@ -1553,9 +1553,11 @@ class SvgCanvas {
                     const _stroke = ele.getAttributeNS(null, 'stroke');
                     ele.removeAttributeNS(null, 'stroke');
                     // Re-apply stroke after delay. Anything higher than 1 seems to cause flicker
-                    if (_stroke !== null) setTimeout(function () {
+                    if (_stroke !== null) {
+setTimeout(function () {
                       ele.setAttributeNS(null, 'stroke', _stroke);
                     }, 0);
+}
                   };
                 }
                 mouseTarget.style.vectorEffect = 'non-scaling-stroke';
@@ -1755,7 +1757,6 @@ class SvgCanvas {
       // in this function we do not record any state changes yet (but we do update
       // any elements that are still being created, moved or resized on the canvas)
       const mouseMove = function (evt) {
-
         rootSctm = $('#svgcontent g')[0].getScreenCTM().inverse();
 
         const pt = transformPoint(evt.pageX, evt.pageY, rootSctm);
@@ -2116,7 +2117,7 @@ class SvgCanvas {
             {
               // dAttr += + realX + ',' + realY + ' ';
               // shape.setAttributeNS(null, 'points', dAttr);
-              end.x = realX;end.y = realY;
+              end.x = realX; end.y = realY;
               if (controllPoint2.x && controllPoint2.y) {
                 for (i = 0; i < STEP_COUNT - 1; i++) {
                   parameter = i / STEP_COUNT;
@@ -2753,7 +2754,7 @@ class SvgCanvas {
       let lastX, lastY;
       let allowDbl;
 
-      function setCursor(index) {
+      function setCursor (index) {
         const empty = (textinput.value === '');
         $(textinput).focus();
 
@@ -2807,7 +2808,7 @@ class SvgCanvas {
         }
       }
 
-      function setSelection(start, end, skipInput) {
+      function setSelection (start, end, skipInput) {
         if (start === end) {
           setCursor(end);
           return;
@@ -2850,7 +2851,7 @@ class SvgCanvas {
         });
       }
 
-      function getIndexFromPoint(mouseX, mouseY) {
+      function getIndexFromPoint (mouseX, mouseY) {
         // Position cursor here
         const pt = svgroot.createSVGPoint();
         pt.x = mouseX;
@@ -2879,11 +2880,11 @@ class SvgCanvas {
         return charpos;
       }
 
-      function setCursorFromPoint(mouseX, mouseY) {
+      function setCursorFromPoint (mouseX, mouseY) {
         setCursor(getIndexFromPoint(mouseX, mouseY));
       }
 
-      function setEndSelectionFromPoint(x, y, apply) {
+      function setEndSelectionFromPoint (x, y, apply) {
         const i1 = textinput.selectionStart;
         const i2 = getIndexFromPoint(x, y);
 
@@ -2892,7 +2893,7 @@ class SvgCanvas {
         setSelection(start, end, !apply);
       }
 
-      function screenToPt(xIn, yIn) {
+      function screenToPt (xIn, yIn) {
         const out = {
           x: xIn,
           y: yIn
@@ -2910,7 +2911,7 @@ class SvgCanvas {
         return out;
       }
 
-      function ptToScreen(xIn, yIn) {
+      function ptToScreen (xIn, yIn) {
         const out = {
           x: xIn,
           y: yIn
@@ -2937,12 +2938,12 @@ class SvgCanvas {
       }
       */
 
-      function selectAll(evt) {
+      function selectAll (evt) {
         setSelection(0, curtext.textContent.length);
         $(this).unbind(evt);
       }
 
-      function selectWord(evt) {
+      function selectWord (evt) {
         if (!allowDbl || !curtext) {
           return;
         }
@@ -2967,15 +2968,15 @@ class SvgCanvas {
       }
 
       return {
-        select(target, x, y) {
+        select (target, x, y) {
           curtext = target;
           textActions.toEditMode(x, y);
         },
-        start(elem) {
+        start (elem) {
           curtext = elem;
           textActions.toEditMode();
         },
-        mouseDown(evt, mouseTarget, startX, startY) {
+        mouseDown (evt, mouseTarget, startX, startY) {
           const pt = screenToPt(startX, startY);
 
           textinput.focus();
@@ -2985,11 +2986,11 @@ class SvgCanvas {
 
           // TODO: Find way to block native selection
         },
-        mouseMove(mouseX, mouseY) {
+        mouseMove (mouseX, mouseY) {
           const pt = screenToPt(mouseX, mouseY);
           setEndSelectionFromPoint(pt.x, pt.y);
         },
-        mouseUp(evt, mouseX, mouseY) {
+        mouseUp (evt, mouseX, mouseY) {
           const pt = screenToPt(mouseX, mouseY);
 
           setEndSelectionFromPoint(pt.x, pt.y, true);
@@ -3011,7 +3012,7 @@ class SvgCanvas {
           }
         },
         setCursor,
-        toEditMode(x, y) {
+        toEditMode (x, y) {
           allowDbl = false;
           currentMode = 'textedit';
           selectorManager.requestSelector(curtext).showGrips(false);
@@ -3040,7 +3041,7 @@ class SvgCanvas {
             allowDbl = true;
           }, 300);
         },
-        toSelectMode(selectElem) {
+        toSelectMode (selectElem) {
           currentMode = 'select';
           clearInterval(blinker);
           blinker = null;
@@ -3072,16 +3073,16 @@ class SvgCanvas {
           //   curtext.removeAttribute('editable');
           // }
         },
-        setInputElem(elem) {
+        setInputElem (elem) {
           textinput = elem;
           // $(textinput).blur(hideCursor);
         },
-        clear() {
+        clear () {
           if (currentMode === 'textedit') {
             textActions.toSelectMode();
           }
         },
-        init(inputElem) {
+        init (inputElem) {
           if (!curtext) {
             return;
           }
@@ -3531,7 +3532,7 @@ class SvgCanvas {
     /**
      * Codes only is useful for locale-independent detection
      */
-    function getIssues() {
+    function getIssues () {
       // remove the selected outline before serializing
       clearSelection();
 
@@ -3602,12 +3603,12 @@ class SvgCanvas {
 
         await canvg(c, svg);
         const dataURLType = (type === 'ICO' ? 'BMP' : type).toLowerCase();
-        const datauri = quality ?
-          c.toDataURL('image/' + dataURLType, quality) :
-          c.toDataURL('image/' + dataURLType);
+        const datauri = quality
+          ? c.toDataURL('image/' + dataURLType, quality)
+          : c.toDataURL('image/' + dataURLType);
         let bloburl;
 
-        function done() {
+        function done () {
           const obj = {
             datauri,
             bloburl,
@@ -3660,8 +3661,8 @@ class SvgCanvas {
             window.svgEditor.modules !== false;
           // Todo: Switch to `import()` when widely supported and available (also allow customization of path)
           await importScript(curConfig.jspdfPath + 'jspdf.plugin.svgToPdf.js', {
-            type: modularVersion ?
-              'module' : 'text/javascript'
+            type: modularVersion
+              ? 'module' : 'text/javascript'
           });
           // await importModule('jspdf/jspdf.plugin.svgToPdf.js');
         }
@@ -4412,10 +4413,10 @@ class SvgCanvas {
     });
     draw.init({
       pathActions,
-      getCurrentGroup() {
+      getCurrentGroup () {
         return currentGroup;
       },
-      setCurrentGroup(cg) {
+      setCurrentGroup (cg) {
         currentGroup = cg;
       },
       getSelectedElements,
@@ -4426,7 +4427,7 @@ class SvgCanvas {
       clearSelection,
       call,
       addCommandToHistory,
-      changeSvgcontent() {
+      changeSvgcontent () {
         call('changed', [svgcontent]);
       }
     });
@@ -4852,7 +4853,7 @@ class SvgCanvas {
       };
       const elems = [];
 
-      function addNonG(e) {
+      function addNonG (e) {
         if (e.nodeName !== 'g') {
           elems.push(e);
         }
@@ -5026,7 +5027,7 @@ class SvgCanvas {
 
       const elems = [];
 
-      function addNonG(e) {
+      function addNonG (e) {
         if (e.nodeName !== 'g') {
           elems.push(e);
         }
@@ -5192,7 +5193,7 @@ class SvgCanvas {
         }
       };
 
-      function finishChange() {
+      function finishChange () {
         const bCmd = canvas.undoMgr.finishUndoableChange();
         curCommand.addSubCommand(bCmd);
         addCommandToHistory(curCommand);
@@ -5837,7 +5838,7 @@ class SvgCanvas {
       const changedIDs = {};
 
       // Recursively replace IDs and record the changes
-      function checkIDs(elem) {
+      function checkIDs (elem) {
         if (elem.attr && elem.attr.id) {
           changedIDs[elem.attr.id] = getNextId();
           elem.attr.id = changedIDs[elem.attr.id];
@@ -6416,7 +6417,7 @@ class SvgCanvas {
       // find all the elements selected (stop at first null)
       const len = selectedElements.length;
 
-      function sortfunction(a, b) {
+      function sortfunction (a, b) {
         return ($(b).index() - $(a).index()); // causes an array to be sorted numerically and ascending
       }
       selectedElements.sort(sortfunction);
@@ -6712,7 +6713,7 @@ class SvgCanvas {
         BatchCommand,
         call,
         ChangeElementCommand,
-        copyElem(elem) {
+        copyElem (elem) {
           return getCurrentDrawing().copyElem(elem);
         },
         decode64,
