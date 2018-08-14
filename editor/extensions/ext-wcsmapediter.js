@@ -673,7 +673,8 @@ export default {
           }
         });
 
-        opts.elems.forEach(function (elem) {
+        // opts.elems.forEach(function (elem)
+        if (opts.elems.length === 1 && elem) {
           if (elem && !svgcontent.getElementById(elem.id)) {
             if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
               routeDeleteByPoint(elem);
@@ -703,7 +704,7 @@ export default {
               controlMove(elem);
             }
           }
-        });
+        }
       }
     };
 

@@ -17,12 +17,24 @@ export default {
     const svgCanvas = svgEditor.canvas,
       addElem = S.addSvgElementFromJson,
       getElem = S.getElem;
+    const svgUtils = svgCanvas.getPrivateMethods();
     const seNs = svgCanvas.getEditorNS(true);
     let selElem, line;
 
     const {
       lang
     } = svgEditor.curPrefs;
+
+    //  导入undo/redo
+    const {
+      // MoveElementCommand,
+      // InsertElementCommand,
+      RemoveElementCommand,
+      ChangeElementCommand,
+      BatchCommand
+      // UndoManager,
+      // HistoryEventTypes
+    } = svgUtils;
 
     // 多语言处理
     const langList = {
@@ -139,6 +151,7 @@ export default {
      * @param {目标点} mouseTarget
      */
     function mergePoint (selElem, mouseTarget) {
+      const cmdArr = [];
       const cx = mouseTarget.getAttribute('cx'),
         cy = mouseTarget.getAttribute('cy');
 
@@ -159,6 +172,7 @@ export default {
           if (routeattr) {
             const points = routeattr.split(' ');
             if (points.length >= 2) {
+              const od = route.getAttribute('d');
               if (points[0] === selElem.id) {
                 points[0] = mouseTarget.id;
                 move.x = cx;
@@ -168,17 +182,35 @@ export default {
                 curve.x = cx;
                 curve.y = cy;
               }
+              cmdArr.push(new ChangeElementCommand(route, {
+                d: od
+              }));
               route.setAttributeNS(seNs, 'se:points', points.join(' '));
+              cmdArr.push(new ChangeElementCommand(route, {
+                'se:points': routeattr
+              }));
             }
           }
           targetRoutes.push(route.id);
           mouseTarget.before(route);
 
+          cmdArr.push(new RemoveElementCommand(selElem, selElem.nextSibling, selElem.parentNode));
           selElem.remove();
         });
       }
 
       mouseTarget.setAttributeNS(seNs, 'se:routes', targetRoutes.join(' '));
+      cmdArr.push(new ChangeElementCommand(mouseTarget, {
+        'se:routes': targetroutesAttr
+      }));
+
+      if (cmdArr.length > 0) {
+        const batchCmd = new BatchCommand('mergePoint');
+        cmdArr.forEach((v) => {
+          batchCmd.addSubCommand(v);
+        });
+        svgCanvas.undoMgr.addCommandToHistory(batchCmd);
+      }
     }
 
     /**
