@@ -791,9 +791,7 @@ export default {
         y2 = y + halfWidth;
       }
 
-      const curStyle = svgCanvas.getStyle();
-
-      const strokeWidth = (curStyle.stroke_width && curStyle.stroke_width !== initStroke.width) ? curStyle.stroke_width : 4;
+      const strokeWidth = ($('#stroke_width').val() !== initStroke.width) ? $('#stroke_width').val() : 4;
       const strokeColor = '#ff7f00';
       const fillColor = '#ff7f00';
 
@@ -904,9 +902,7 @@ export default {
         cy = y + halfWidth;
       }
 
-      const curStyle = svgCanvas.getStyle();
-
-      const strokeWidth = (curStyle.stroke_width !== 'null' && curStyle.stroke_width !== initStroke.width) ? curStyle.stroke_width : 4;
+      const strokeWidth = ($('#stroke_width').val() !== initStroke.width) ? $('#stroke_width').val() : 4;
       const strokeColor = '#ff7f00';
       const fillColor = '#ff7f00';
 

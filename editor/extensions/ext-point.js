@@ -125,10 +125,7 @@ export default {
             const route = mouseTarget;
             const curve = route.pathSegList.getItem(1);
 
-            const curStyle = svgCanvas.getStyle();
-
-            const strokeWidth = (curStyle.stroke_width && curStyle.stroke_width !== initStroke.width) ? curStyle.stroke_width : 4;
-
+            const strokeWidth = ($('#stroke_width').val() !== initStroke.width) ? $('#stroke_width').val() : 4;
             const path = addElem({
               element: 'path',
               attr: {
