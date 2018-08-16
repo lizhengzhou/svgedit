@@ -732,7 +732,9 @@ export default {
 
     // 初始化方法，在刷新或打开地图时导入svg字符串后执行
     function init () {
-
+      $(svgcontent).find('.control').each(function () {
+        this.setAttribute('display', 'none');
+      });
     }
 
     function initPattern () {
@@ -769,27 +771,31 @@ export default {
      * @param {直线方向，默认横向} IsHoriaontal
      */
     function drawLine (opts, IsHoriaontal = true) {
+      const zoom = svgCanvas.getZoom();
       const x = opts.start_x;
       const y = opts.start_y;
 
+      const lineWidth = 100;
+      const halfWidth = parseInt(lineWidth / 2 / zoom);
+
       let x1, y1, x2, y2;
       if (IsHoriaontal) {
-        x1 = x - 50;
+        x1 = x - halfWidth;
         y1 = y;
-        x2 = x + 50;
+        x2 = x + halfWidth;
         y2 = y;
       } else {
         x1 = x;
-        y1 = y - 50;
+        y1 = y - halfWidth;
         x2 = x;
-        y2 = y + 50;
+        y2 = y + halfWidth;
       }
 
       const curStyle = svgCanvas.getStyle();
 
       const strokeWidth = (curStyle.stroke_width && curStyle.stroke_width !== initStroke.width) ? curStyle.stroke_width : 4;
-      const strokeColor = (curStyle.stroke !== ('#' + initStroke.color)) ? curStyle.stroke : '#ff7f00';
-      const fillColor = (curStyle.fill !== 'none' && curStyle.fill !== ('#' + initFill.color)) ? curStyle.fill : '#ff7f00';
+      const strokeColor = '#ff7f00';
+      const fillColor = '#ff7f00';
 
       const path = addElem({
         element: 'path',
@@ -861,45 +867,48 @@ export default {
      * @param {弧线方向，默认控制点在弧线左上方} direction
      */
     function drawArcLine (opts, direction = 'upleft') {
+      const zoom = svgCanvas.getZoom();
       const x = opts.start_x;
       const y = opts.start_y;
 
+      const lineWidth = 100;
+      const halfWidth = parseInt(lineWidth / 2 / zoom);      
       let x1, y1, x2, y2, cx, cy;
       if (direction === 'upleft') {
-        x1 = x - 50;
-        y1 = y + 50;
-        x2 = x + 50;
-        y2 = y - 50;
-        cx = x - 50;
-        cy = y - 50;
+        x1 = x - halfWidth;
+        y1 = y + halfWidth;
+        x2 = x + halfWidth;
+        y2 = y - halfWidth;
+        cx = x - halfWidth;
+        cy = y - halfWidth;
       } else if (direction === 'upright') {
-        x1 = x - 50;
-        y1 = y - 50;
-        x2 = x + 50;
-        y2 = y + 50;
-        cx = x + 50;
-        cy = y - 50;
+        x1 = x - halfWidth;
+        y1 = y - halfWidth;
+        x2 = x + halfWidth;
+        y2 = y + halfWidth;
+        cx = x + halfWidth;
+        cy = y - halfWidth;
       } else if (direction === 'downleft') {
-        x1 = x - 50;
-        y1 = y - 50;
-        x2 = x + 50;
-        y2 = y + 50;
-        cx = x - 50;
-        cy = y + 50;
+        x1 = x - halfWidth;
+        y1 = y - halfWidth;
+        x2 = x + halfWidth;
+        y2 = y + halfWidth;
+        cx = x - halfWidth;
+        cy = y + halfWidth;
       } else if (direction === 'downright') {
-        x1 = x - 50;
-        y1 = y + 50;
-        x2 = x + 50;
-        y2 = y - 50;
-        cx = x + 50;
-        cy = y + 50;
+        x1 = x - halfWidth;
+        y1 = y + halfWidth;
+        x2 = x + halfWidth;
+        y2 = y - halfWidth;
+        cx = x + halfWidth;
+        cy = y + halfWidth;
       }
 
       const curStyle = svgCanvas.getStyle();
 
       const strokeWidth = (curStyle.stroke_width !== 'null' && curStyle.stroke_width !== initStroke.width) ? curStyle.stroke_width : 4;
-      const strokeColor = (curStyle.stroke !== ('#' + initStroke.color)) ? curStyle.stroke : '#ff7f00';
-      const fillColor = (curStyle.fill !== 'none' && curStyle.fill !== ('#' + initFill.color)) ? curStyle.fill : '#ff7f00';
+      const strokeColor = '#ff7f00';
+      const fillColor = '#ff7f00';
 
       const path = addElem({
         element: 'path',

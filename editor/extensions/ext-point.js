@@ -79,6 +79,9 @@ export default {
         title: getTitle('point'),
         events: {
           click () {
+            if (svgCanvas.getSelectedElems().length > 0) {
+              svgCanvas.clearSelection();
+            }
             svgCanvas.setMode('point');
           }
         }
@@ -89,6 +92,9 @@ export default {
         title: getTitle('point_IsControl'),
         events: {
           click () {
+            if (svgCanvas.getSelectedElems().length > 0) {
+              svgCanvas.clearSelection();
+            }
             svgCanvas.setMode('point_IsControl');
           }
         }
@@ -99,6 +105,9 @@ export default {
         title: getTitle('point_IsCharge'),
         events: {
           click () {
+            if (svgCanvas.getSelectedElems().length > 0) {
+              svgCanvas.clearSelection();
+            }
             svgCanvas.setMode('point_IsCharge');
           }
         }

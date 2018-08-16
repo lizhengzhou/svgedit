@@ -1403,7 +1403,7 @@ class SvgCanvas {
           y = mouseY / currentZoom;
         let mouseTarget = getMouseTarget(evt);
 
-        if (mouseTarget.tagName === 'a' && mouseTarget.childNodes.length === 1) {
+        if (mouseTarget && mouseTarget.tagName === 'a' && mouseTarget.childNodes.length === 1) {
           mouseTarget = mouseTarget.firstChild;
         }
 
