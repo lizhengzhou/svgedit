@@ -5133,8 +5133,8 @@ editor.init = function () {
             img.src = e.target.result;
             img.style.opacity = 0;
             img.onload = function () {
-              imgWidth = img.offsetWidth;
-              imgHeight = img.offsetHeight;
+              imgWidth = img.width;
+              imgHeight = img.height;
               insertNewImage(imgWidth, imgHeight);
             };
           };
