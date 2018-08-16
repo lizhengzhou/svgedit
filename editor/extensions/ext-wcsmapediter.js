@@ -36,7 +36,7 @@ export default {
     const seNs = svgCanvas.getEditorNS(true);
     const svgdoc = document.getElementById('svgcanvas').ownerDocument,
       {assignAttributes} = svgCanvas;
-    const {curConfig: {initStroke, initFill}} = svgEditor;
+    const {curConfig: {initStroke}} = svgEditor;
 
     const {
       lang
@@ -872,7 +872,7 @@ export default {
       const y = opts.start_y;
 
       const lineWidth = 100;
-      const halfWidth = parseInt(lineWidth / 2 / zoom);      
+      const halfWidth = parseInt(lineWidth / 2 / zoom);
       let x1, y1, x2, y2, cx, cy;
       if (direction === 'upleft') {
         x1 = x - halfWidth;
