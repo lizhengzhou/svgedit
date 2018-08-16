@@ -56,7 +56,7 @@ export default {
       height: 100
     });
     gridPattern.append(gridimg);
-    $('#svgroot defs').append(gridPattern);
+    $('#svgroot defs')[0].append(gridPattern);
 
     // grid-box
     const gridBox = svgdoc.createElementNS(NS.SVG, 'rect');

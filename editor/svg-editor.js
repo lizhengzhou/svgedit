@@ -138,7 +138,7 @@ const callbacks = [],
     jspdfPath: 'jspdf/', // Default will be changed if this is a modular load
     extIconsPath: 'extensions/',
     jGraduatePath: 'jgraduate/images/',
-    serverApi:'', //Interact with server
+    serverApi: '', // Interact with server
     // DOCUMENT PROPERTIES
     // Change the following to a preference (already in the Document Properties dialog)?
     dimensions: [640, 480],
@@ -915,7 +915,7 @@ editor.init = function () {
       '#tool_source': 'source',
       '#tool_docprops > div': 'docprops',
       '#tool_wireframe': 'wireframe',
-      '#tool_mapsave':'mapsave',
+      '#tool_mapsave': 'mapsave',
 
       '#tool_undo': 'undo',
       '#tool_redo': 'redo',
@@ -3122,7 +3122,7 @@ editor.init = function () {
       svgCanvas.addToSelection([elem], true);
     } else {
       svgCanvas.changeSelectedAttribute(attr, val);
-      svgCanvas.call('changed',svgCanvas.getSelectedElems());
+      svgCanvas.call('changed', svgCanvas.getSelectedElems());
     }
     this.blur();
   });

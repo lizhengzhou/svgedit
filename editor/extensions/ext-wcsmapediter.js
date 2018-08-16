@@ -28,11 +28,14 @@ export default {
     const svgUtils = svgCanvas.getPrivateMethods();
     const getNextId = S.getNextId,
       getElem = S.getElem,
+      NS = S.NS,
       addElem = S.addSvgElementFromJson;
     let svgcontent = S.svgcontent,
       selRoute = void 0,
       selPoint = void 0;
     const seNs = svgCanvas.getEditorNS(true);
+    const svgdoc = document.getElementById('svgcanvas').ownerDocument,
+      {assignAttributes} = svgCanvas;
 
     const {
       lang
@@ -49,6 +52,7 @@ export default {
       // HistoryEventTypes
     } = svgUtils;
 
+    initPattern();
     // 刷新初始化
     init();
 
@@ -540,6 +544,9 @@ export default {
           data: langList[lang]
         };
       },
+      onNewDocument: function onNewDocument () {
+        initPattern();
+      },
       /**
        *
        * @param {鼠标按下事件} opts
@@ -713,6 +720,32 @@ export default {
 
     }
 
+    function initPattern () {
+      // road-pattern
+      const roadPattern = svgdoc.createElementNS(NS.SVG, 'pattern');
+      assignAttributes(roadPattern, {
+        id: 'roadpattern',
+        patternUnits: 'userSpaceOnUse',
+        x: 0,
+        y: 0,
+        width: 8,
+        height: 8
+      });
+
+      const roadline = svgdoc.createElementNS(NS.SVG, 'path');
+      assignAttributes(roadline, {
+        d: 'm4,0l0,4',
+        stroke: '#ff7f00',
+        'stroke-width': '6'
+      });
+      roadPattern.append(roadline);
+      const defs = S.findDefs();
+      const roaddef = $(defs).find('#roadpattern');
+      if (roaddef.length === 0) {
+        S.findDefs().append(roadPattern);
+      }
+    }
+
     /**
      *
      * @param {鼠标点击事件} opts
@@ -740,7 +773,7 @@ export default {
         attr: {
           id: getNextId(),
           d: 'M' + x1 + ',' + y1 + ' L' + x2 + ',' + y2,
-          stroke: '#ff7f00',
+          stroke: 'url(#roadpattern)',
           'stroke-width': 4,
           fill: 'none',
           class: 'route'
@@ -844,7 +877,7 @@ export default {
         attr: {
           id: getNextId(),
           d: 'M' + x1 + ',' + y1 + ' Q' + cx + ',' + cy + ' ' + x2 + ',' + y2,
-          stroke: '#ff7f00',
+          stroke: 'url(#roadpattern)',
           'stroke-width': 4,
           fill: 'none',
           class: 'route'
