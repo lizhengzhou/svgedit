@@ -36,6 +36,7 @@ export default {
     const seNs = svgCanvas.getEditorNS(true);
     const svgdoc = document.getElementById('svgcanvas').ownerDocument,
       {assignAttributes} = svgCanvas;
+    const {curConfig: {initStroke, initFill}} = svgEditor;
 
     const {
       lang
@@ -44,7 +45,7 @@ export default {
     //  导入undo/redo
     const {
       // MoveElementCommand,
-      // InsertElementCommand,
+      InsertElementCommand,
       RemoveElementCommand,
       ChangeElementCommand,
       BatchCommand
@@ -270,7 +271,6 @@ export default {
                 console.log(err);
               }
             });
-
             /**
              * 用原始svg编辑图片重置编辑器状态
              */
@@ -587,14 +587,14 @@ export default {
               // be line control point move
               controlMove(elem, opts);
             } else if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
-              const pointsAttr = elem.getAttributeNS(seNs, 'points');
-              if (pointsAttr) {
-                const points = pointsAttr.trim().split(' ');
-                if (points.length >= 2) {
-                  getElem(points[0]).setAttribute('display', 'none');
-                  getElem(points[1]).setAttribute('display', 'none');
-                }
-              }
+              // const pointsAttr = elem.getAttributeNS(seNs, 'points');
+              // if (pointsAttr) {
+              //   const points = pointsAttr.trim().split(' ');
+              //   if (points.length >= 2) {
+              //     getElem(points[0]).setAttribute('display', 'none');
+              //     getElem(points[1]).setAttribute('display', 'none');
+              //   }
+              // }
             }
           }
           return {
@@ -607,35 +607,44 @@ export default {
        * @param {鼠标抬起事件} opts
        */
       mouseUp (opts) {
-        if (svgCanvas.getMode() === 'select') {
-          if (svgCanvas.getSelectedElems().length === 1) {
-            const elems = svgCanvas.getSelectedElems();
-            const elem = elems[0];
+        // if (svgCanvas.getMode() === 'select') {
+        //   if (svgCanvas.getSelectedElems().length === 1) {
+        //     const elems = svgCanvas.getSelectedElems();
+        //     const elem = elems[0];
 
-            if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
-              const pointsAttr = elem.getAttributeNS(seNs, 'points');
-              if (pointsAttr) {
-                const points = pointsAttr.trim().split(' ');
-                if (points.length >= 2) {
-                  getElem(points[0]).setAttribute('display', 'inline');
-                  getElem(points[1]).setAttribute('display', 'inline');
-                }
-              }
-            }
-          }
-        }
+        //     if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
+        //       const pointsAttr = elem.getAttributeNS(seNs, 'points');
+        //       if (pointsAttr) {
+        //         const points = pointsAttr.trim().split(' ');
+        //         if (points.length >= 2) {
+        //           getElem(points[0]).setAttribute('display', 'inline');
+        //           getElem(points[1]).setAttribute('display', 'inline');
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
       },
       /**
        * 元素选择变化时触发
        * @param {选择元素事件} opts
        */
       selectedChanged: function selectedChanged (opts) {
+        $(svgcontent).find('.control').each(function () {
+          this.setAttribute('display', 'none');
+        });
+
         if (svgCanvas.getSelectedElems().length === 0) {
           showPointPanel(false);
           showRoutePanel(false);
         }
         if (svgCanvas.getSelectedElems().length === 1) {
           const elem = opts.elems[0];
+
+          if (elem.getAttribute('class') === 'control') {
+            elem.setAttribute('display', 'inline');
+          }
+
           if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
             selRoute = elem;
             selectRoute(selRoute);
@@ -649,6 +658,12 @@ export default {
           } else {
             showRoutePanel(false);
             showPointPanel(false);
+          }
+
+          if (elem.getAttribute('class') === 'route' ||
+          elem.getAttribute('class') === 'point' ||
+          elem.getAttribute('class') === 'control') {
+            $('#selectorGroup0')[0].setAttribute('display', 'none');
           }
         }
       },
@@ -668,8 +683,8 @@ export default {
           if (elem && svgcontent.getElementById(elem.id)) {
             if (elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
               const r = elem.getAttribute('r');
-              if (r !== 4) {
-                elem.setAttribute('r', 4);
+              if (r !== 2) {
+                elem.setAttribute('r', 2);
               }
             } else if (elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
               const r = elem.getAttribute('r');
@@ -732,11 +747,13 @@ export default {
         height: 8
       });
 
-      const roadline = svgdoc.createElementNS(NS.SVG, 'path');
+      const roadline = svgdoc.createElementNS(NS.SVG, 'rect');
       assignAttributes(roadline, {
-        d: 'm4,0l0,4',
-        stroke: '#ff7f00',
-        'stroke-width': '6'
+        x: 1,
+        y: 1,
+        width: 8,
+        height: 8,
+        fill: '#ff7f00'
       });
       roadPattern.append(roadline);
       const defs = S.findDefs();
@@ -768,13 +785,19 @@ export default {
         y2 = y + 50;
       }
 
+      const curStyle = svgCanvas.getStyle();
+
+      const strokeWidth = (curStyle.stroke_width && curStyle.stroke_width !== initStroke.width) ? curStyle.stroke_width : 4;
+      const strokeColor = (curStyle.stroke !== ('#' + initStroke.color)) ? curStyle.stroke : '#ff7f00';
+      const fillColor = (curStyle.fill !== 'none' && curStyle.fill !== ('#' + initFill.color)) ? curStyle.fill : '#ff7f00';
+
       const path = addElem({
         element: 'path',
         attr: {
           id: getNextId(),
           d: 'M' + x1 + ',' + y1 + ' L' + x2 + ',' + y2,
           stroke: 'url(#roadpattern)',
-          'stroke-width': 4,
+          'stroke-width': strokeWidth,
           fill: 'none',
           class: 'route'
         }
@@ -786,10 +809,10 @@ export default {
           id: getNextId(),
           cx: x1,
           cy: y1,
-          r: 4,
-          stroke: '#00ffff',
-          'stroke-width': 4,
-          fill: '#fff',
+          r: 2,
+          stroke: strokeColor,
+          'stroke-width': strokeWidth,
+          fill: fillColor,
           class: 'point'
         }
       });
@@ -802,10 +825,10 @@ export default {
           id: getNextId(),
           cx: x2,
           cy: y2,
-          r: 4,
-          stroke: '#00ffff',
-          'stroke-width': 4,
-          fill: '#fff',
+          r: 2,
+          stroke: strokeColor,
+          'stroke-width': strokeWidth,
+          fill: fillColor,
           class: 'point'
         }
       });
@@ -819,10 +842,10 @@ export default {
       }
       svgCanvas.addToSelection([path]);
 
-      const batchCmd = new S.BatchCommand();
-      batchCmd.addSubCommand(new S.InsertElementCommand(endElem));
-      batchCmd.addSubCommand(new S.InsertElementCommand(startElem));
-      batchCmd.addSubCommand(new S.InsertElementCommand(path));
+      const batchCmd = new BatchCommand();
+      batchCmd.addSubCommand(new InsertElementCommand(endElem));
+      batchCmd.addSubCommand(new InsertElementCommand(startElem));
+      batchCmd.addSubCommand(new InsertElementCommand(path));
       S.addCommandToHistory(batchCmd);
 
       svgCanvas.setMode('select');
@@ -872,13 +895,19 @@ export default {
         cy = y + 50;
       }
 
+      const curStyle = svgCanvas.getStyle();
+
+      const strokeWidth = (curStyle.stroke_width !== 'null' && curStyle.stroke_width !== initStroke.width) ? curStyle.stroke_width : 4;
+      const strokeColor = (curStyle.stroke !== ('#' + initStroke.color)) ? curStyle.stroke : '#ff7f00';
+      const fillColor = (curStyle.fill !== 'none' && curStyle.fill !== ('#' + initFill.color)) ? curStyle.fill : '#ff7f00';
+
       const path = addElem({
         element: 'path',
         attr: {
           id: getNextId(),
           d: 'M' + x1 + ',' + y1 + ' Q' + cx + ',' + cy + ' ' + x2 + ',' + y2,
           stroke: 'url(#roadpattern)',
-          'stroke-width': 4,
+          'stroke-width': strokeWidth,
           fill: 'none',
           class: 'route'
         }
@@ -890,10 +919,10 @@ export default {
           id: getNextId(),
           cx: x1,
           cy: y1,
-          r: 4,
-          stroke: '#00ffff',
-          'stroke-width': 4,
-          fill: '#fff',
+          r: 2,
+          stroke: strokeColor,
+          'stroke-width': strokeWidth,
+          fill: fillColor,
           class: 'point'
         }
       });
@@ -906,10 +935,10 @@ export default {
           id: getNextId(),
           cx: x2,
           cy: y2,
-          r: 4,
-          stroke: '#00ffff',
-          'stroke-width': 4,
-          fill: '#fff',
+          r: 2,
+          stroke: strokeColor,
+          'stroke-width': strokeWidth,
+          fill: fillColor,
           class: 'point'
         }
       });
@@ -938,11 +967,11 @@ export default {
       }
       svgCanvas.addToSelection([path]);
 
-      const batchCmd = new S.BatchCommand();
-      batchCmd.addSubCommand(new S.InsertElementCommand(control));
-      batchCmd.addSubCommand(new S.InsertElementCommand(endElem));
-      batchCmd.addSubCommand(new S.InsertElementCommand(startElem));
-      batchCmd.addSubCommand(new S.InsertElementCommand(path));
+      const batchCmd = new BatchCommand();
+      batchCmd.addSubCommand(new InsertElementCommand(control));
+      batchCmd.addSubCommand(new InsertElementCommand(endElem));
+      batchCmd.addSubCommand(new InsertElementCommand(startElem));
+      batchCmd.addSubCommand(new InsertElementCommand(path));
       S.addCommandToHistory(batchCmd);
 
       svgCanvas.setMode('select');
@@ -971,7 +1000,7 @@ export default {
             const move = route.pathSegList.getItem(0);
             const curve = route.pathSegList.getItem(1);
 
-            const routeattr = route.getAttributeNS(seNs, 'points');
+            const routeattr = route.getAttribute('se:points');
             if (routeattr) {
               const points = routeattr.trim().split(' ');
               if (points.length >= 2) {
@@ -999,7 +1028,7 @@ export default {
       $('#wcsline_x1').val(move.x);
       $('#wcsline_y1').val(move.y);
       $('#wcsline_width').val(curve.x - move.x);
-      $('#wcsline_height').val(curve.x - move.y);
+      $('#wcsline_height').val(curve.y - move.y);
 
       const Direction = elem.getAttributeNS(seNs, 'Direction');
       if (Direction === 10) {
@@ -1010,6 +1039,17 @@ export default {
 
       const speed = elem.getAttributeNS(seNs, 'Speed');
       $('#wcsline_speed').val(speed);
+
+      const pointsAttr = elem.getAttributeNS(seNs, 'points');
+      if (pointsAttr) {
+        const points = pointsAttr.trim().split(' ');
+        if (points.length >= 3) {
+          const control = getElem(points[2]);
+          if (control) {
+            control.setAttribute('display', 'inline');
+          }
+        }
+      }
     }
     /**
      *

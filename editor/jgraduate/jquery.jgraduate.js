@@ -201,7 +201,7 @@ export default function ($) {
       const $win = $(window);
 
       if ($this.paint.type === 'none') {
-        $this.paint = $.jGraduate.Paint({solidColor: 'ffffff'});
+        $this.paint = new $.jGraduate.Paint({solidColor: 'ffffff'});
       }
 
       $this.addClass('jGraduate_Picker');

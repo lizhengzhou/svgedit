@@ -1,3 +1,4 @@
+/* globals jQuery */
 /*
  * ext-point.js
  *
@@ -9,6 +10,7 @@
 export default {
   name: 'point',
   init (S) {
+    const $ = jQuery;
     const svgEditor = this;
     const svgCanvas = svgEditor.canvas,
       addElem = S.addSvgElementFromJson;
@@ -17,7 +19,19 @@ export default {
       getElem = S.getElem;
     const svgUtils = svgCanvas.getPrivateMethods();
     const assignAttributes = svgCanvas.assignAttributes;
-    const svgcontent = S.svgcontent;
+    let svgcontent = S.svgcontent;
+    const {curConfig: {initStroke}} = svgEditor;
+
+    //  导入undo/redo
+    const {
+      // MoveElementCommand,
+      InsertElementCommand,
+      // RemoveElementCommand,
+      ChangeElementCommand,
+      BatchCommand
+      // UndoManager,
+      // HistoryEventTypes
+    } = svgUtils;
 
     const {
       lang
@@ -95,40 +109,44 @@ export default {
         if (mode.split('_')[0] === 'point') {
           const mouseTarget = opts.event.target;
           if (mouseTarget && mouseTarget.tagName === 'path' && mouseTarget.getAttribute('class') === 'route') {
+            const cmdArr = [];
             const x = opts.start_x;
             const y = opts.start_y;
 
             const route = mouseTarget;
             const curve = route.pathSegList.getItem(1);
 
+            const curStyle = svgCanvas.getStyle();
+
+            const strokeWidth = (curStyle.stroke_width && curStyle.stroke_width !== initStroke.width) ? curStyle.stroke_width : 4;
+
             const path = addElem({
               element: 'path',
               attr: {
                 id: getNextId(),
                 d: 'M' + x + ',' + y + ' L' + curve.x + ',' + curve.y,
-                stroke: '#ff7f00',
-                'stroke-width': 4,
+                stroke: 'url(#roadpattern)',
+                'stroke-width': strokeWidth,
                 fill: 'none',
                 class: 'route'
               }
             });
-
+            cmdArr.push(new InsertElementCommand(path));
             const point = addElem({
               element: 'circle',
               attr: {
                 id: getNextId(),
                 cx: x,
                 cy: y,
-                r: 4,
+                r: 2,
                 stroke: '#00ffff',
-                'stroke-width': 4,
+                'stroke-width': strokeWidth,
                 fill: '#fff',
                 class: 'point'
               }
             });
-
             point.setAttributeNS(seNs, 'se:routes', route.id + ' ' + path.id);
-
+            cmdArr.push(new InsertElementCommand(point));
             if (mode.split('_')[1]) {
               const imgElem = addElem({
                 element: 'image',
@@ -153,21 +171,42 @@ export default {
               svgUtils.preventClickDefault(imgElem);
 
               imgElem.setAttributeNS(seNs, 'se:point', point.id);
+
+              cmdArr.push(new InsertElementCommand(imgElem));
+
               point.setAttributeNS(seNs, 'se:nebor', imgElem.id);
               point.setAttributeNS(seNs, 'se:' + mode.split('_')[1], true);
+
+              cmdArr.push(new ChangeElementCommand(point, {
+                'se:nebor': null,
+                'se:IsCharge': null,
+                'se:IsControl': null
+              }));
             }
 
-            const points = route.getAttributeNS(seNs, 'points').split(' ');
+            const routeAttr = route.getAttributeNS(seNs, 'points');
+            const points = routeAttr.split(' ');
             const startElem2 = point,
               endElem2 = getElem(points[1]);
+
+            const od = route.getAttribute('d');
 
             curve.x = x;
             curve.y = y;
 
             route.setAttributeNS(seNs, 'se:points', [points[0], point.id, points[2]].join(' '));
 
-            endElem2.before(path);
+            cmdArr.push(new ChangeElementCommand(route, {
+              d: od,
+              'se:points': routeAttr
+            }));
+
+            // endElem2.before(path);
             path.setAttributeNS(seNs, 'se:points', startElem2.id + ' ' + endElem2.id);
+
+            cmdArr.push(new ChangeElementCommand(path, {
+              'se:points': null
+            }));
 
             let endRoute = [];
             const endRouteAttr = endElem2.getAttributeNS(seNs, 'routes');
@@ -182,6 +221,16 @@ export default {
             }
             endRoute.push(path.id);
             endElem2.setAttributeNS(seNs, 'se:routes', endRoute.join(' '));
+            cmdArr.push(new ChangeElementCommand(endElem2, {
+              'se:routes': endRouteAttr
+            }));
+            if (cmdArr.length > 0) {
+              const batchCmd = new BatchCommand('pointadd');
+              cmdArr.forEach((v) => {
+                batchCmd.addSubCommand(v);
+              });
+              svgCanvas.undoMgr.addCommandToHistory(batchCmd);
+            }
 
             svgCanvas.setMode('select');
           }
@@ -197,8 +246,8 @@ export default {
           const elem = elems[0];
           if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
             // Point Group Changed
-            if (elem.hasAttributeNS(seNs, 'nebor')) {
-              const nebor = getElem(elem.getAttributeNS(seNs, 'nebor'));
+            if (elem.hasAttribute('se:nebor')) {
+              const nebor = getElem(elem.getAttribute('se:nebor'));
               if (nebor) {
                 nebor.setAttribute('x', x - 17);
                 nebor.setAttribute('y', y - 50);
@@ -216,7 +265,21 @@ export default {
           }
         }
       },
+      selectedChanged: function selectedChanged (opts) {
+        if (svgCanvas.getSelectedElems().length === 1) {
+          const elem = opts.elems[0];
+          if (elem.hasAttributeNS(seNs, 'point')) {
+            $('#selectorGroup0')[0].setAttribute('display', 'none');
+          }
+        }
+      },
       elementChanged: function elementChanged (opts) {
+        const elem = opts.elems[0];
+        if (elem && elem.tagName === 'svg' && elem.id === 'svgcontent') {
+          // Update svgcontent (can change on import)
+          svgcontent = elem;
+        }
+
         opts.elems.forEach(function (elem) {
           if (svgcontent.getElementById(elem.id)) {
             if (elem.tagName === 'image' && elem.getAttributeNS(seNs, 'point')) {

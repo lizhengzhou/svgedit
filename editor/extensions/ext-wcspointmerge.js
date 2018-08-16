@@ -82,7 +82,7 @@ export default {
                 x2: x,
                 y2: y,
                 stroke: '#ff7f00',
-                'stroke-width': 4,
+                'stroke-width': 2,
                 'stroke-dasharray': '5,5'
               }
             });
