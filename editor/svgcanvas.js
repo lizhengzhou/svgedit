@@ -1402,7 +1402,7 @@ class SvgCanvas {
         let x = mouseX / currentZoom,
           y = mouseY / currentZoom;
         let mouseTarget = getMouseTarget(evt);
-
+        if (!mouseTarget) return;
         if (mouseTarget && mouseTarget.tagName === 'a' && mouseTarget.childNodes.length === 1) {
           mouseTarget = mouseTarget.firstChild;
         }
@@ -1437,9 +1437,14 @@ class SvgCanvas {
           mouseTarget = selectedElements[0];
         }
 
-        startTransform = mouseTarget.getAttribute('transform');
+        if (mouseTarget && mouseTarget.hasAttribute('transform')) {
+          startTransform = mouseTarget.getAttribute('transform');
+        }
         let i, strokeW;
-        const tlist = getTransformList(mouseTarget);
+        let tlist;
+        if (mouseTarget) {
+          tlist = getTransformList(mouseTarget);
+        }
         switch (currentMode) {
           case 'select':
             started = true;
