@@ -865,7 +865,7 @@ export default {
       batchCmd.addSubCommand(new InsertElementCommand(path));
       S.addCommandToHistory(batchCmd);
 
-      svgCanvas.setMode('select');
+      svgEditor.clickSelect();
 
       return {
         keep: true
@@ -992,7 +992,7 @@ export default {
       batchCmd.addSubCommand(new InsertElementCommand(path));
       S.addCommandToHistory(batchCmd);
 
-      svgCanvas.setMode('select');
+      svgEditor.clickSelect();
 
       return {
         keep: true

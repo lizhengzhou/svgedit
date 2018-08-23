@@ -238,7 +238,7 @@ export default {
               svgCanvas.undoMgr.addCommandToHistory(batchCmd);
             }
 
-            svgCanvas.setMode('select');
+            svgEditor.clickSelect();
           }
         }
       },
