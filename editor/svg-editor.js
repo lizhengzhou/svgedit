@@ -4596,9 +4596,9 @@ editor.init = function () {
     // sel:'selector', fn:function, evt:'event', key:[key, preventDefault, NoDisableInInput]
     const toolButtons = [
       {sel: '#tool_select', fn: clickSelect, evt: 'click', key: ['V', true]},
-      {sel: '#tool_fhpath', fn: clickFHPath, evt: 'click', key: ['Q', true]},      
+      {sel: '#tool_fhpath', fn: clickFHPath, evt: 'click', key: ['Q', true]},
       {sel: '#tool_rect', fn: clickRect, evt: 'mouseup', key: ['R', true], parent: '#tools_rect', icon: 'rect'},
-      {sel: '#tool_line', fn: clickLine, evt: 'click', key: ['L', true], parent: '#tools_rect', icon: 'line'},
+      {sel: '#tool_line', fn: clickLine, evt: 'click', key: ['L', true], parent: '#tools_rect', icon: 'pen'},
       {sel: '#tool_square', fn: clickSquare, evt: 'mouseup', parent: '#tools_rect', icon: 'square'},
       {sel: '#tool_fhrect', fn: clickFHRect, evt: 'mouseup', parent: '#tools_rect', icon: 'fh_rect'},
       {sel: '#tool_ellipse', fn: clickEllipse, evt: 'mouseup', key: ['E', true], parent: '#tools_rect', icon: 'ellipse'},
