@@ -37,6 +37,7 @@ export default {
     const svgdoc = document.getElementById('svgcanvas').ownerDocument,
       {assignAttributes} = svgCanvas;
     const {curConfig: {initStroke}} = svgEditor;
+    let roadline;
 
     const {
       lang
@@ -683,13 +684,13 @@ export default {
           if (elem && svgcontent.getElementById(elem.id)) {
             if (elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
               const r = elem.getAttribute('r');
-              if (r !== 2) {
-                elem.setAttribute('r', 2);
+              if (r <= 0) {
+                elem.setAttribute('r', 1);
               }
             } else if (elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
               const r = elem.getAttribute('r');
-              if (r !== 6) {
-                elem.setAttribute('r', 6);
+              if (r <= 0) {
+                elem.setAttribute('r', 1);
               }
             }
           }
@@ -717,8 +718,10 @@ export default {
               if (pointsAttr) {
                 const points = pointsAttr.trim().split(' ');
                 if (points.length >= 2) {
-                  getElem(points[0]).setAttribute('display', 'inline');
-                  getElem(points[1]).setAttribute('display', 'inline');
+                  const startElem = getElem(points[0]),
+                    endElem = getElem(points[1]);
+                  if (startElem)startElem.setAttribute('display', 'inline');
+                  if (endElem)endElem.setAttribute('display', 'inline');
                 }
               }
             } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
@@ -727,6 +730,10 @@ export default {
             }
           }
         }
+      },
+      zoomChanged (zoom) {
+        updatePattern(zoom);
+        updateMap(zoom);
       }
     };
 
@@ -737,6 +744,9 @@ export default {
       });
     }
 
+    /**
+     * 初始化路线图案
+     */
     function initPattern () {
       // road-pattern
       const roadPattern = svgdoc.createElementNS(NS.SVG, 'pattern');
@@ -749,8 +759,9 @@ export default {
         height: 8
       });
 
-      const roadline = svgdoc.createElementNS(NS.SVG, 'rect');
+      roadline = svgdoc.createElementNS(NS.SVG, 'rect');
       assignAttributes(roadline, {
+        id: 'linepatternrect',
         x: 1,
         y: 1,
         width: 8,
@@ -762,6 +773,8 @@ export default {
       const roaddef = $(defs).find('#roadpattern');
       if (roaddef.length === 0) {
         S.findDefs().append(roadPattern);
+      } else {
+        roadline = roaddef[0].children[0];
       }
     }
 
@@ -791,7 +804,7 @@ export default {
         y2 = y + halfWidth;
       }
 
-      const strokeWidth = ($('#stroke_width').val() !== initStroke.width) ? $('#stroke_width').val() : 4;
+      const strokeWidth = ($('#stroke_width').val() !== initStroke.width) ? $('#stroke_width').val() : 4 / zoom;
       const strokeColor = '#ff7f00';
       const fillColor = '#ff7f00';
 
@@ -813,7 +826,7 @@ export default {
           id: getNextId(),
           cx: x1,
           cy: y1,
-          r: 2,
+          r: 2 / zoom,
           stroke: strokeColor,
           'stroke-width': strokeWidth,
           fill: fillColor,
@@ -829,7 +842,7 @@ export default {
           id: getNextId(),
           cx: x2,
           cy: y2,
-          r: 2,
+          r: 2 / zoom,
           stroke: strokeColor,
           'stroke-width': strokeWidth,
           fill: fillColor,
@@ -902,7 +915,7 @@ export default {
         cy = y + halfWidth;
       }
 
-      const strokeWidth = ($('#stroke_width').val() !== initStroke.width) ? $('#stroke_width').val() : 4;
+      const strokeWidth = ($('#stroke_width').val() !== initStroke.width) ? $('#stroke_width').val() : 4 / zoom;
       const strokeColor = '#ff7f00';
       const fillColor = '#ff7f00';
 
@@ -924,7 +937,7 @@ export default {
           id: getNextId(),
           cx: x1,
           cy: y1,
-          r: 2,
+          r: 2 / zoom,
           stroke: strokeColor,
           'stroke-width': strokeWidth,
           fill: fillColor,
@@ -940,7 +953,7 @@ export default {
           id: getNextId(),
           cx: x2,
           cy: y2,
-          r: 2,
+          r: 2 / zoom,
           stroke: strokeColor,
           'stroke-width': strokeWidth,
           fill: fillColor,
@@ -956,7 +969,7 @@ export default {
           id: getNextId(),
           cx: cx,
           cy: cy,
-          r: 4,
+          r: 4 / zoom,
           stroke: 'none',
           fill: 'red',
           class: 'control'
@@ -1404,6 +1417,28 @@ export default {
         }
       }
       return id;
+    }
+    /**
+     *
+     * @param {缩放级别} zoom
+     */
+    function updateMap (zoom) {
+      $(svgcontent).find('.point').each(function () {
+        this.setAttribute('stroke-width', 1);
+        this.setAttribute('r', 4 / zoom);
+      });
+      $(svgcontent).find('.control').each(function () {
+        this.setAttribute('r', 6 / zoom);
+      });
+    }
+
+    /**
+     *
+     * @param {缩放级别} zoom
+     */
+    function updatePattern (zoom) {
+      roadline.setAttribute('x', 1 / zoom);
+      roadline.setAttribute('y', 1 / zoom);
     }
 
     return extConfig;

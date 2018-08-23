@@ -74,6 +74,8 @@ export default {
             const x = opts.start_x;
             const y = opts.start_y;
 
+            const zoom = svgCanvas.getZoom();
+
             line = addElem({
               element: 'line',
               attr: {
@@ -82,7 +84,7 @@ export default {
                 x2: x,
                 y2: y,
                 stroke: '#ff7f00',
-                'stroke-width': 2,
+                'stroke-width': 2 / zoom,
                 'stroke-dasharray': '5,5'
               }
             });
