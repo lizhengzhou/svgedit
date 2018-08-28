@@ -241,7 +241,7 @@ export default {
              * 隐藏普通点
              */
             $(svgcontent).find('.point').each(function () {
-              if (!this.getAttributeNS(seNs, 'nebor')) {
+              if (!this.getAttribute('se:Code') && !this.getAttributeNS(seNs, 'nebor')) {
                 this.setAttribute('display', 'none');
               }
             });
@@ -1424,8 +1424,10 @@ export default {
      */
     function updateMap (zoom) {
       $(svgcontent).find('.point').each(function () {
-        this.setAttribute('stroke-width', 1);
-        this.setAttribute('r', 4 / zoom);
+        if (!this.getAttribute('se:Code')) {
+          this.setAttribute('stroke-width', 1);
+          this.setAttribute('r', 4 / zoom);
+        }
       });
       $(svgcontent).find('.control').each(function () {
         this.setAttribute('r', 6 / zoom);

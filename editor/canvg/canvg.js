@@ -2816,7 +2816,7 @@ function build (opts) {
       e.render(ctx);
       if (isFirstRender) {
         isFirstRender = false;
-        resolve(dom);
+        if (resolve)resolve(dom);
       }
     };
 
