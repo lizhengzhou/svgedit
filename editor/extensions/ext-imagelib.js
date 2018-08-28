@@ -360,7 +360,7 @@ export default {
         id: 'tool_imagelib',
         type: 'app_menu', // _flyout
         position: 4,
-        title: 'Image library',
+        title: '图例库',
         events: {
           mouseup: showBrowser
         }
