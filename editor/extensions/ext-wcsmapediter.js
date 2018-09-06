@@ -171,8 +171,9 @@ export default {
               route.startSvgId = points[0];
               route.endSvgId = points[1];
 
-              route.Direction = this.getAttributeNS(seNs, 'Direction');
-              route.Speed = this.getAttributeNS(seNs, 'Direction');
+              route.IsPositive = this.getAttributeNS(seNs, 'IsPositive');
+              route.Direction = 0;
+              route.Speed = this.getAttributeNS(seNs, 'Speed');
 
               if (control) {
                 const controlX = parseInt(control.getAttribute('cx')),
@@ -199,8 +200,6 @@ export default {
 
               map.Points.push(point);
             });
-
-            console.log(map);
 
             /***
              * 提交地图数据到后台
@@ -419,8 +418,18 @@ export default {
           click: setRouteDirection
         },
         panel: 'wcsline_panel',
-        list: 'direction_list',
-        isDefault: true
+        list: 'direction_list'
+      },
+      {
+        id: 'twowayarrow',
+        svgicon: 'twowayarrow',
+        title: 'Two Way direction',
+        type: 'context',
+        events: {
+          click: setRouteDirection
+        },
+        panel: 'wcsline_panel',
+        list: 'direction_list'
       }
       ],
       /**
@@ -1043,10 +1052,10 @@ export default {
       const move = elem.pathSegList.getItem(0);
       const curve = elem.pathSegList.getItem(1);
 
-      $('#wcsline_x1').val(move.x);
-      $('#wcsline_y1').val(move.y);
-      $('#wcsline_width').val(curve.x - move.x);
-      $('#wcsline_height').val(curve.y - move.y);
+      $('#wcsline_x1').val(move.x.toFixed(0));
+      $('#wcsline_y1').val(move.y.toFixed(0));
+      $('#wcsline_width').val((curve.x - move.x).toFixed(0));
+      $('#wcsline_height').val((curve.y - move.y).toFixed(0));
 
       const Direction = elem.getAttributeNS(seNs, 'Direction');
       if (Direction === 10) {
@@ -1318,14 +1327,14 @@ export default {
      * 根据属性面板修改的值设置线方向
      */
     function setRouteDirection () {
-      let val = 0;
+      let val = true;
       if (this.id === 'uparrow') {
-        val = 10;
+        val = true;
       } else if (this.id === 'downarrow') {
-        val = 20;
+        val = false;
       }
       if (selRoute) {
-        selRoute.setAttributeNS(seNs, 'se:Direction', val);
+        selRoute.setAttributeNS(seNs, 'se:IsPositive', val);
       }
     }
     /**
@@ -1442,6 +1451,31 @@ export default {
       roadline.setAttribute('x', 1 / zoom);
       roadline.setAttribute('y', 1 / zoom);
     }
+
+    // function setRoutePositive (map, currentRoute) {
+    //   let checkPoint;
+    //   if (currentRoute.IsPositive === 'true') {
+    //     checkPoint = map.Points.find(function (item) {
+    //       return item.svgId === currentRoute.endSvgId;
+    //     });
+    //   } else if (currentRoute.IsPositive === 'false') {
+    //     checkPoint = map.Points.find(function (item) {
+    //       return item.svgId === currentRoute.startSvgId;
+    //     });
+    //   }
+
+    //   map.Routes.forEach(function (item) {
+    //     if (item.svgId !== currentRoute.svgId) {
+    //       if (item.startSvgId === checkPoint.svgId) {
+    //         item.IsPositive = 'true';
+    //         setRoutePositive(map, item);
+    //       } else if (item.endSvgId === checkPoint.svgId) {
+    //         item.IsPositive = 'false';
+    //         setRoutePositive(map, item);
+    //       }
+    //     }
+    //   });
+    // }
 
     return extConfig;
   }

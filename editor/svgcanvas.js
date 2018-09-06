@@ -1766,8 +1766,8 @@ setTimeout(function () {
 
         const pt = transformPoint(evt.pageX, evt.pageY, rootSctm);
 
-        $('#mouse_x').html(pt.x);
-        $('#mouse_y').html(pt.y);
+        $('#mouse_x').html(pt.x.toFixed(0));
+        $('#mouse_y').html(pt.y.toFixed(0));
 
         if (!started) {
           return;
