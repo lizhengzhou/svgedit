@@ -18,9 +18,10 @@ export default {
     const getNextId = S.getNextId,
       getElem = S.getElem;
     const svgUtils = svgCanvas.getPrivateMethods();
-    const assignAttributes = svgCanvas.assignAttributes;
+    // const assignAttributes = svgCanvas.assignAttributes;
     let svgcontent = S.svgcontent;
-    const {curConfig: {initStroke}} = svgEditor;
+    // const {curConfig: {initStroke}} = svgEditor;
+    let currentStrokeWidth = 4, keyPointRadius = 6;
 
     //  导入undo/redo
     const {
@@ -141,7 +142,7 @@ export default {
             const route = mouseTarget;
             const curve = route.pathSegList.getItem(1);
 
-            const strokeWidth = ($('#stroke_width').val() !== initStroke.width) ? $('#stroke_width').val() : 4;
+            const strokeWidth = currentStrokeWidth;
             const path = addElem({
               element: 'path',
               attr: {
@@ -174,41 +175,20 @@ export default {
                 id: getNextId(),
                 cx: x,
                 cy: y,
-                r: 6,
+                r: keyPointRadius,
                 stroke: stroke,
                 'stroke-width': strokeWidth,
                 fill: '#fff',
                 class: 'point'
               }
             });
+            point.setAttributeNS(seNs, 'se:IsKey', true);
             point.setAttributeNS(seNs, 'se:routes', route.id + ' ' + path.id);
             cmdArr.push(new InsertElementCommand(point));
             if (mode.split('_')[1]) {
-              // const imgElem = addElem({
-              //   element: 'image',
-              //   attr: {
-              //     id: getNextId(),
-              //     x: x - 17,
-              //     y: y - 50,
-              //     width: 34,
-              //     heigth: 42
-              //   }
-              // });
-
-              // const href = imgSrc[mode.split('_')[1]];
-
-              // setHref(imgElem, href);
-              // svgUtils.preventClickDefault(imgElem);
-
-              // imgElem.setAttributeNS(seNs, 'se:point', point.id);
-
-              // cmdArr.push(new InsertElementCommand(imgElem));
-
-              // point.setAttributeNS(seNs, 'se:nebor', imgElem.id);
               point.setAttributeNS(seNs, 'se:' + mode.split('_')[1], true);
 
               cmdArr.push(new ChangeElementCommand(point, {
-                'se:nebor': null,
                 'se:IsCharge': null,
                 'se:IsControl': null
               }));
@@ -269,33 +249,6 @@ export default {
         }
       },
       mouseMove: function mouseMove (opts) {
-        const zoom = svgCanvas.getZoom();
-        const x = opts.mouse_x / zoom;
-        const y = opts.mouse_y / zoom;
-
-        if (svgCanvas.getSelectedElems().length === 1) {
-          const elems = svgCanvas.getSelectedElems();
-          const elem = elems[0];
-          if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
-            // Point Group Changed
-            if (elem.hasAttribute('se:nebor')) {
-              const nebor = getElem(elem.getAttribute('se:nebor'));
-              if (nebor) {
-                nebor.setAttribute('x', x - 17);
-                nebor.setAttribute('y', y - 50);
-              }
-            }
-          } else if (elem && elem.tagName === 'image' && elem.getAttributeNS(seNs, 'point')) {
-            const point = getElem(elem.getAttributeNS(seNs, 'point'));
-            if (point) {
-              assignAttributes(point, {
-                cx: x,
-                cy: y + 30
-              });
-              svgCanvas.call('changed', [point]);
-            }
-          }
-        }
       },
       selectedChanged: function selectedChanged (opts) {
         if (svgCanvas.getSelectedElems().length === 1) {
@@ -314,45 +267,28 @@ export default {
 
         opts.elems.forEach(function (elem) {
           if (svgcontent.getElementById(elem.id)) {
-            if (elem.tagName === 'image' && elem.getAttributeNS(seNs, 'point')) {
-              const w = elem.getAttribute('width'),
-                h = elem.getAttribute('height');
-              if (w !== 34) {
-                elem.setAttribute('width', 34);
-              }
-
-              if (h !== 42) {
-                elem.setAttribute('height', 42);
-              }
-            }
           }
         });
-        const selElems = svgCanvas.getSelectedElems();
-        const selElem = selElems[0];
+
         opts.elems.forEach(function (elem) {
           if (!svgcontent.getElementById(elem.id)) {
-            if (elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
-              if (elem.getAttributeNS(seNs, 'nebor')) {
-                const bebor = getElem(elem.getAttributeNS(seNs, 'nebor'));
-                if (bebor) bebor.remove();
-              }
-            } else if (elem.tagName === 'image' && elem.getAttributeNS(seNs, 'point')) {
-              const point = getElem(elem.getAttributeNS(seNs, 'point'));
-              if (point) {
-                point.remove();
-                svgCanvas.call('changed', [point]);
-              }
-            }
-          } else {
-            if (selElem && selElem.tagName === 'point' && elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
-              // Point Group Changed
-              if (elem.getAttributeNS(seNs, 'nebor')) {
-                const x = elem.getAttribute('cx'),
-                  y = elem.getAttribute('cy');
 
-                const bebor = getElem(elem.getAttributeNS(seNs, 'nebor'));
-                bebor.setAttribute('x', x - 17);
-                bebor.setAttribute('y', y - 50);
+          } else {
+            if (elem.tagName === 'circle' && elem.getAttribute('class') === 'point' && elem.getAttribute('se:IsKey')) {
+              const r = elem.getAttribute('r');
+              if (r <= 0) {
+                elem.setAttribute('r', keyPointRadius);
+              }
+              keyPointRadius = r;
+
+              const strokeWidth = elem.getAttribute('stroke-width');
+              if (strokeWidth !== currentStrokeWidth) {
+                currentStrokeWidth = strokeWidth;
+              }
+            } else if (elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
+              const strokeWidth = elem.getAttribute('stroke-width');
+              if (strokeWidth !== currentStrokeWidth) {
+                currentStrokeWidth = strokeWidth;
               }
             }
           }

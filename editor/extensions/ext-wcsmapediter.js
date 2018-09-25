@@ -36,8 +36,9 @@ export default {
     const seNs = svgCanvas.getEditorNS(true);
     const svgdoc = document.getElementById('svgcanvas').ownerDocument,
       {assignAttributes} = svgCanvas;
-    const {curConfig: {initStroke}} = svgEditor;
+    // const {curConfig: {initStroke}} = svgEditor;
     let roadline;
+    let currentStrokeWidth = 4, pointRadius = 2, controlRadius = 4;
 
     const {
       lang
@@ -192,7 +193,8 @@ export default {
               point.Code = this.getAttributeNS(seNs, 'Code');
               point.PositionX = parseInt(this.getAttribute('cx'));
               point.PositionY = parseInt(this.getAttribute('cy'));
-              if (point.Code) point.IsKey = true;
+
+              point.IsKey = this.getAttributeNS(seNs, 'IsKey');
               point.IsCharge = this.getAttributeNS(seNs, 'IsCharge');
               point.IsControl = this.getAttributeNS(seNs, 'IsControl');
               point.IsMaterial = this.getAttributeNS(seNs, 'IsMaterial');
@@ -240,7 +242,7 @@ export default {
              * 隐藏普通点
              */
             $(svgcontent).find('.point').each(function () {
-              if (!this.getAttribute('se:Code') && !this.getAttributeNS(seNs, 'nebor')) {
+              if (!this.getAttribute('se:IsKey')) {
                 this.setAttribute('display', 'none');
               }
             });
@@ -694,18 +696,34 @@ export default {
             if (elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
               const r = elem.getAttribute('r');
               if (r <= 0) {
-                elem.setAttribute('r', 1);
+                elem.setAttribute('r', pointRadius);
+              }
+              pointRadius = r;
+
+              const strokeWidth = elem.getAttribute('stroke-width');
+              if (strokeWidth !== currentStrokeWidth) {
+                currentStrokeWidth = strokeWidth;
               }
             } else if (elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
               const r = elem.getAttribute('r');
               if (r <= 0) {
-                elem.setAttribute('r', 1);
+                elem.setAttribute('r', controlRadius);
+              }
+              controlRadius = r;
+
+              const strokeWidth = elem.getAttribute('stroke-width');
+              if (strokeWidth !== currentStrokeWidth) {
+                currentStrokeWidth = strokeWidth;
+              }
+            } else if (elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
+              const strokeWidth = elem.getAttribute('stroke-width');
+              if (strokeWidth !== currentStrokeWidth) {
+                currentStrokeWidth = strokeWidth;
               }
             }
           }
         });
 
-        // opts.elems.forEach(function (elem)
         if (opts.elems.length === 1 && elem) {
           if (elem && !svgcontent.getElementById(elem.id)) {
             if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
@@ -813,7 +831,7 @@ export default {
         y2 = y + halfWidth;
       }
 
-      const strokeWidth = ($('#stroke_width').val() !== initStroke.width) ? $('#stroke_width').val() : 4 / zoom;
+      const strokeWidth = currentStrokeWidth / zoom;
       const strokeColor = '#ff7f00';
       const fillColor = '#ff7f00';
 
@@ -835,7 +853,7 @@ export default {
           id: getNextId(),
           cx: x1,
           cy: y1,
-          r: 2 / zoom,
+          r: pointRadius / zoom,
           stroke: strokeColor,
           'stroke-width': strokeWidth,
           fill: fillColor,
@@ -851,7 +869,7 @@ export default {
           id: getNextId(),
           cx: x2,
           cy: y2,
-          r: 2 / zoom,
+          r: pointRadius / zoom,
           stroke: strokeColor,
           'stroke-width': strokeWidth,
           fill: fillColor,
@@ -924,7 +942,7 @@ export default {
         cy = y + halfWidth;
       }
 
-      const strokeWidth = ($('#stroke_width').val() !== initStroke.width) ? $('#stroke_width').val() : 4 / zoom;
+      const strokeWidth = currentStrokeWidth / zoom;
       const strokeColor = '#ff7f00';
       const fillColor = '#ff7f00';
 
@@ -946,7 +964,7 @@ export default {
           id: getNextId(),
           cx: x1,
           cy: y1,
-          r: 2 / zoom,
+          r: pointRadius / zoom,
           stroke: strokeColor,
           'stroke-width': strokeWidth,
           fill: fillColor,
@@ -962,7 +980,7 @@ export default {
           id: getNextId(),
           cx: x2,
           cy: y2,
-          r: 2 / zoom,
+          r: pointRadius / zoom,
           stroke: strokeColor,
           'stroke-width': strokeWidth,
           fill: fillColor,
@@ -978,7 +996,7 @@ export default {
           id: getNextId(),
           cx: cx,
           cy: cy,
-          r: 4 / zoom,
+          r: controlRadius / zoom,
           stroke: 'none',
           fill: 'red',
           class: 'control'
@@ -1433,7 +1451,7 @@ export default {
      */
     function updateMap (zoom) {
       $(svgcontent).find('.point').each(function () {
-        if (!this.getAttribute('se:Code')) {
+        if (!this.getAttribute('se:IsKey')) {
           this.setAttribute('stroke-width', 1);
           this.setAttribute('r', 4 / zoom);
         }
