@@ -2585,7 +2585,7 @@ editor.init = function () {
         let panel = $('#' + tool.panel);
         // create the panel if it doesn't exist
         if (!panel.length) {
-          panel = $('<div>', {id: tool.panel}).appendTo('#tools_top');
+          panel = $('<div>', {id: tool.panel, class: 'toolset'}).appendTo('#tools_top');
         }
 
         let html;
