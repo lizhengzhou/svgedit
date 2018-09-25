@@ -1139,10 +1139,14 @@ export default {
         if (startElem) {
           startElem.setAttribute('cx', move.x);
           startElem.setAttribute('cy', move.y);
+
+          svgCanvas.call('changed', [startElem]);
         }
         if (endElem) {
           endElem.setAttribute('cx', curve.x);
           endElem.setAttribute('cy', curve.y);
+
+          svgCanvas.call('changed', [endElem]);
         }
         if (control) {
           control.setAttribute('cx', curve.x1);
