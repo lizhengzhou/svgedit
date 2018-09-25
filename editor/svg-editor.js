@@ -2844,6 +2844,7 @@ editor.init = function () {
           }
         }
 
+        button.css('margin', '0px');
         if (!svgicons) {
           button.append(icon);
         }
