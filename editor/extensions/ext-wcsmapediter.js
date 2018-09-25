@@ -1069,12 +1069,12 @@ export default {
     function selectRoute (elem) {
       const move = elem.pathSegList.getItem(0);
       const curve = elem.pathSegList.getItem(1);
-
-      $('#wcsline_x1').val(move.x.toFixed(0));
-      $('#wcsline_y1').val(move.y.toFixed(0));
-      $('#wcsline_width').val((curve.x - move.x).toFixed(0));
-      $('#wcsline_height').val((curve.y - move.y).toFixed(0));
-
+      if (move.x && move.y) {
+        $('#wcsline_x1').val(move.x.toFixed(0));
+        $('#wcsline_y1').val(move.y.toFixed(0));
+        $('#wcsline_width').val((curve.x - move.x).toFixed(0));
+        $('#wcsline_height').val((curve.y - move.y).toFixed(0));
+      }
       const Direction = elem.getAttributeNS(seNs, 'Direction');
       if (Direction === 10) {
         svgEditor.setIcon('#cur_direction_list', 'uparrow');

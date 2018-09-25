@@ -2655,92 +2655,92 @@ setTimeout(function () {
       // $(window).mouseup(mouseUp);
 
       // TODO(rafaelcastrocouto): User preference for shift key and zoom factor
-      $(container).bind('mousewheel DOMMouseScroll', function (e) {
-        if (!e.shiftKey) {
-          return;
-        }
+      // $(container).bind('mousewheel DOMMouseScroll', function (e) {
+      //   if (!e.shiftKey) {
+      //     return;
+      //   }
 
-        e.preventDefault();
-        const evt = e.originalEvent;
+      //   e.preventDefault();
+      //   const evt = e.originalEvent;
 
-        rootSctm = $('#svgcontent g')[0].getScreenCTM().inverse();
+      //   rootSctm = $('#svgcontent g')[0].getScreenCTM().inverse();
 
-        const workarea = $('#workarea');
-        const scrbar = 15;
-        const rulerwidth = curConfig.showRulers ? 16 : 0;
+      //   const workarea = $('#workarea');
+      //   const scrbar = 15;
+      //   const rulerwidth = curConfig.showRulers ? 16 : 0;
 
-        // mouse relative to content area in content pixels
-        const pt = transformPoint(evt.pageX, evt.pageY, rootSctm);
+      //   // mouse relative to content area in content pixels
+      //   const pt = transformPoint(evt.pageX, evt.pageY, rootSctm);
 
-        // full work area width in screen pixels
-        const editorFullW = workarea.width();
-        const editorFullH = workarea.height();
+      //   // full work area width in screen pixels
+      //   const editorFullW = workarea.width();
+      //   const editorFullH = workarea.height();
 
-        // work area width minus scroll and ruler in screen pixels
-        const editorW = editorFullW - scrbar - rulerwidth;
-        const editorH = editorFullH - scrbar - rulerwidth;
+      //   // work area width minus scroll and ruler in screen pixels
+      //   const editorW = editorFullW - scrbar - rulerwidth;
+      //   const editorH = editorFullH - scrbar - rulerwidth;
 
-        // work area width in content pixels
-        const workareaViewW = editorW * rootSctm.a;
-        const workareaViewH = editorH * rootSctm.d;
+      //   // work area width in content pixels
+      //   const workareaViewW = editorW * rootSctm.a;
+      //   const workareaViewH = editorH * rootSctm.d;
 
-        // content offset from canvas in screen pixels
-        const wOffset = workarea.offset();
-        const wOffsetLeft = wOffset['left'] + rulerwidth;
-        const wOffsetTop = wOffset['top'] + rulerwidth;
+      //   // content offset from canvas in screen pixels
+      //   const wOffset = workarea.offset();
+      //   const wOffsetLeft = wOffset['left'] + rulerwidth;
+      //   const wOffsetTop = wOffset['top'] + rulerwidth;
 
-        const delta = (evt.wheelDelta) ? evt.wheelDelta : (evt.detail) ? -evt.detail : 0;
-        if (!delta) {
-          return;
-        }
+      //   const delta = (evt.wheelDelta) ? evt.wheelDelta : (evt.detail) ? -evt.detail : 0;
+      //   if (!delta) {
+      //     return;
+      //   }
 
-        let factor = Math.max(3 / 4, Math.min(4 / 3, (delta)));
+      //   let factor = Math.max(3 / 4, Math.min(4 / 3, (delta)));
 
-        let wZoom, hZoom;
-        if (factor > 1) {
-          wZoom = Math.ceil(editorW / workareaViewW * factor * 100) / 100;
-          hZoom = Math.ceil(editorH / workareaViewH * factor * 100) / 100;
-        } else {
-          wZoom = Math.floor(editorW / workareaViewW * factor * 100) / 100;
-          hZoom = Math.floor(editorH / workareaViewH * factor * 100) / 100;
-        }
-        let zoomlevel = Math.min(wZoom, hZoom);
-        zoomlevel = Math.min(10, Math.max(0.01, zoomlevel));
-        if (zoomlevel === currentZoom) {
-          return;
-        }
-        factor = zoomlevel / currentZoom;
+      //   let wZoom, hZoom;
+      //   if (factor > 1) {
+      //     wZoom = Math.ceil(editorW / workareaViewW * factor * 100) / 100;
+      //     hZoom = Math.ceil(editorH / workareaViewH * factor * 100) / 100;
+      //   } else {
+      //     wZoom = Math.floor(editorW / workareaViewW * factor * 100) / 100;
+      //     hZoom = Math.floor(editorH / workareaViewH * factor * 100) / 100;
+      //   }
+      //   let zoomlevel = Math.min(wZoom, hZoom);
+      //   zoomlevel = Math.min(10, Math.max(0.01, zoomlevel));
+      //   if (zoomlevel === currentZoom) {
+      //     return;
+      //   }
+      //   factor = zoomlevel / currentZoom;
 
-        // top left of workarea in content pixels before zoom
-        const topLeftOld = transformPoint(wOffsetLeft, wOffsetTop, rootSctm);
+      //   // top left of workarea in content pixels before zoom
+      //   const topLeftOld = transformPoint(wOffsetLeft, wOffsetTop, rootSctm);
 
-        // top left of workarea in content pixels after zoom
-        const topLeftNew = {
-          x: pt.x - (pt.x - topLeftOld.x) / factor,
-          y: pt.y - (pt.y - topLeftOld.y) / factor
-        };
+      //   // top left of workarea in content pixels after zoom
+      //   const topLeftNew = {
+      //     x: pt.x - (pt.x - topLeftOld.x) / factor,
+      //     y: pt.y - (pt.y - topLeftOld.y) / factor
+      //   };
 
-        // top left of workarea in canvas pixels relative to content after zoom
-        const topLeftNewCanvas = {
-          x: topLeftNew.x * zoomlevel,
-          y: topLeftNew.y * zoomlevel
-        };
+      //   // top left of workarea in canvas pixels relative to content after zoom
+      //   const topLeftNewCanvas = {
+      //     x: topLeftNew.x * zoomlevel,
+      //     y: topLeftNew.y * zoomlevel
+      //   };
 
-        // new center in canvas pixels
-        const newCtr = {
-          x: topLeftNewCanvas.x - rulerwidth + editorFullW / 2,
-          y: topLeftNewCanvas.y - rulerwidth + editorFullH / 2
-        };
+      //   // new center in canvas pixels
+      //   const newCtr = {
+      //     x: topLeftNewCanvas.x - rulerwidth + editorFullW / 2,
+      //     y: topLeftNewCanvas.y - rulerwidth + editorFullH / 2
+      //   };
 
-        canvas.setZoom(zoomlevel);
-        $('#zoom').val((zoomlevel * 100).toFixed(1));
+      //   canvas.setZoom(zoomlevel);
+      //   $('#zoom').val((zoomlevel * 100).toFixed(1));
 
-        call('updateCanvas', {
-          center: false,
-          newCtr
-        });
-        call('zoomDone');
-      });
+      //   call('updateCanvas', {
+      //     center: false,
+      //     newCtr
+      //   });
+      //   call('zoomDone');
+      // });
     }());
 
     /**
