@@ -50,8 +50,8 @@ export default {
 
               startElem = focusPoint;
             } else {
-              x = opts.start_x / zoom;
-              y = opts.start_y / zoom;
+              x = opts.start_x;
+              y = opts.start_y;
 
               startElem = addElem({
                 element: 'circle',
@@ -80,8 +80,8 @@ export default {
               }
             });
           } else if (IsControl) {
-            const x = opts.start_x / zoom,
-              y = opts.start_y / zoom;
+            const x = opts.start_x,
+              y = opts.start_y;
 
             controlElem = addElem({
               element: 'circle',
@@ -163,7 +163,13 @@ export default {
             });
             endElem.setAttributeNS(seNs, 'se:routes', currentRoute.id);
 
-            startElem.setAttributeNS(seNs, 'se:routes', currentRoute.id);
+            let routeAttr = startElem.getAttributeNS(seNs, 'routes');
+            if (!routeAttr) {
+              routeAttr = currentRoute.id;
+            } else {
+              routeAttr += ' ' + currentRoute.id;
+            }
+            startElem.setAttributeNS(seNs, 'se:routes', routeAttr);
 
             currentRoute.setAttributeNS(seNs, 'se:points', startElem.id + ' ' + endElem.id);
 
