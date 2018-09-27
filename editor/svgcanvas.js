@@ -1769,9 +1769,12 @@ setTimeout(function () {
         $('#mouse_x').html(pt.x.toFixed(0));
         $('#mouse_y').html(pt.y.toFixed(0));
 
-        if (!started) {
-          return;
+        if (currentMode !== 'drawroad') {
+          if (!started) {
+            return;
+          }
         }
+
         if (evt.button === 1 || canvas.spaceKey) {
           return;
         }
