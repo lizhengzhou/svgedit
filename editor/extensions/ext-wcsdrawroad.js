@@ -31,7 +31,7 @@ export default {
       buttons: [{
         id: 'drawroad',
         type: 'mode',
-        title: 'Draw Complex Road',
+        title: '画复杂线路 直线/弧线[空格]',
         events: {
           click () {
             svgCanvas.setMode('drawroad');
