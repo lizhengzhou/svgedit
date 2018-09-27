@@ -1,4 +1,4 @@
-/* globals jQuery */
+// /* globals jQuery */
 /*
  * ext-wcsdrawroad.js
  *
@@ -16,13 +16,13 @@ export default {
   name: 'drawroad',
   init (S) {
     const svgEditor = this;
-    const $ = jQuery;
+    // const $ = jQuery;
     const svgCanvas = svgEditor.canvas;
     const addElem = S.addSvgElementFromJson;
     const getNextId = S.getNextId;
     const seNs = svgCanvas.getEditorNS(true);
 
-    let focusPoint, IsDrawing, startElem, endElem, currentRoute, IsControl,controlElem;
+    let focusPoint, IsDrawing, startElem, endElem, currentRoute, IsControl, controlElem;
     const currentStrokeWidth = 4, pointRadius = 2, controlRadius = 4;
 
     return {
