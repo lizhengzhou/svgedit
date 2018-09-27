@@ -116,8 +116,8 @@ export default {
             if (mouseTarget && mouseTarget !== focusPoint && mouseTarget.tagName === 'circle' && mouseTarget.getAttribute('class') === 'point') {
               focusPoint = mouseTarget;
               focusPoint.orignRadis = focusPoint.getAttribute('r');
-              focusPoint.setAttribute('r', focusPoint.orignRadis * 2);
-            } else if (focusPoint) {
+              focusPoint.setAttribute('r', focusPoint.orignRadis * 3);
+            } else if (focusPoint && mouseTarget && mouseTarget.tagName === 'svg') {
               focusPoint.setAttribute('r', focusPoint.orignRadis);
               focusPoint = null;
             }

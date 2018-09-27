@@ -9,7 +9,9 @@
  */
 export default {
   /**
-   * WCS地图插件——点合并工具
+   * WCS地图插件——点合并工具,将鼠标按下选中的起始点合并到鼠标抬起时选中的目标点
+   * 鼠标移动到点上时，点突出显示，半径放大3倍，操作完成后恢复
+   * 将源路线连接到目标点上，将源点删除
    */
   name: 'wcspointmerge',
   init (S) {
@@ -19,7 +21,8 @@ export default {
       getElem = S.getElem;
     const svgUtils = svgCanvas.getPrivateMethods();
     const seNs = svgCanvas.getEditorNS(true);
-    let selElem, line;
+    let IsDrawing, fromElem, toElem, currentLine;
+    const currentStrokeWidth = 4;
 
     const {
       lang
@@ -27,13 +30,9 @@ export default {
 
     //  导入undo/redo
     const {
-      // MoveElementCommand,
-      // InsertElementCommand,
       RemoveElementCommand,
       ChangeElementCommand,
       BatchCommand
-      // UndoManager,
-      // HistoryEventTypes
     } = svgUtils;
 
     // 多语言处理
@@ -66,17 +65,15 @@ export default {
       }],
       mouseDown (opts) {
         if (svgCanvas.getMode() === 'wcspointmerge') {
-          const mouseTarget = opts.event.target;
-          if (mouseTarget && mouseTarget.tagName === 'circle' && mouseTarget.getAttribute('class') === 'point') {
-            mouseTarget.setAttribute('fill', 'orange');
-            selElem = mouseTarget;
+          const zoom = svgCanvas.getZoom();
+          if (!IsDrawing && fromElem) {
+            /**
+             * 选中起始点后，按下鼠标画一条临时的虚线
+             */
+            const x = fromElem.getAttribute('cx');
+            const y = fromElem.getAttribute('cy');
 
-            const x = opts.start_x;
-            const y = opts.start_y;
-
-            const zoom = svgCanvas.getZoom();
-
-            line = addElem({
+            currentLine = addElem({
               element: 'line',
               attr: {
                 x1: x,
@@ -84,10 +81,12 @@ export default {
                 x2: x,
                 y2: y,
                 stroke: '#ff7f00',
-                'stroke-width': 2 / zoom,
+                'stroke-width': currentStrokeWidth / zoom,
                 'stroke-dasharray': '5,5'
               }
             });
+
+            IsDrawing = true;
           }
         }
         return {
@@ -96,49 +95,91 @@ export default {
       },
       mouseMove (opts) {
         if (svgCanvas.getMode() === 'wcspointmerge') {
-          const zoom = svgCanvas.getZoom();
-
-          let x2 = opts.mouse_x / zoom,
-            y2 = opts.mouse_y / zoom;
-
-          if (line) {
-            const x1 = line.getAttribute('x1'),
-              y1 = line.getAttribute('y1');
-
-            if (x2 > x1) {
-              x2--;
-            } else {
-              x2++;
+          const mouseTarget = opts.event.target;
+          if (!IsDrawing) {
+            /**
+             * 移动鼠标到点上，突出显示，标记起始点
+             */
+            if (mouseTarget && mouseTarget !== fromElem && mouseTarget.tagName === 'circle' && mouseTarget.getAttribute('class') === 'point') {
+              fromElem = mouseTarget;
+              fromElem.orignRadis = fromElem.getAttribute('r');
+              fromElem.setAttribute('r', fromElem.orignRadis * 3);
+            } else if (fromElem && mouseTarget && mouseTarget.tagName === 'svg') {
+              fromElem.setAttribute('r', fromElem.orignRadis);
+              fromElem = null;
+            }
+          } else {
+            /**
+             * 鼠标拖动过程中，选择目标点，突出显示
+             */
+            if (mouseTarget && mouseTarget !== toElem && mouseTarget !== fromElem && mouseTarget.tagName === 'circle' && mouseTarget.getAttribute('class') === 'point') {
+              toElem = mouseTarget;
+              toElem.orignRadis = toElem.getAttribute('r');
+              toElem.setAttribute('r', toElem.orignRadis * 3);
+            } else if (toElem && mouseTarget && mouseTarget.tagName === 'svg') {
+              toElem.setAttribute('r', toElem.orignRadis);
+              toElem = null;
             }
 
-            if (y2 > y1) {
-              y2--;
-            } else {
-              y2++;
+            /**
+             * 虚线跟着鼠标移动
+             */
+            const zoom = svgCanvas.getZoom();
+            let x2 = opts.mouse_x / zoom,
+              y2 = opts.mouse_y / zoom;
+            if (currentLine) {
+              const x1 = currentLine.getAttribute('x1'),
+                y1 = currentLine.getAttribute('y1');
+              if (x2 > x1) {
+                x2--;
+              } else {
+                x2++;
+              }
+              if (y2 > y1) {
+                y2--;
+              } else {
+                y2++;
+              }
+              currentLine.setAttribute('x2', x2);
+              currentLine.setAttribute('y2', y2);
             }
-
-            line.setAttribute('x2', x2);
-            line.setAttribute('y2', y2);
           }
         }
       },
       mouseUp (opts) {
         if (svgCanvas.getMode() === 'wcspointmerge') {
-          const mouseTarget = opts.event.target;
-          if (mouseTarget && mouseTarget.tagName === 'circle' && mouseTarget.getAttribute('class') === 'point') {
-            if (selElem && selElem !== mouseTarget) {
-              mergePoint(selElem, mouseTarget);
-              svgEditor.clickSelect();
-            }
+          if (IsDrawing && toElem) {
+            /**
+             * 选中目标点后抬起鼠标，将两个点合并
+             */
+            mergePoint(fromElem, toElem);
+            svgEditor.clickSelect();
           }
 
-          if (selElem) {
-            selElem.setAttribute('fill', 'white');
+          /**
+           * 恢复起始点状态
+           */
+          if (fromElem) {
+            fromElem.setAttribute('r', fromElem.orignRadis);
+            fromElem = null;
           }
 
-          if (line) {
-            line.remove();
+          /**
+           * 恢复目标点状态
+           */
+          if (toElem) {
+            toElem.setAttribute('r', toElem.orignRadis);
+            toElem = null;
           }
+
+          /**
+           * 删除临时虚线
+           */
+          if (currentLine) {
+            currentLine.remove();
+          }
+
+          IsDrawing = false;
 
           return {
             keep: true
