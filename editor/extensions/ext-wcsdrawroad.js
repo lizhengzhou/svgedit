@@ -163,6 +163,8 @@ export default {
             });
             endElem.setAttributeNS(seNs, 'se:routes', currentRoute.id);
 
+            startElem.setAttributeNS(seNs, 'se:routes', currentRoute.id);
+
             currentRoute.setAttributeNS(seNs, 'se:points', startElem.id + ' ' + endElem.id);
 
             if (svgCanvas.getSelectedElems().length > 0) {
