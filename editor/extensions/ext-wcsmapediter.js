@@ -301,80 +301,81 @@ export default {
       /**
        * 工具栏按钮
        */
-      buttons: [{
-        /**
-           * 按钮ID，必须和上面图标文件中图标的ID一致
-           */
-        id: 'line_horizontal',
-        /**
-           * 标识当前按钮会被添加到左边工具栏
-           */
-        type: 'mode',
-        /**
-           * 按钮标题，鼠标放上去会显示
-           */
-        title: getTitle('line_horizontal'),
-        /**
-           * 按钮事件
-           */
-        events: {
-          click () {
-            // 单击按钮时执行的操作。
-            // 对于“模式”按钮，任何其他按钮都将
-            // 自动被压缩。
-            svgCanvas.setMode('line_horizontal');
-          }
-        }
-      }, {
-        id: 'line_vertical',
-        type: 'mode',
-        title: getTitle('line_vertical'),
-        events: {
-          click () {
-            svgCanvas.setMode('line_vertical');
-          }
-        }
-      },
-      {
-        id: 'line_arc_upleft',
-        type: 'mode',
-        title: getTitle('line_arc_upleft'),
-        events: {
-          click () {
-            svgCanvas.setMode('line_arc_upleft');
-          }
-        }
-      },
-      {
-        id: 'line_arc_upright',
-        type: 'mode',
-        title: getTitle('line_arc_upright'),
-        events: {
-          click () {
-            svgCanvas.setMode('line_arc_upright');
-          }
-        }
-      },
-      {
-        id: 'line_arc_downleft',
-        type: 'mode',
-        title: getTitle('line_arc_downleft'),
-        events: {
-          click () {
-            svgCanvas.setMode('line_arc_downleft');
-          }
-        }
-      },
-      {
-        id: 'line_arc_downright',
-        type: 'mode',
-        title: getTitle('line_arc_downright'),
-        events: {
-          click () {
-            svgCanvas.setMode('line_arc_downright');
-          }
-        }
-      },
+      buttons: [
+      // {
+      //   /**
+      //      * 按钮ID，必须和上面图标文件中图标的ID一致
+      //      */
+      //   id: 'line_horizontal',
+      //   /**
+      //      * 标识当前按钮会被添加到左边工具栏
+      //      */
+      //   type: 'mode',
+      //   /**
+      //      * 按钮标题，鼠标放上去会显示
+      //      */
+      //   title: getTitle('line_horizontal'),
+      //   /**
+      //      * 按钮事件
+      //      */
+      //   events: {
+      //     click () {
+      //       // 单击按钮时执行的操作。
+      //       // 对于“模式”按钮，任何其他按钮都将
+      //       // 自动被压缩。
+      //       svgCanvas.setMode('line_horizontal');
+      //     }
+      //   }
+      // }, {
+      //   id: 'line_vertical',
+      //   type: 'mode',
+      //   title: getTitle('line_vertical'),
+      //   events: {
+      //     click () {
+      //       svgCanvas.setMode('line_vertical');
+      //     }
+      //   }
+      // },
+      // {
+      //   id: 'line_arc_upleft',
+      //   type: 'mode',
+      //   title: getTitle('line_arc_upleft'),
+      //   events: {
+      //     click () {
+      //       svgCanvas.setMode('line_arc_upleft');
+      //     }
+      //   }
+      // },
+      // {
+      //   id: 'line_arc_upright',
+      //   type: 'mode',
+      //   title: getTitle('line_arc_upright'),
+      //   events: {
+      //     click () {
+      //       svgCanvas.setMode('line_arc_upright');
+      //     }
+      //   }
+      // },
+      // {
+      //   id: 'line_arc_downleft',
+      //   type: 'mode',
+      //   title: getTitle('line_arc_downleft'),
+      //   events: {
+      //     click () {
+      //       svgCanvas.setMode('line_arc_downleft');
+      //     }
+      //   }
+      // },
+      // {
+      //   id: 'line_arc_downright',
+      //   type: 'mode',
+      //   title: getTitle('line_arc_downright'),
+      //   events: {
+      //     click () {
+      //       svgCanvas.setMode('line_arc_downright');
+      //     }
+      //   }
+      // },
       {
         /**
            * 属性ID按钮
