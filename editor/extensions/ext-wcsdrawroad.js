@@ -61,8 +61,8 @@ export default {
 
               startElem = focusPoint;
             } else {
-              x = opts.start_x;
-              y = opts.start_y;
+              x = opts.start_x.toFixed(0);
+              y = opts.start_y.toFixed(0);
 
               startElem = addElem({
                 element: 'circle',
@@ -143,8 +143,8 @@ export default {
              * 移动路线终点或者控制点
              */
             const zoom = svgCanvas.getZoom();
-            const x = opts.mouse_x / zoom,
-              y = opts.mouse_y / zoom;
+            const x = (opts.mouse_x / zoom).toFixed(0),
+              y = (opts.mouse_y / zoom).toFixed(0);
 
             if (!IsControl) {
               const curve = currentRoute.pathSegList.getItem(1);
