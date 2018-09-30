@@ -40,9 +40,9 @@ export default {
     let roadline;
     let currentStrokeWidth = 4, pointRadius = 2, controlRadius = 4;
 
-    const {
-      lang
-    } = svgEditor.curPrefs;
+    // const {
+    //   lang
+    // } = svgEditor.curPrefs;
 
     //  导入undo/redo
     const {
@@ -376,64 +376,64 @@ export default {
       //     }
       //   }
       // },
-      {
+        {
         /**
            * 属性ID按钮
            */
-        id: 'uparrow',
-        /**
+          id: 'uparrow',
+          /**
            * 按钮图标
            */
-        svgicon: 'uparrow',
-        /**
+          svgicon: 'uparrow',
+          /**
            * 按钮标题
            */
-        title: 'forword direction',
-        /**
+          title: 'forword direction',
+          /**
            * 按钮类型为属性按钮
            */
-        type: 'context',
-        /**
+          type: 'context',
+          /**
            * 按钮事件
            */
-        events: {
-          click: setRouteDirection
-        },
-        /**
+          events: {
+            click: setRouteDirection
+          },
+          /**
            * 该属性属于哪个面板
            */
-        panel: 'wcsline_panel',
-        /**
+          panel: 'wcsline_panel',
+          /**
            * 该属性属于哪个清单
            */
-        list: 'direction_list',
-        /**
+          list: 'direction_list',
+          /**
            * 是否默认选择
            */
-        isDefault: true
-      },
-      {
-        id: 'downarrow',
-        svgicon: 'downarrow',
-        title: 'backword direction',
-        type: 'context',
-        events: {
-          click: setRouteDirection
+          isDefault: true
         },
-        panel: 'wcsline_panel',
-        list: 'direction_list'
-      },
-      {
-        id: 'twowayarrow',
-        svgicon: 'twowayarrow',
-        title: 'Two Way direction',
-        type: 'context',
-        events: {
-          click: setRouteDirection
+        {
+          id: 'downarrow',
+          svgicon: 'downarrow',
+          title: 'backword direction',
+          type: 'context',
+          events: {
+            click: setRouteDirection
+          },
+          panel: 'wcsline_panel',
+          list: 'direction_list'
         },
-        panel: 'wcsline_panel',
-        list: 'direction_list'
-      }
+        {
+          id: 'twowayarrow',
+          svgicon: 'twowayarrow',
+          title: 'Two Way direction',
+          type: 'context',
+          events: {
+            click: setRouteDirection
+          },
+          panel: 'wcsline_panel',
+          list: 'direction_list'
+        }
       ],
       /**
        * 属性面板输入元素
@@ -1071,10 +1071,10 @@ export default {
       const move = elem.pathSegList.getItem(0);
       const curve = elem.pathSegList.getItem(1);
       if (move.x && move.y) {
-        $('#wcsline_x1').val(move.x.toFixed(0));
-        $('#wcsline_y1').val(move.y.toFixed(0));
-        $('#wcsline_width').val((curve.x - move.x).toFixed(0));
-        $('#wcsline_height').val((curve.y - move.y).toFixed(0));
+        $('#wcsline_x1').val(parseFloat(move.x).toFixed(0));
+        $('#wcsline_y1').val(parseFloat(move.y).toFixed(0));
+        $('#wcsline_width').val(parseFloat(curve.x - move.x).toFixed(0));
+        $('#wcsline_height').val(parseFloat(curve.y - move.y).toFixed(0));
       }
       const Direction = elem.getAttributeNS(seNs, 'Direction');
       if (Direction === 10) {
@@ -1438,18 +1438,18 @@ export default {
       }
     }
 
-    /**
-     * 获取多语言标题
-     */
-    function getTitle (id, curLang = lang) {
-      const list = langList[lang];
-      for (const i in list) {
-        if (list.hasOwnProperty(i) && list[i].id === id) {
-          return list[i].title;
-        }
-      }
-      return id;
-    }
+    // /**
+    //  * 获取多语言标题
+    //  */
+    // function getTitle (id, curLang = lang) {
+    //   const list = langList[lang];
+    //   for (const i in list) {
+    //     if (list.hasOwnProperty(i) && list[i].id === id) {
+    //       return list[i].title;
+    //     }
+    //   }
+    //   return id;
+    // }
     /**
      *
      * @param {缩放级别} zoom
