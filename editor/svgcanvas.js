@@ -1769,7 +1769,7 @@ setTimeout(function () {
         $('#mouse_x').html(pt.x.toFixed(0));
         $('#mouse_y').html(pt.y.toFixed(0));
 
-        if (currentMode !== 'drawroad' && currentMode !== 'wcspointmerge') {
+        if (currentMode !== 'drawroad' && currentMode !== 'wcspointmerge' && currentMode !== 'chamfer') {
           if (!started) {
             return;
           }
