@@ -80,7 +80,7 @@ const callbacks = [],
   defaultPrefs = {
     // EDITOR OPTIONS (DIALOG)
     lang: '', // Default to "en" if locale.js detection does not detect another language
-    iconsize: '', // Will default to 's' if the window height is smaller than the minimum height and 'm' otherwise
+    iconsize: 'm', // Will default to 's' if the window height is smaller than the minimum height and 'm' otherwise
     bkgd_color: '#FFF',
     bkgd_url: '',
     // DOCUMENT PROPERTIES (DIALOG)
