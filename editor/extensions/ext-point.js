@@ -1,4 +1,4 @@
-/* globals jQuery */
+// /* globals jQuery */
 /*
  * ext-point.js
  *
@@ -10,7 +10,7 @@
 export default {
   name: 'point',
   init (S) {
-    const $ = jQuery;
+    // const $ = jQuery;
     const svgEditor = this;
     const svgCanvas = svgEditor.canvas,
       addElem = S.addSvgElementFromJson;
@@ -18,20 +18,13 @@ export default {
     const getNextId = S.getNextId,
       getElem = S.getElem;
     const svgUtils = svgCanvas.getPrivateMethods();
-    // const assignAttributes = svgCanvas.assignAttributes;
-    let svgcontent = S.svgcontent;
-    // const {curConfig: {initStroke}} = svgEditor;
-    let currentStrokeWidth = 4, keyPointRadius = 6;
+    const currentStrokeWidth = 4, keyPointRadius = 6;
 
     //  导入undo/redo
     const {
-      // MoveElementCommand,
       InsertElementCommand,
-      // RemoveElementCommand,
       ChangeElementCommand,
       BatchCommand
-      // UndoManager,
-      // HistoryEventTypes
     } = svgUtils;
 
     const {
@@ -83,9 +76,6 @@ export default {
         title: getTitle('point'),
         events: {
           click () {
-            if (svgCanvas.getSelectedElems().length > 0) {
-              svgCanvas.clearSelection();
-            }
             svgCanvas.setMode('point');
           }
         }
@@ -96,9 +86,6 @@ export default {
         title: getTitle('point_IsControl'),
         events: {
           click () {
-            if (svgCanvas.getSelectedElems().length > 0) {
-              svgCanvas.clearSelection();
-            }
             svgCanvas.setMode('point_IsControl');
           }
         }
@@ -109,9 +96,6 @@ export default {
         title: getTitle('point_IsCharge'),
         events: {
           click () {
-            if (svgCanvas.getSelectedElems().length > 0) {
-              svgCanvas.clearSelection();
-            }
             svgCanvas.setMode('point_IsCharge');
           }
         }
@@ -122,9 +106,6 @@ export default {
         title: getTitle('point_IsMaterial'),
         events: {
           click () {
-            if (svgCanvas.getSelectedElems().length > 0) {
-              svgCanvas.clearSelection();
-            }
             svgCanvas.setMode('point_IsMaterial');
           }
         }
@@ -245,54 +226,12 @@ export default {
             }
 
             svgEditor.clickSelect();
+
+            return {
+              keep: true
+            };
           }
         }
-      },
-      mouseMove: function mouseMove (opts) {
-      },
-      selectedChanged: function selectedChanged (opts) {
-        if (svgCanvas.getSelectedElems().length === 1) {
-          const elem = opts.elems[0];
-          if (elem.hasAttributeNS(seNs, 'point')) {
-            $('#selectorGroup0')[0].setAttribute('display', 'none');
-          }
-        }
-      },
-      elementChanged: function elementChanged (opts) {
-        const elem = opts.elems[0];
-        if (elem && elem.tagName === 'svg' && elem.id === 'svgcontent') {
-          // Update svgcontent (can change on import)
-          svgcontent = elem;
-        }
-
-        opts.elems.forEach(function (elem) {
-          if (svgcontent.getElementById(elem.id)) {
-          }
-        });
-
-        opts.elems.forEach(function (elem) {
-          if (!svgcontent.getElementById(elem.id)) {
-
-          } else {
-            if (elem.tagName === 'circle' && elem.getAttribute('class') === 'point' && elem.getAttribute('se:IsKey')) {
-              const r = elem.getAttribute('r');
-              if (r <= 0) {
-                elem.setAttribute('r', keyPointRadius);
-              }
-              keyPointRadius = r;
-
-              const strokeWidth = elem.getAttribute('stroke-width');
-              if (strokeWidth !== currentStrokeWidth) {
-                currentStrokeWidth = strokeWidth;
-              }
-            } else if (elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
-              const strokeWidth = elem.getAttribute('stroke-width');
-              if (strokeWidth !== currentStrokeWidth) {
-                currentStrokeWidth = strokeWidth;
-              }
-            }
-          }
-        });
       }
     };
 

@@ -26,71 +26,27 @@ export default {
     const svgEditor = this;
     const svgCanvas = svgEditor.canvas;
     const svgUtils = svgCanvas.getPrivateMethods();
-    const getNextId = S.getNextId,
-      getElem = S.getElem,
-      NS = S.NS,
-      addElem = S.addSvgElementFromJson;
+    const getElem = S.getElem,
+      NS = S.NS;
     let svgcontent = S.svgcontent,
       selRoute = void 0,
       selPoint = void 0;
     const seNs = svgCanvas.getEditorNS(true);
     const svgdoc = document.getElementById('svgcanvas').ownerDocument,
       {assignAttributes} = svgCanvas;
-    // const {curConfig: {initStroke}} = svgEditor;
     let roadline;
-    let currentStrokeWidth = 4, pointRadius = 2, controlRadius = 4;
-
-    // const {
-    //   lang
-    // } = svgEditor.curPrefs;
+    const pointRadius = 2, controlRadius = 4;
 
     //  导入undo/redo
     const {
-      // MoveElementCommand,
-      InsertElementCommand,
       RemoveElementCommand,
       ChangeElementCommand,
       BatchCommand
-      // UndoManager,
-      // HistoryEventTypes
     } = svgUtils;
 
     initPattern();
     // 刷新初始化
     init();
-
-    // 多语言处理
-    const langList = {
-      en: [{
-        id: 'line_horizontal',
-        title: 'Draw horizontal line'
-      }, {
-        id: 'line_vertical',
-        title: 'Draw vertical line'
-      }],
-      zh_CN: [{
-        id: 'line_horizontal',
-        title: '画横线'
-      }, {
-        id: 'line_vertical',
-        title: '画竖线'
-      }, {
-        id: 'line_arc_upleft',
-        title: '画左上弧线'
-      }, {
-        id: 'line_arc_upright',
-        title: '画右上弧线'
-      }, {
-        id: 'line_arc_downleft',
-        title: '画左下弧线'
-      }, {
-        id: 'line_arc_downright',
-        title: '画右下弧线'
-      }, {
-        id: 'line_arc_downright',
-        title: '画右下弧线'
-      }]
-    };
 
     /*
      * 绑定编辑器open和save事件，
@@ -173,7 +129,7 @@ export default {
               route.endSvgId = points[1];
 
               route.IsPositive = this.getAttributeNS(seNs, 'IsPositive');
-              route.Direction = 0;
+              route.Direction = this.getAttributeNS(seNs, 'Direction');
               route.Speed = this.getAttributeNS(seNs, 'Speed');
 
               if (control) {
@@ -302,80 +258,6 @@ export default {
        * 工具栏按钮
        */
       buttons: [
-      // {
-      //   /**
-      //      * 按钮ID，必须和上面图标文件中图标的ID一致
-      //      */
-      //   id: 'line_horizontal',
-      //   /**
-      //      * 标识当前按钮会被添加到左边工具栏
-      //      */
-      //   type: 'mode',
-      //   /**
-      //      * 按钮标题，鼠标放上去会显示
-      //      */
-      //   title: getTitle('line_horizontal'),
-      //   /**
-      //      * 按钮事件
-      //      */
-      //   events: {
-      //     click () {
-      //       // 单击按钮时执行的操作。
-      //       // 对于“模式”按钮，任何其他按钮都将
-      //       // 自动被压缩。
-      //       svgCanvas.setMode('line_horizontal');
-      //     }
-      //   }
-      // }, {
-      //   id: 'line_vertical',
-      //   type: 'mode',
-      //   title: getTitle('line_vertical'),
-      //   events: {
-      //     click () {
-      //       svgCanvas.setMode('line_vertical');
-      //     }
-      //   }
-      // },
-      // {
-      //   id: 'line_arc_upleft',
-      //   type: 'mode',
-      //   title: getTitle('line_arc_upleft'),
-      //   events: {
-      //     click () {
-      //       svgCanvas.setMode('line_arc_upleft');
-      //     }
-      //   }
-      // },
-      // {
-      //   id: 'line_arc_upright',
-      //   type: 'mode',
-      //   title: getTitle('line_arc_upright'),
-      //   events: {
-      //     click () {
-      //       svgCanvas.setMode('line_arc_upright');
-      //     }
-      //   }
-      // },
-      // {
-      //   id: 'line_arc_downleft',
-      //   type: 'mode',
-      //   title: getTitle('line_arc_downleft'),
-      //   events: {
-      //     click () {
-      //       svgCanvas.setMode('line_arc_downleft');
-      //     }
-      //   }
-      // },
-      // {
-      //   id: 'line_arc_downright',
-      //   type: 'mode',
-      //   title: getTitle('line_arc_downright'),
-      //   events: {
-      //     click () {
-      //       svgCanvas.setMode('line_arc_downright');
-      //     }
-      //   }
-      // },
         {
         /**
            * 属性ID按钮
@@ -416,6 +298,28 @@ export default {
           id: 'downarrow',
           svgicon: 'downarrow',
           title: 'backword direction',
+          type: 'context',
+          events: {
+            click: setRouteDirection
+          },
+          panel: 'wcsline_panel',
+          list: 'direction_list'
+        },
+        {
+          id: 'leftarrow',
+          svgicon: 'leftarrow',
+          title: 'left direction',
+          type: 'context',
+          events: {
+            click: setRouteDirection
+          },
+          panel: 'wcsline_panel',
+          list: 'direction_list'
+        },
+        {
+          id: 'rightarrow',
+          svgicon: 'rightarrow',
+          title: 'right direction',
           type: 'context',
           events: {
             click: setRouteDirection
@@ -552,37 +456,8 @@ export default {
       callback: function callback () {
         $('#wcsline_panel').hide();
       },
-      addlangData: function addlangData (lang) {
-        return {
-          data: langList[lang]
-        };
-      },
       onNewDocument: function onNewDocument () {
         initPattern();
-      },
-      /**
-       *
-       * @param {鼠标按下事件} opts
-       */
-      mouseDown (opts) {
-        const mode = svgCanvas.getMode();
-        if (mode === 'line_horizontal') {
-          drawLine(opts);
-        } else if (mode === 'line_vertical') {
-          drawLine(opts, false);
-        } else if (mode === 'line_arc_upleft') {
-          drawArcLine(opts, 'upleft');
-        } else if (mode === 'line_arc_upright') {
-          drawArcLine(opts, 'upright');
-        } else if (mode === 'line_arc_downleft') {
-          drawArcLine(opts, 'downleft');
-        } else if (mode === 'line_arc_downright') {
-          drawArcLine(opts, 'downright');
-        } else if (mode === 'select') {
-          return {
-            started: true
-          };
-        }
       },
       /**
        * 只有在mouseDown函数返回true的时候才会触发
@@ -599,44 +474,9 @@ export default {
             } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
               // be line control point move
               controlMove(elem, opts);
-            } else if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
-              // const pointsAttr = elem.getAttributeNS(seNs, 'points');
-              // if (pointsAttr) {
-              //   const points = pointsAttr.trim().split(' ');
-              //   if (points.length >= 2) {
-              //     getElem(points[0]).setAttribute('display', 'none');
-              //     getElem(points[1]).setAttribute('display', 'none');
-              //   }
-              // }
             }
           }
-          return {
-            started: true
-          };
         }
-      },
-      /**
-       * 只有在mouseDown函数返回true的时候才会触发
-       * @param {鼠标抬起事件} opts
-       */
-      mouseUp (opts) {
-        // if (svgCanvas.getMode() === 'select') {
-        //   if (svgCanvas.getSelectedElems().length === 1) {
-        //     const elems = svgCanvas.getSelectedElems();
-        //     const elem = elems[0];
-
-        //     if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
-        //       const pointsAttr = elem.getAttributeNS(seNs, 'points');
-        //       if (pointsAttr) {
-        //         const points = pointsAttr.trim().split(' ');
-        //         if (points.length >= 2) {
-        //           getElem(points[0]).setAttribute('display', 'inline');
-        //           getElem(points[1]).setAttribute('display', 'inline');
-        //         }
-        //       }
-        //     }
-        //   }
-        // }
       },
       /**
        * 元素选择变化时触发
@@ -647,30 +487,22 @@ export default {
           this.setAttribute('display', 'none');
         });
 
-        if (svgCanvas.getSelectedElems().length === 0) {
-          showPointPanel(false);
-          showRoutePanel(false);
-        }
+        showPointPanel(false);
+        showRoutePanel(false);
+
         if (svgCanvas.getSelectedElems().length === 1) {
           const elem = opts.elems[0];
-
-          if (elem.getAttribute('class') === 'control') {
-            elem.setAttribute('display', 'inline');
-          }
 
           if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
             selRoute = elem;
             selectRoute(selRoute);
             showRoutePanel(true);
-            showPointPanel(false);
-          } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
+          } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point' && elem.getAttribute('se:IsKey')) {
             selPoint = elem;
             selectPoint(selPoint);
             showPointPanel(true);
-            showRoutePanel(false);
-          } else {
-            showRoutePanel(false);
-            showPointPanel(false);
+          } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
+            elem.setAttribute('display', 'inline');
           }
 
           if (elem.getAttribute('class') === 'route' ||
@@ -692,39 +524,6 @@ export default {
           init();
         }
 
-        opts.elems.forEach(function (elem) {
-          if (elem && svgcontent.getElementById(elem.id)) {
-            if (elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
-              const r = elem.getAttribute('r');
-              if (r <= 0) {
-                elem.setAttribute('r', pointRadius);
-              }
-              pointRadius = r;
-
-              const strokeWidth = elem.getAttribute('stroke-width');
-              if (strokeWidth !== currentStrokeWidth) {
-                currentStrokeWidth = strokeWidth;
-              }
-            } else if (elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
-              const r = elem.getAttribute('r');
-              if (r <= 0) {
-                elem.setAttribute('r', controlRadius);
-              }
-              controlRadius = r;
-
-              const strokeWidth = elem.getAttribute('stroke-width');
-              if (strokeWidth !== currentStrokeWidth) {
-                currentStrokeWidth = strokeWidth;
-              }
-            } else if (elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
-              const strokeWidth = elem.getAttribute('stroke-width');
-              if (strokeWidth !== currentStrokeWidth) {
-                currentStrokeWidth = strokeWidth;
-              }
-            }
-          }
-        });
-
         if (opts.elems.length === 1 && elem) {
           if (elem && !svgcontent.getElementById(elem.id)) {
             if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'point') {
@@ -741,17 +540,6 @@ export default {
             } else if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
               // route move
               routeMove(elem);
-
-              const pointsAttr = elem.getAttributeNS(seNs, 'points');
-              if (pointsAttr) {
-                const points = pointsAttr.trim().split(' ');
-                if (points.length >= 2) {
-                  const startElem = getElem(points[0]),
-                    endElem = getElem(points[1]);
-                  if (startElem)startElem.setAttribute('display', 'inline');
-                  if (endElem)endElem.setAttribute('display', 'inline');
-                }
-              }
             } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
               // be line control point move
               controlMove(elem);
@@ -804,227 +592,6 @@ export default {
       } else {
         roadline = roaddef[0].children[0];
       }
-    }
-
-    /**
-     *
-     * @param {鼠标点击事件} opts
-     * @param {直线方向，默认横向} IsHoriaontal
-     */
-    function drawLine (opts, IsHoriaontal = true) {
-      const zoom = svgCanvas.getZoom();
-      const x = opts.start_x;
-      const y = opts.start_y;
-
-      const lineWidth = 100;
-      const halfWidth = parseInt(lineWidth / 2 / zoom);
-
-      let x1, y1, x2, y2;
-      if (IsHoriaontal) {
-        x1 = x - halfWidth;
-        y1 = y;
-        x2 = x + halfWidth;
-        y2 = y;
-      } else {
-        x1 = x;
-        y1 = y - halfWidth;
-        x2 = x;
-        y2 = y + halfWidth;
-      }
-
-      const strokeWidth = currentStrokeWidth / zoom;
-      const strokeColor = '#ff7f00';
-      const fillColor = '#ff7f00';
-
-      const path = addElem({
-        element: 'path',
-        attr: {
-          id: getNextId(),
-          d: 'M' + x1 + ',' + y1 + ' L' + x2 + ',' + y2,
-          stroke: 'url(#roadpattern)',
-          'stroke-width': strokeWidth,
-          fill: 'none',
-          class: 'route'
-        }
-      });
-
-      const startElem = addElem({
-        element: 'circle',
-        attr: {
-          id: getNextId(),
-          cx: x1,
-          cy: y1,
-          r: pointRadius / zoom,
-          stroke: strokeColor,
-          'stroke-width': strokeWidth,
-          fill: fillColor,
-          class: 'point'
-        }
-      });
-
-      startElem.setAttributeNS(seNs, 'se:routes', path.id);
-
-      const endElem = addElem({
-        element: 'circle',
-        attr: {
-          id: getNextId(),
-          cx: x2,
-          cy: y2,
-          r: pointRadius / zoom,
-          stroke: strokeColor,
-          'stroke-width': strokeWidth,
-          fill: fillColor,
-          class: 'point'
-        }
-      });
-
-      endElem.setAttributeNS(seNs, 'se:routes', path.id);
-
-      path.setAttributeNS(seNs, 'se:points', startElem.id + ' ' + endElem.id);
-
-      if (svgCanvas.getSelectedElems().length > 0) {
-        svgCanvas.clearSelection();
-      }
-      svgCanvas.addToSelection([path]);
-
-      const batchCmd = new BatchCommand();
-      batchCmd.addSubCommand(new InsertElementCommand(endElem));
-      batchCmd.addSubCommand(new InsertElementCommand(startElem));
-      batchCmd.addSubCommand(new InsertElementCommand(path));
-      S.addCommandToHistory(batchCmd);
-
-      svgEditor.clickSelect();
-
-      return {
-        keep: true
-      };
-    }
-
-    /**
-     *
-     * @param {鼠标点击事件} opts
-     * @param {弧线方向，默认控制点在弧线左上方} direction
-     */
-    function drawArcLine (opts, direction = 'upleft') {
-      const zoom = svgCanvas.getZoom();
-      const x = opts.start_x;
-      const y = opts.start_y;
-
-      const lineWidth = 100;
-      const halfWidth = parseInt(lineWidth / 2 / zoom);
-      let x1, y1, x2, y2, cx, cy;
-      if (direction === 'upleft') {
-        x1 = x - halfWidth;
-        y1 = y + halfWidth;
-        x2 = x + halfWidth;
-        y2 = y - halfWidth;
-        cx = x - halfWidth;
-        cy = y - halfWidth;
-      } else if (direction === 'upright') {
-        x1 = x - halfWidth;
-        y1 = y - halfWidth;
-        x2 = x + halfWidth;
-        y2 = y + halfWidth;
-        cx = x + halfWidth;
-        cy = y - halfWidth;
-      } else if (direction === 'downleft') {
-        x1 = x - halfWidth;
-        y1 = y - halfWidth;
-        x2 = x + halfWidth;
-        y2 = y + halfWidth;
-        cx = x - halfWidth;
-        cy = y + halfWidth;
-      } else if (direction === 'downright') {
-        x1 = x - halfWidth;
-        y1 = y + halfWidth;
-        x2 = x + halfWidth;
-        y2 = y - halfWidth;
-        cx = x + halfWidth;
-        cy = y + halfWidth;
-      }
-
-      const strokeWidth = currentStrokeWidth / zoom;
-      const strokeColor = '#ff7f00';
-      const fillColor = '#ff7f00';
-
-      const path = addElem({
-        element: 'path',
-        attr: {
-          id: getNextId(),
-          d: 'M' + x1 + ',' + y1 + ' Q' + cx + ',' + cy + ' ' + x2 + ',' + y2,
-          stroke: 'url(#roadpattern)',
-          'stroke-width': strokeWidth,
-          fill: 'none',
-          class: 'route'
-        }
-      });
-
-      const startElem = addElem({
-        element: 'circle',
-        attr: {
-          id: getNextId(),
-          cx: x1,
-          cy: y1,
-          r: pointRadius / zoom,
-          stroke: strokeColor,
-          'stroke-width': strokeWidth,
-          fill: fillColor,
-          class: 'point'
-        }
-      });
-
-      startElem.setAttributeNS(seNs, 'se:routes', path.id);
-
-      const endElem = addElem({
-        element: 'circle',
-        attr: {
-          id: getNextId(),
-          cx: x2,
-          cy: y2,
-          r: pointRadius / zoom,
-          stroke: strokeColor,
-          'stroke-width': strokeWidth,
-          fill: fillColor,
-          class: 'point'
-        }
-      });
-
-      endElem.setAttributeNS(seNs, 'se:routes', path.id);
-
-      const control = addElem({
-        element: 'circle',
-        attr: {
-          id: getNextId(),
-          cx: cx,
-          cy: cy,
-          r: controlRadius / zoom,
-          stroke: 'none',
-          fill: 'red',
-          class: 'control'
-        }
-      });
-
-      control.setAttributeNS(seNs, 'se:path', path.id);
-
-      path.setAttributeNS(seNs, 'se:points', startElem.id + ' ' + endElem.id + ' ' + control.id);
-
-      if (svgCanvas.getSelectedElems().length > 0) {
-        svgCanvas.clearSelection();
-      }
-      svgCanvas.addToSelection([path]);
-
-      const batchCmd = new BatchCommand();
-      batchCmd.addSubCommand(new InsertElementCommand(control));
-      batchCmd.addSubCommand(new InsertElementCommand(endElem));
-      batchCmd.addSubCommand(new InsertElementCommand(startElem));
-      batchCmd.addSubCommand(new InsertElementCommand(path));
-      S.addCommandToHistory(batchCmd);
-
-      svgEditor.clickSelect();
-
-      return {
-        keep: true
-      };
     }
 
     /**
@@ -1105,16 +672,16 @@ export default {
       const code = elem.getAttributeNS(seNs, 'Code');
       $('#wcspoint_code').val(code);
 
-      const routersAttr = elem.getAttributeNS(seNs, 'routes');
-      if (routersAttr) {
-        const routers = routersAttr.trim().split(' ');
-        routers.forEach(function (routeid) {
-          const route = getElem(routeid);
-          if (route) {
-            elem.before(route);
-          }
-        });
-      }
+      // const routersAttr = elem.getAttributeNS(seNs, 'routes');
+      // if (routersAttr) {
+      //   const routers = routersAttr.trim().split(' ');
+      //   routers.forEach(function (routeid) {
+      //     const route = getElem(routeid);
+      //     if (route) {
+      //       elem.before(route);
+      //     }
+      //   });
+      // }
     }
     /**
      *
@@ -1350,14 +917,16 @@ export default {
      * 根据属性面板修改的值设置线方向
      */
     function setRouteDirection () {
-      let val = true;
+      let val = 0;
       if (this.id === 'uparrow') {
-        val = true;
-      } else if (this.id === 'downarrow') {
-        val = false;
+        val = 0;
+      } else if (this.id === 'leftarrow') {
+        val = 10;
+      } else if (this.id === 'rightarrow') {
+        val = 20;
       }
       if (selRoute) {
-        selRoute.setAttributeNS(seNs, 'se:IsPositive', val);
+        selRoute.setAttributeNS(seNs, 'se:Direction', val);
       }
     }
     /**
@@ -1438,18 +1007,6 @@ export default {
       }
     }
 
-    // /**
-    //  * 获取多语言标题
-    //  */
-    // function getTitle (id, curLang = lang) {
-    //   const list = langList[lang];
-    //   for (const i in list) {
-    //     if (list.hasOwnProperty(i) && list[i].id === id) {
-    //       return list[i].title;
-    //     }
-    //   }
-    //   return id;
-    // }
     /**
      *
      * @param {缩放级别} zoom
@@ -1458,11 +1015,11 @@ export default {
       $(svgcontent).find('.point').each(function () {
         if (!this.getAttribute('se:IsKey')) {
           this.setAttribute('stroke-width', 1);
-          this.setAttribute('r', 4 / zoom);
+          this.setAttribute('r', pointRadius / zoom);
         }
       });
       $(svgcontent).find('.control').each(function () {
-        this.setAttribute('r', 6 / zoom);
+        this.setAttribute('r', controlRadius / zoom);
       });
     }
 
@@ -1474,31 +1031,6 @@ export default {
       roadline.setAttribute('x', 1 / zoom);
       roadline.setAttribute('y', 1 / zoom);
     }
-
-    // function setRoutePositive (map, currentRoute) {
-    //   let checkPoint;
-    //   if (currentRoute.IsPositive === 'true') {
-    //     checkPoint = map.Points.find(function (item) {
-    //       return item.svgId === currentRoute.endSvgId;
-    //     });
-    //   } else if (currentRoute.IsPositive === 'false') {
-    //     checkPoint = map.Points.find(function (item) {
-    //       return item.svgId === currentRoute.startSvgId;
-    //     });
-    //   }
-
-    //   map.Routes.forEach(function (item) {
-    //     if (item.svgId !== currentRoute.svgId) {
-    //       if (item.startSvgId === checkPoint.svgId) {
-    //         item.IsPositive = 'true';
-    //         setRoutePositive(map, item);
-    //       } else if (item.endSvgId === checkPoint.svgId) {
-    //         item.IsPositive = 'false';
-    //         setRoutePositive(map, item);
-    //       }
-    //     }
-    //   });
-    // }
 
     return extConfig;
   }
