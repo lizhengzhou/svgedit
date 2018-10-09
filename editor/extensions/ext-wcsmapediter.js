@@ -604,7 +604,7 @@ export default {
       const cx = opts ? opts.mouse_x / zoom : elem.getAttribute('cx'),
         cy = opts ? opts.mouse_y / zoom : elem.getAttribute('cy');
 
-      const routersAttr = elem.getAttributeNS(seNs, 'routes');
+      const routersAttr = elem.getAttribute('se:routes');
       if (routersAttr) {
         const routers = routersAttr.trim().split(' ');
         routers.forEach(function (routeid) {

@@ -16,16 +16,16 @@ export default {
     const svgCanvas = svgEditor.canvas;
     const seNs = svgCanvas.getEditorNS(true);
     const getElem = S.getElem;
-    // const svgUtils = svgCanvas.getPrivateMethods();
+    const svgUtils = svgCanvas.getPrivateMethods();
     const controlRadius = 4;
     let fromElem, toElem, startElem, endElem;
 
-    // //  导入undo/redo
-    // const {
-    //   InsertElementCommand,
-    //   ChangeElementCommand,
-    //   BatchCommand
-    // } = svgUtils;
+    //  导入undo/redo
+    const {
+      RemoveElementCommand,
+      ChangeElementCommand,
+      BatchCommand
+    } = svgUtils;
 
     const {
       lang
@@ -104,6 +104,22 @@ export default {
               }
 
               const controlPoint = getElem(repeatPoint);
+
+              const startElemAttr = {
+                d: startElem.getAttribute('d'),
+                'se:points': startElem.getAttribute('se:points'),
+                'stroke-width': startElem.orignRadis
+              };
+              const controlPointAttr = {
+                class: controlPoint.getAttribute('class'),
+                fill: controlPoint.getAttribute('fill'),
+                stroke: controlPoint.getAttribute('stroke'),
+                r: controlPoint.getAttribute('r'),
+                display: controlPoint.getAttribute('display'),
+                'se:routes': controlPoint.getAttribute('se:routes'),
+                'se:path': controlPoint.getAttribute('se:path')
+              };
+
               controlPoint.setAttribute('class', 'control');
               controlPoint.setAttribute('fill', 'red');
               controlPoint.setAttribute('stroke', 'red');
@@ -133,9 +149,20 @@ export default {
                 endPoint.setAttributeNS(seNs, 'se:routes', routers.join(' '));
               }
 
+              fromElem.setAttribute('stroke-width', fromElem.orignRadis);
+              toElem.setAttribute('stroke-width', toElem.orignRadis2);
+
+              const batchCmd = new BatchCommand();
+              batchCmd.addSubCommand(new ChangeElementCommand(controlPoint, controlPointAttr));
+              batchCmd.addSubCommand(new ChangeElementCommand(startElem, startElemAttr));
+              batchCmd.addSubCommand(new ChangeElementCommand(endPoint, {
+                'se:routes': routersAttr
+              }));
+              batchCmd.addSubCommand(new RemoveElementCommand(endElem, endElem.nextSibling, endElem.parentNode));
+              S.addCommandToHistory(batchCmd);
+
               endElem.remove();
 
-              fromElem.setAttribute('stroke-width', fromElem.orignRadis);
               fromElem = null;
               toElem = null;
               startElem = null;
