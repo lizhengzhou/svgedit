@@ -113,7 +113,7 @@ const callbacks = [],
       opacity: 1
     },
     initStroke: {
-      width: 5,
+      width: 4,
       color: '000000', // solid black
       opacity: 1
     },
@@ -149,6 +149,7 @@ const callbacks = [],
     baseUnit: 'px',
     snappingStep: 10,
     showRulers: true,
+    defaultStrokeWidth: 4,
     // URL BEHAVIOR CONFIGURATION
     preventAllURLConfig: false,
     preventURLContentLoading: false,
@@ -1858,7 +1859,10 @@ editor.init = function () {
         paintBox.fill.update(true);
         paintBox.stroke.update(true);
 
-        $('#stroke_width').val(selectedElement.getAttribute('stroke-width') || 1);
+        if (selectedElement.getAttribute('stroke-width')) {
+          $('#stroke_width').val(selectedElement.getAttribute('stroke-width'));
+        }
+
         $('#stroke_style').val(selectedElement.getAttribute('stroke-dasharray') || 'none');
 
         let attr = selectedElement.getAttribute('stroke-linejoin') || 'miter';
@@ -3870,6 +3874,8 @@ editor.init = function () {
     $('#grid_snapping_step').attr('value', curConfig.snappingStep);
     $('#grid_color').attr('value', curConfig.gridColor);
 
+    $('#default_stroke_width input').val(curConfig.defaultStrokeWidth);
+
     $('#svg_prefs').show();
   };
 
@@ -3974,6 +3980,9 @@ editor.init = function () {
     curConfig.snappingStep = $('#grid_snapping_step').val();
     curConfig.gridColor = $('#grid_color').val();
     curConfig.showRulers = $('#show_rulers')[0].checked;
+
+    curConfig.defaultStrokeWidth = $('#default_stroke_width input').val();
+    $('#stroke_width').val($('#default_stroke_width input').val());
 
     $('#rulers').toggle(curConfig.showRulers);
     if (curConfig.showRulers) { updateRulers(); }

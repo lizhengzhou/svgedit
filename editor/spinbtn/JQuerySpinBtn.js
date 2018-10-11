@@ -130,7 +130,7 @@ export default function ($) {
       };
 
       $(this)
-        .addClass(cfg.spinClass || 'spin-button')
+        .addClass(cfg.spinClass)
 
         .mousemove(function (e) {
           // Determine which button mouse is over, or not (spin direction):

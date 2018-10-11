@@ -24,7 +24,6 @@ export default {
     const seNs = svgCanvas.getEditorNS(true);
 
     let fromElem, toElem, IsDrawing, startElem, endElem, path, currentRoute, IsControl, controlElem;
-    const currentStrokeWidth = 4, pointRadius = 2, controlRadius = 4;
     let batchCmdList = [];
     let startElemCmd, endElemCmd, controlElemCmd;
 
@@ -112,9 +111,9 @@ export default {
                   id: getNextId(),
                   cx: x,
                   cy: y,
-                  r: pointRadius / zoom,
-                  stroke: '#ff7f00',
-                  'stroke-width': currentStrokeWidth,
+                  r: $('#default_stroke_width input').val() / 2 / zoom,
+                  stroke: 'none',
+                  'stroke-width': $('#default_stroke_width input').val(),
                   fill: '#ff7f00',
                   class: 'point'
                 }
@@ -127,7 +126,7 @@ export default {
                 id: getNextId(),
                 d: 'M' + x + ',' + y + ' L' + x + ',' + y,
                 stroke: 'url(#roadpattern)',
-                'stroke-width': currentStrokeWidth,
+                'stroke-width': $('#default_stroke_width input').val(),
                 fill: 'none',
                 class: 'route'
               }
@@ -205,9 +204,9 @@ export default {
                   id: getNextId(),
                   cx: x,
                   cy: y,
-                  r: pointRadius / zoom,
-                  stroke: '#ff7f00',
-                  'stroke-width': currentStrokeWidth,
+                  r: $('#default_stroke_width input').val() / 2 / zoom,
+                  stroke: 'none',
+                  'stroke-width': $('#default_stroke_width input').val(),
                   fill: '#ff7f00',
                   class: 'point'
                 }
@@ -255,7 +254,7 @@ export default {
                   id: getNextId(),
                   d: 'M' + x + ',' + y + ' L' + x + ',' + y,
                   stroke: 'url(#roadpattern)',
-                  'stroke-width': currentStrokeWidth,
+                  'stroke-width': $('#default_stroke_width input').val(),
                   fill: 'none',
                   class: 'route'
                 }
@@ -273,7 +272,7 @@ export default {
                 id: getNextId(),
                 cx: x,
                 cy: y,
-                r: controlRadius / zoom,
+                r: $('#default_stroke_width input').val() / zoom,
                 stroke: 'none',
                 fill: 'red',
                 class: 'control'

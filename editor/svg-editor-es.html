@@ -600,6 +600,13 @@
             </label>
           </fieldset>
         </fieldset>
+        <fieldset id="default_stroke_width_opts">
+          <legend id="defaultstrokewidth">默认线宽</legend>
+          <label>
+            <input type="text" name="default_stroke_width" value="4" />
+          </label>
+        </fieldset>
+      </fieldset>
       </div>
     </div>
     <div id="svg_prefs">
@@ -655,62 +662,71 @@
             </label>
             <p id="svginfo_bg_note">Note: Background will not be saved with image.</p>
           </fieldset>
-          <fieldset id="change_grid">
-            <legend id="svginfo_grid_settings">Grid</legend>
+          <fieldset id="default_stroke_width">
+            <legend id="svginfo_default_stroke_width">默认线宽</legend>
             <label>
-              <span id="svginfo_snap_onoff">Snapping on/off</span>
-              <input type="checkbox" value="snapping_on" id="grid_snapping_on" />
-            </label>
-            <label>
-              <span id="svginfo_snap_step">Snapping Step-Size:</span>
-              <input type="text" id="grid_snapping_step" size="3" value="10" />
-            </label>
-            <label>
-              <span id="svginfo_grid_color">Grid color:</span>
-              <input type="text" id="grid_color" size="3" value="#000" />
+              <input type="text" name="default_stroke_width" value="4" />
             </label>
           </fieldset>
-          <fieldset id="units_rulers">
-            <legend id="svginfo_units_rulers">Units &amp; Rulers</legend>
-            <label>
-              <span id="svginfo_rulers_onoff">Show rulers</span>
-              <input id="show_rulers" type="checkbox" value="show_rulers" checked="checked" />
-            </label>
-            <label>
-              <span id="svginfo_unit">Base Unit:</span>
-              <select id="base_unit">
-                <option value="px">Pixels</option>
-                <option value="cm">Centimeters</option>
-                <option value="mm">Millimeters</option>
-                <option value="in">Inches</option>
-                <option value="pt">Points</option>
-                <option value="pc">Picas</option>
-                <option value="em">Ems</option>
-                <option value="ex">Exs</option>
-              </select>
-            </label>
-            <!-- Should this be an export option instead? -->
-            <!--
-        <span id="svginfo_unit_system">Unit System:</span>
-        <label>
-          <input type="radio" name="unit_system" value="single" checked="checked"/>
-          <span id="svginfo_single_type_unit">Single type unit</span>
-          <small id="svginfo_single_type_unit_sub">
-            CSS unit type is set on root element.
-            If a different unit type is entered in a text
-            field, it is converted back to user units on export.
-          </small>
-        </label>
-        <label>
-          <input type="radio" name="unit_system" value="multi"/>
-          <span id="svginfo_multi_units">Multiple CSS units</span>
-          <small id="svginfo_single_type_unit_sub">
-            Attributes can be given different CSS units, which may
-            lead to inconsistant results among viewers.
-          </small>
-        </label>
-        -->
+          <fieldset>
+            <fieldset id="change_grid">
+              <legend id="svginfo_grid_settings">Grid</legend>
+              <label>
+                <span id="svginfo_snap_onoff">Snapping on/off</span>
+                <input type="checkbox" value="snapping_on" id="grid_snapping_on" />
+              </label>
+              <label>
+                <span id="svginfo_snap_step">Snapping Step-Size:</span>
+                <input type="text" id="grid_snapping_step" size="3" value="10" />
+              </label>
+              <label>
+                <span id="svginfo_grid_color">Grid color:</span>
+                <input type="text" id="grid_color" size="3" value="#000" />
+              </label>
+            </fieldset>
+            <fieldset id="units_rulers">
+              <legend id="svginfo_units_rulers">Units &amp; Rulers</legend>
+              <label>
+                <span id="svginfo_rulers_onoff">Show rulers</span>
+                <input id="show_rulers" type="checkbox" value="show_rulers" checked="checked" />
+              </label>
+              <label>
+                <span id="svginfo_unit">Base Unit:</span>
+                <select id="base_unit">
+                  <option value="px">Pixels</option>
+                  <option value="cm">Centimeters</option>
+                  <option value="mm">Millimeters</option>
+                  <option value="in">Inches</option>
+                  <option value="pt">Points</option>
+                  <option value="pc">Picas</option>
+                  <option value="em">Ems</option>
+                  <option value="ex">Exs</option>
+                </select>
+              </label>
+              <!-- Should this be an export option instead? -->
+              <!--
+          <span id="svginfo_unit_system">Unit System:</span>
+          <label>
+            <input type="radio" name="unit_system" value="single" checked="checked"/>
+            <span id="svginfo_single_type_unit">Single type unit</span>
+            <small id="svginfo_single_type_unit_sub">
+              CSS unit type is set on root element.
+              If a different unit type is entered in a text
+              field, it is converted back to user units on export.
+            </small>
+          </label>
+          <label>
+            <input type="radio" name="unit_system" value="multi"/>
+            <span id="svginfo_multi_units">Multiple CSS units</span>
+            <small id="svginfo_single_type_unit_sub">
+              Attributes can be given different CSS units, which may
+              lead to inconsistant results among viewers.
+            </small>
+          </label>
+          -->
+            </fieldset>
           </fieldset>
+         
         </fieldset>
       </div>
     </div>

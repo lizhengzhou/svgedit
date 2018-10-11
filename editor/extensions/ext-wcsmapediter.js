@@ -35,7 +35,6 @@ export default {
     const svgdoc = document.getElementById('svgcanvas').ownerDocument,
       {assignAttributes} = svgCanvas;
     let roadline;
-    const pointRadius = 2, controlRadius = 4;
 
     //  导入undo/redo
     const {
@@ -486,6 +485,12 @@ export default {
         $(svgcontent).find('.control').each(function () {
           this.setAttribute('display', 'none');
         });
+
+        if (svgCanvas.getSelectedElems().length === 0) {
+          if ($('#default_stroke_width input').val()) {
+            $('#stroke_width').val($('#default_stroke_width input').val());
+          }
+        }
 
         showPointPanel(false);
         showRoutePanel(false);
@@ -1015,11 +1020,11 @@ export default {
       $(svgcontent).find('.point').each(function () {
         if (!this.getAttribute('se:IsKey')) {
           this.setAttribute('stroke-width', 1);
-          this.setAttribute('r', pointRadius / zoom);
+          this.setAttribute('r', $('#default_stroke_width input').val() / 2 / zoom);
         }
       });
       $(svgcontent).find('.control').each(function () {
-        this.setAttribute('r', controlRadius / zoom);
+        this.setAttribute('r', $('#default_stroke_width input').val() / zoom);
       });
     }
 

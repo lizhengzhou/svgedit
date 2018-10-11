@@ -1,3 +1,4 @@
+/* globals jQuery */
 /*
  * ext-wcspointmerge.js
  * https://github.com/lizhengzhou/svgedit.git
@@ -15,6 +16,7 @@ export default {
    */
   name: 'wcspointmerge',
   init (S) {
+    const $ = jQuery;
     const svgEditor = this;
     const svgCanvas = svgEditor.canvas,
       addElem = S.addSvgElementFromJson,
@@ -22,7 +24,6 @@ export default {
     const svgUtils = svgCanvas.getPrivateMethods();
     const seNs = svgCanvas.getEditorNS(true);
     let IsDrawing, fromElem, toElem, currentLine;
-    const currentStrokeWidth = 4;
 
     const {
       lang
@@ -73,6 +74,8 @@ export default {
             const x = fromElem.getAttribute('cx');
             const y = fromElem.getAttribute('cy');
 
+            const defaultStrokeWidth = $('#default_stroke_width input').val();
+
             currentLine = addElem({
               element: 'line',
               attr: {
@@ -81,7 +84,7 @@ export default {
                 x2: x,
                 y2: y,
                 stroke: '#ff7f00',
-                'stroke-width': currentStrokeWidth / zoom,
+                'stroke-width': defaultStrokeWidth / zoom,
                 'stroke-dasharray': '5,5'
               }
             });

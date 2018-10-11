@@ -1,5 +1,5 @@
 
-// /* globals jQuery */
+/* globals jQuery */
 /*
  * ext-wcschamfer.js
  *
@@ -11,13 +11,12 @@
 export default {
   name: 'chamfer',
   init (S) {
-    // const $ = jQuery;
+    const $ = jQuery;
     const svgEditor = this;
     const svgCanvas = svgEditor.canvas;
     const seNs = svgCanvas.getEditorNS(true);
     const getElem = S.getElem;
     const svgUtils = svgCanvas.getPrivateMethods();
-    const controlRadius = 4;
     let fromElem, toElem, startElem, endElem;
 
     //  导入undo/redo
@@ -123,7 +122,7 @@ export default {
               controlPoint.setAttribute('class', 'control');
               controlPoint.setAttribute('fill', 'red');
               controlPoint.setAttribute('stroke', 'red');
-              controlPoint.setAttribute('r', controlRadius / zoom);
+              controlPoint.setAttribute('r', $('#default_stroke_width input').val() / zoom);
               controlPoint.removeAttribute('se:routes');
 
               const x1 = startPoint.getAttribute('cx'),
