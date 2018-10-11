@@ -1,4 +1,4 @@
-// /* globals jQuery */
+/* globals jQuery */
 /*
  * ext-point.js
  *
@@ -10,7 +10,7 @@
 export default {
   name: 'point',
   init (S) {
-    // const $ = jQuery;
+    const $ = jQuery;
     const svgEditor = this;
     const svgCanvas = svgEditor.canvas,
       addElem = S.addSvgElementFromJson;
@@ -18,7 +18,7 @@ export default {
     const getNextId = S.getNextId,
       getElem = S.getElem;
     const svgUtils = svgCanvas.getPrivateMethods();
-    const currentStrokeWidth = 4, keyPointRadius = 6;
+    const keyPointRadius = 6;
 
     //  导入undo/redo
     const {
@@ -123,7 +123,7 @@ export default {
             const route = mouseTarget;
             const curve = route.pathSegList.getItem(1);
 
-            const strokeWidth = currentStrokeWidth;
+            const strokeWidth = $('#default_stroke_width input').val();
             const path = addElem({
               element: 'path',
               attr: {
@@ -158,7 +158,7 @@ export default {
                 cy: y,
                 r: keyPointRadius,
                 stroke: stroke,
-                'stroke-width': strokeWidth,
+                'stroke-width': 4,
                 fill: '#fff',
                 class: 'point'
               }
