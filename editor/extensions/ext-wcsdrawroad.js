@@ -89,7 +89,6 @@ export default {
       }],
       mouseDown: function mouseMove (opts) {
         if (svgCanvas.getMode() === 'drawroad') {
-          const zoom = svgCanvas.getZoom();
           if (!IsDrawing) {
             /**
              * 如果选择了起始点，则使用起始点画路线；如果没有选择起始点，则新画一个起始点
@@ -111,7 +110,7 @@ export default {
                   id: getNextId(),
                   cx: x,
                   cy: y,
-                  r: $('#default_stroke_width input').val() / 2 / zoom,
+                  r: $('#default_stroke_width input').val() / 2,
                   stroke: 'none',
                   'stroke-width': $('#default_stroke_width input').val(),
                   fill: '#ff7f00',
@@ -148,7 +147,7 @@ export default {
                   id: getNextId(),
                   cx: x,
                   cy: y,
-                  r: $('#default_stroke_width input').val() / 2 / zoom,
+                  r: $('#default_stroke_width input').val() / 2,
                   stroke: 'none',
                   'stroke-width': $('#default_stroke_width input').val(),
                   fill: '#ff7f00',
@@ -216,7 +215,7 @@ export default {
                 id: getNextId(),
                 cx: x,
                 cy: y,
-                r: $('#default_stroke_width input').val() / zoom,
+                r: $('#default_stroke_width input').val(),
                 stroke: 'none',
                 fill: 'red',
                 class: 'control'

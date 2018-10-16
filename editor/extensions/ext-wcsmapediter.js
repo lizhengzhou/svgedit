@@ -545,6 +545,7 @@ export default {
             } else if (elem && elem.tagName === 'path' && elem.getAttribute('class') === 'route') {
               // route move
               routeMove(elem);
+              routeChanged(elem);
             } else if (elem && elem.tagName === 'circle' && elem.getAttribute('class') === 'control') {
               // be line control point move
               controlMove(elem);
@@ -725,6 +726,25 @@ export default {
           control.setAttribute('cx', curve.x1);
           control.setAttribute('cy', curve.y1);
         }
+      }
+    }
+
+    /**
+     *
+     * @param {*} route
+     */
+    function routeChanged (route) {
+      const strokeWidth = route.getAttribute('stroke-width');
+      const pattr = route.getAttributeNS(seNs, 'points');
+      if (pattr) {
+        const points = pattr.trim().split(' ');
+        points.forEach(function (id) {
+          const point = getElem(id);
+          if (point) {
+            point.setAttribute('stroke-width', strokeWidth);
+            point.setAttribute('r', strokeWidth / 2);
+          }
+        });
       }
     }
     /**
