@@ -19,6 +19,7 @@ export default {
     const $ = jQuery;
     const svgCanvas = svgEditor.canvas;
     const addElem = S.addSvgElementFromJson;
+    const getElem = S.getElem;
     const getNextId = S.getNextId;
     const svgUtils = svgCanvas.getPrivateMethods();
     const seNs = svgCanvas.getEditorNS(true);
@@ -26,6 +27,7 @@ export default {
     let fromElem, toElem, IsDrawing, startElem, endElem, path, currentRoute, IsControl, controlElem;
     let batchCmdList = [];
     let startElemCmd, endElemCmd, controlElemCmd;
+    let selRoute;
 
     const {
       InsertElementCommand,
@@ -41,6 +43,9 @@ export default {
       if (IsDrawing) {
         if (currentRoute) {
           currentRoute.remove();
+        }
+        if (!path) {
+          startElem.remove();
         }
         clearDrawing();
         if (batchCmdList.length > 0) {
@@ -137,10 +142,13 @@ export default {
           if (IsDrawing && !IsControl) {
             const curve = currentRoute.pathSegList.getItem(1);
             const x = curve.x, y = curve.y;
-            if (!toElem) {
-            /**
-             * 画终点
-             */
+
+            if (toElem) {
+              endElem = toElem;
+            } else {
+              /**
+               * 画终点
+               */
               endElem = addElem({
                 element: 'circle',
                 attr: {
@@ -154,11 +162,10 @@ export default {
                   class: 'point'
                 }
               });
-              endElem.setAttributeNS(seNs, 'se:routes', currentRoute.id);
             }
 
             let routeAttr = startElem.getAttributeNS(seNs, 'routes');
-            const orgRouteAttr = routeAttr;
+            let orgRouteAttr = routeAttr;
             if (!routeAttr) {
               routeAttr = currentRoute.id;
             } else {
@@ -174,7 +181,22 @@ export default {
               });
             }
 
-            endElemCmd = new InsertElementCommand(endElem);
+            routeAttr = endElem.getAttributeNS(seNs, 'routes');
+            orgRouteAttr = routeAttr;
+            if (!routeAttr) {
+              routeAttr = currentRoute.id;
+            } else {
+              routeAttr += ' ' + currentRoute.id;
+            }
+            endElem.setAttributeNS(seNs, 'se:routes', routeAttr);
+
+            if (!orgRouteAttr) {
+              endElemCmd = new InsertElementCommand(endElem);
+            } else {
+              endElemCmd = new ChangeElementCommand(endElem, {
+                'se:routes': orgRouteAttr
+              });
+            }
 
             currentRoute.setAttributeNS(seNs, 'se:points', startElem.id + ' ' + endElem.id);
 
@@ -190,6 +212,7 @@ export default {
            * 开始点为上一个结束点，新画线
            */
             startElem = endElem;
+            endElem = null;
             path = currentRoute;
 
             currentRoute = addElem({
@@ -241,30 +264,36 @@ export default {
       },
       mouseMove: function mouseMove (opts) {
         if (svgCanvas.getMode() === 'drawroad') {
+          const mouseTarget = opts.event.target;
+          if (mouseTarget && mouseTarget !== selRoute && mouseTarget.tagName === 'path' && mouseTarget.getAttribute('class') === 'route') {
+            selRoute = mouseTarget;
+            focusRoute(selRoute);
+          }
+
           if (!IsDrawing) {
             /**
              * 突出显示选中的起始点
              */
-            const mouseTarget = opts.event.target;
             if (mouseTarget && mouseTarget !== fromElem && mouseTarget.tagName === 'circle' && mouseTarget.getAttribute('class') === 'point') {
               fromElem = mouseTarget;
               fromElem.orignRadis = fromElem.getAttribute('r');
               fromElem.setAttribute('r', fromElem.orignRadis * 3);
             } else if (fromElem && mouseTarget && mouseTarget.tagName === 'svg') {
               fromElem.setAttribute('r', fromElem.orignRadis);
+              fromElem.orignRadis = null;
               fromElem = null;
             }
           } else {
             /**
              * 突出显示选中的终点
              */
-            const mouseTarget = opts.event.target;
-            if (mouseTarget && endElem && mouseTarget !== toElem && mouseTarget.tagName === 'circle' && mouseTarget.getAttribute('class') === 'point') {
+            if (mouseTarget && mouseTarget !== toElem && mouseTarget.tagName === 'circle' && mouseTarget.getAttribute('class') === 'point') {
               toElem = mouseTarget;
-              toElem.orignRadis2 = toElem.getAttribute('r');
-              toElem.setAttribute('r', toElem.orignRadis2 * 3);
+              toElem.orignRadis = toElem.getAttribute('r');
+              toElem.setAttribute('r', toElem.orignRadis * 3);
             } else if (toElem && mouseTarget && mouseTarget.tagName === 'svg') {
-              toElem.setAttribute('r', toElem.orignRadis2);
+              toElem.setAttribute('r', toElem.orignRadis);
+              toElem.orignRadis = null;
               toElem = null;
             }
           }
@@ -306,15 +335,20 @@ export default {
         IsDrawing = false;
 
         if (toElem) {
-          toElem.setAttribute('r', toElem.orignRadis2);
+          toElem.setAttribute('r', toElem.orignRadis);
+          toElem.orignRadis = null;
           toElem = null;
         }
         if (fromElem) {
           fromElem.setAttribute('r', fromElem.orignRadis);
+          fromElem.orignRadis = null;
           fromElem = null;
         }
         if (currentRoute) {
           currentRoute = null;
+        }
+        if (path) {
+          path = null;
         }
         if (startElem) {
           startElem = null;
@@ -322,6 +356,28 @@ export default {
         if (endElem) {
           endElem = null;
         }
+      }
+    }
+
+    function focusRoute (route) {
+      const pointAttr = route.getAttribute('se:points');
+      if (pointAttr) {
+        const points = pointAttr.trim().split(' ');
+        points.forEach(function (pointId) {
+          const point = getElem(pointId);
+          moveToFront(point);
+        });
+      }
+    }
+
+    function moveToFront (point) {
+      const routeAttr = point.getAttribute('se:routes');
+      if (routeAttr) {
+        const routes = routeAttr.trim().split(' ');
+        routes.forEach(function (routeid) {
+          const route = getElem(routeid);
+          point.before(route);
+        });
       }
     }
 
