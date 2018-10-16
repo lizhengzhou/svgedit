@@ -136,68 +136,12 @@ export default {
           }
 
           if (IsDrawing && !IsControl) {
-            if (toElem) {
-              endElem = toElem;
-
-              let routeAttr = startElem.getAttributeNS(seNs, 'routes');
-              let orgRouteAttr = routeAttr;
-              if (!routeAttr) {
-                routeAttr = currentRoute.id;
-              } else {
-                routeAttr += ' ' + currentRoute.id;
-              }
-              startElem.setAttributeNS(seNs, 'se:routes', routeAttr);
-
-              if (!orgRouteAttr) {
-                startElemCmd = new InsertElementCommand(startElem);
-              } else {
-                startElemCmd = new ChangeElementCommand(startElem, {
-                  'se:routes': orgRouteAttr
-                });
-              }
-
-              routeAttr = endElem.getAttributeNS(seNs, 'routes');
-              orgRouteAttr = routeAttr;
-              if (!routeAttr) {
-                routeAttr = currentRoute.id;
-              } else {
-                routeAttr += ' ' + currentRoute.id;
-              }
-              endElem.setAttributeNS(seNs, 'se:routes', routeAttr);
-
-              endElemCmd = new ChangeElementCommand(endElem, {
-                'se:routes': orgRouteAttr
-              });
-
-              currentRoute.setAttributeNS(seNs, 'se:points', startElem.id + ' ' + endElem.id);
-
-              batchCmdList.push(startElemCmd);
-              batchCmdList.push(new InsertElementCommand(currentRoute));
-              if (controlElemCmd) {
-                batchCmdList.push(controlElemCmd);
-                controlElemCmd = null;
-              }
-              batchCmdList.push(endElemCmd);
-
-              clearDrawing();
-
-              if (batchCmdList.length > 0) {
-                const batchCmd = new BatchCommand();
-                batchCmdList.reverse();
-                batchCmdList.forEach((v) => {
-                  batchCmd.addSubCommand(v);
-                });
-                batchCmdList = [];
-                S.addCommandToHistory(batchCmd);
-              }
-            } else {
-              /**
+            const curve = currentRoute.pathSegList.getItem(1);
+            const x = curve.x, y = curve.y;
+            if (!toElem) {
+            /**
              * 画终点
              */
-              const curve = currentRoute.pathSegList.getItem(1);
-
-              const x = curve.x, y = curve.y;
-
               endElem = addElem({
                 element: 'circle',
                 attr: {
@@ -212,54 +156,54 @@ export default {
                 }
               });
               endElem.setAttributeNS(seNs, 'se:routes', currentRoute.id);
+            }
 
-              let routeAttr = startElem.getAttributeNS(seNs, 'routes');
-              const orgRouteAttr = routeAttr;
-              if (!routeAttr) {
-                routeAttr = currentRoute.id;
-              } else {
-                routeAttr += ' ' + currentRoute.id;
-              }
-              startElem.setAttributeNS(seNs, 'se:routes', routeAttr);
+            let routeAttr = startElem.getAttributeNS(seNs, 'routes');
+            const orgRouteAttr = routeAttr;
+            if (!routeAttr) {
+              routeAttr = currentRoute.id;
+            } else {
+              routeAttr += ' ' + currentRoute.id;
+            }
+            startElem.setAttributeNS(seNs, 'se:routes', routeAttr);
 
-              if (!orgRouteAttr) {
-                startElemCmd = new InsertElementCommand(startElem);
-              } else {
-                startElemCmd = new ChangeElementCommand(startElem, {
-                  'se:routes': orgRouteAttr
-                });
-              }
-
-              endElemCmd = new InsertElementCommand(endElem);
-
-              currentRoute.setAttributeNS(seNs, 'se:points', startElem.id + ' ' + endElem.id);
-
-              batchCmdList.push(startElemCmd);
-              batchCmdList.push(new InsertElementCommand(currentRoute));
-              if (controlElemCmd) {
-                batchCmdList.push(controlElemCmd);
-                controlElemCmd = null;
-              }
-              batchCmdList.push(endElemCmd);
-
-              /**
-             * 开始点为上一个结束点，新画线
-             */
-              startElem = endElem;
-              path = currentRoute;
-
-              currentRoute = addElem({
-                element: 'path',
-                attr: {
-                  id: getNextId(),
-                  d: 'M' + x + ',' + y + ' L' + x + ',' + y,
-                  stroke: 'url(#roadpattern)',
-                  'stroke-width': $('#default_stroke_width input').val(),
-                  fill: 'none',
-                  class: 'route'
-                }
+            if (!orgRouteAttr) {
+              startElemCmd = new InsertElementCommand(startElem);
+            } else {
+              startElemCmd = new ChangeElementCommand(startElem, {
+                'se:routes': orgRouteAttr
               });
             }
+
+            endElemCmd = new InsertElementCommand(endElem);
+
+            currentRoute.setAttributeNS(seNs, 'se:points', startElem.id + ' ' + endElem.id);
+
+            batchCmdList.push(startElemCmd);
+            batchCmdList.push(new InsertElementCommand(currentRoute));
+            if (controlElemCmd) {
+              batchCmdList.push(controlElemCmd);
+              controlElemCmd = null;
+            }
+            batchCmdList.push(endElemCmd);
+
+            /**
+           * 开始点为上一个结束点，新画线
+           */
+            startElem = endElem;
+            path = currentRoute;
+
+            currentRoute = addElem({
+              element: 'path',
+              attr: {
+                id: getNextId(),
+                d: 'M' + x + ',' + y + ' L' + x + ',' + y,
+                stroke: 'url(#roadpattern)',
+                'stroke-width': $('#default_stroke_width input').val(),
+                fill: 'none',
+                class: 'route'
+              }
+            });
           }
 
           if (IsDrawing && IsControl && !controlElem) {

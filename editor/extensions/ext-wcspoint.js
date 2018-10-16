@@ -1,6 +1,6 @@
 /* globals jQuery */
 /*
- * ext-point.js
+ * ext-wcspoint.js
  *
  *
  * Copyright(c) 2010 CloudCanvas, Inc.
@@ -137,7 +137,7 @@ export default {
             });
             cmdArr.push(new InsertElementCommand(path));
 
-            let stroke = '#505050';
+            let stroke = '#505050', radius = keyPointRadius;
             switch (mode.split('_')[1]) {
             case 'IsControl':
               stroke = '#84BD00';
@@ -148,6 +148,8 @@ export default {
             case 'IsMaterial':
               stroke = '#CB3338';
               break;
+            default:
+              radius = 4;
             }
 
             const point = addElem({
@@ -156,7 +158,7 @@ export default {
                 id: getNextId(),
                 cx: x,
                 cy: y,
-                r: keyPointRadius,
+                r: radius,
                 stroke: stroke,
                 'stroke-width': 4,
                 fill: '#fff',

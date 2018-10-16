@@ -554,7 +554,7 @@ export default {
       },
       zoomChanged (zoom) {
         updatePattern(zoom);
-        updateMap(zoom);
+        // updateMap(zoom);
       }
     };
 
@@ -1012,21 +1012,20 @@ export default {
       }
     }
 
-    /**
-     *
-     * @param {缩放级别} zoom
-     */
-    function updateMap (zoom) {
-      $(svgcontent).find('.point').each(function () {
-        if (!this.getAttribute('se:IsKey')) {
-          this.setAttribute('stroke-width', 1);
-          this.setAttribute('r', $('#default_stroke_width input').val() / 2 / zoom);
-        }
-      });
-      $(svgcontent).find('.control').each(function () {
-        this.setAttribute('r', $('#default_stroke_width input').val() / zoom);
-      });
-    }
+    // /**
+    //  *
+    //  * @param {缩放级别} zoom
+    //  */
+    // function updateMap (zoom) {
+    //   $(svgcontent).find('.point').each(function () {
+    //     if (!this.getAttribute('se:IsKey')) {
+    //       this.setAttribute('r', $('#default_stroke_width input').val() / 2 / zoom);
+    //     }
+    //   });
+    //   $(svgcontent).find('.control').each(function () {
+    //     this.setAttribute('r', $('#default_stroke_width input').val() / zoom);
+    //   });
+    // }
 
     /**
      *

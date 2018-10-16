@@ -61,7 +61,7 @@ svgEditor.setConfig({
 svgEditor.setConfig({
   extensions: [
     'ext-overview_window.js', 'ext-grid.js', 'ext-panning.js', 'ext-storage.js', 'ext-imagelib.js', 'ext-wcsmapediter.js', 'ext-wcspointmerge.js',
-    'ext-wcsdrawroad.js', 'ext-point.js', 'ext-wcschamfer.js'
+    'ext-wcsdrawroad.js', 'ext-wcspoint.js', 'ext-wcschamfer.js'
     // 'ext-overview_window.js', 'ext-markers.js', 'ext-connector.js', 'ext-eyedropper.js', 'ext-shapes.js', 'ext-imagelib.js', 'ext-grid.js', 'ext-polygon.js', 'ext-star.js', 'ext-panning.js', 'ext-storage.js'
   ],
   noDefaultExtensions: true // noDefaultExtensions can only be meaningfully used in svgedit-config-es.js or in the URL
