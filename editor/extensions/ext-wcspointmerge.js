@@ -57,9 +57,6 @@ export default {
         title: getTitle('wcspointmerge'),
         events: {
           click () {
-            if (svgCanvas.getSelectedElems().length > 0) {
-              svgCanvas.clearSelection();
-            }
             svgCanvas.setMode('wcspointmerge');
           }
         }
@@ -92,9 +89,6 @@ export default {
             IsDrawing = true;
           }
         }
-        return {
-          started: true
-        };
       },
       mouseMove (opts) {
         if (svgCanvas.getMode() === 'wcspointmerge') {
@@ -147,6 +141,9 @@ export default {
               currentLine.setAttribute('y2', y2);
             }
           }
+          return {
+            keep: true
+          };
         }
       },
       mouseUp (opts) {

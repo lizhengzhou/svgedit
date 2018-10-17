@@ -19,6 +19,7 @@ export default {
       getElem = S.getElem;
     const svgUtils = svgCanvas.getPrivateMethods();
     const keyPointRadius = 6;
+    let selRoute;
 
     //  导入undo/redo
     const {
@@ -115,13 +116,13 @@ export default {
         const mode = svgCanvas.getMode();
         if (mode.split('_')[0] === 'point') {
           const mouseTarget = opts.event.target;
-          if (mouseTarget && mouseTarget.tagName === 'path' && mouseTarget.getAttribute('class') === 'route') {
+          if (mouseTarget && mouseTarget !== selRoute && mouseTarget.tagName === 'path' && mouseTarget.getAttribute('class') === 'route') {
             const cmdArr = [];
             const x = opts.start_x;
             const y = opts.start_y;
 
-            const route = mouseTarget;
-            const curve = route.pathSegList.getItem(1);
+            selRoute = mouseTarget;
+            const curve = selRoute.pathSegList.getItem(1);
 
             const strokeWidth = $('#default_stroke_width input').val();
             const path = addElem({
@@ -166,7 +167,7 @@ export default {
               }
             });
             point.setAttributeNS(seNs, 'se:IsKey', true);
-            point.setAttributeNS(seNs, 'se:routes', route.id + ' ' + path.id);
+            point.setAttributeNS(seNs, 'se:routes', selRoute.id + ' ' + path.id);
             cmdArr.push(new InsertElementCommand(point));
             if (mode.split('_')[1]) {
               point.setAttributeNS(seNs, 'se:' + mode.split('_')[1], true);
@@ -177,21 +178,21 @@ export default {
               }));
             }
 
-            const routeAttr = route.getAttributeNS(seNs, 'points');
+            const routeAttr = selRoute.getAttributeNS(seNs, 'points');
             const points = routeAttr.split(' ');
             const startElem1 = getElem(points[0]),
               // endElem1 = point,
               startElem2 = point,
               endElem2 = getElem(points[1]);
 
-            const od = route.getAttribute('d');
+            const od = selRoute.getAttribute('d');
 
             curve.x = x;
             curve.y = y;
 
-            route.setAttributeNS(seNs, 'se:points', [points[0], point.id, points[2]].join(' '));
+            selRoute.setAttributeNS(seNs, 'se:points', [points[0], point.id, points[2]].join(' '));
 
-            cmdArr.push(new ChangeElementCommand(route, {
+            cmdArr.push(new ChangeElementCommand(selRoute, {
               d: od,
               'se:points': routeAttr
             }));
@@ -209,7 +210,7 @@ export default {
               endRoute = endRouteAttr.trim().split(' ');
               if (endRoute && endRoute.length > 0) {
                 const endRouteIndex = endRoute.findIndex(function (v) {
-                  return v === route.id;
+                  return v === selRoute.id;
                 });
                 endRoute.splice(endRouteIndex, 1);
               }
@@ -229,11 +230,13 @@ export default {
 
             svgEditor.clickSelect();
 
-            return {
-              keep: true
-            };
+            selRoute = null;
           }
         }
+
+        return {
+          keep: true
+        };
       }
     };
 
