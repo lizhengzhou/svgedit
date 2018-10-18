@@ -178,15 +178,15 @@ export default {
 
     function getMatrix (map) {
       return new Promise(function (resolve, reject) {
-        $.globalEval('var matrix={}');
+        const matrix = {};
         map.Points.forEach(function (point) {
-          $.globalEval('matrix.' + point.svgId + '={}');
+          matrix[point.svgId] = {};
           const startRoutes = map.Routes.filter(function (route) { return route.startSvgId === point.svgId; });
           startRoutes.forEach(function (route) {
-            $.globalEval('matrix.' + point.svgId + '.' + route.endSvgId + '=1');
+            matrix[point.svgId][route.endSvgId] = 1;
           });
         });
-        resolve(matrix);// eslint-disable-line
+        resolve(matrix);
       });
     }
   }
