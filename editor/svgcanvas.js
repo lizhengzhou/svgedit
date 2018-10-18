@@ -4835,6 +4835,10 @@ setTimeout(function () {
       textActions.clear();
       curProperties = (selectedElements[0] && selectedElements[0].nodeName === 'text') ? curText : curShape;
       currentMode = name;
+
+      runExtensions('modeChanged', {
+        mode: name
+      });
     };
 
     /**
