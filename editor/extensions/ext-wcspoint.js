@@ -118,8 +118,8 @@ export default {
           const mouseTarget = opts.event.target;
           if (mouseTarget && mouseTarget !== selRoute && mouseTarget.tagName === 'path' && mouseTarget.getAttribute('class') === 'route') {
             const cmdArr = [];
-            const x = opts.start_x;
-            const y = opts.start_y;
+            const x = opts.start_x.toFixed(0);
+            const y = opts.start_y.toFixed(0);
 
             selRoute = mouseTarget;
             const curve = selRoute.pathSegList.getItem(1);
