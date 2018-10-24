@@ -2041,7 +2041,11 @@ editor.init = function () {
             const bv = elem[item].baseVal.value;
             attrVal = convertUnit(bv);
           }
-          $('#' + tagName + '_' + item).val(attrVal || 0);
+          if (attrVal && tagName === 'circle' && (item === 'cx' || item === 'cy' || item === 'r')) {
+            $('#' + tagName + '_' + item).val(parseInt(attrVal) || 0);
+          } else {
+            $('#' + tagName + '_' + item).val(attrVal || 0);
+          }
         });
 
         if (tagName === 'text') {
