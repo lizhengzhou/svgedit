@@ -25,6 +25,7 @@ export default {
     const seNs = svgCanvas.getEditorNS(true);
 
     let fromElem, toElem, IsDrawing, startElem, endElem, path, currentRoute, IsControl, controlElem;
+    let fromElemOrignRadis, toElemOrignRadis;
     let batchCmdList = [];
     let startElemCmd, endElemCmd, controlElemCmd;
     let selRoute;
@@ -117,7 +118,6 @@ export default {
                   cy: y,
                   r: $('#default_stroke_width input').val() / 2,
                   stroke: 'none',
-                  'stroke-width': $('#default_stroke_width input').val(),
                   fill: '#ff7f00',
                   class: 'point'
                 }
@@ -157,7 +157,6 @@ export default {
                   cy: y,
                   r: $('#default_stroke_width input').val() / 2,
                   stroke: 'none',
-                  'stroke-width': $('#default_stroke_width input').val(),
                   fill: '#ff7f00',
                   class: 'point'
                 }
@@ -276,11 +275,11 @@ export default {
              */
             if (mouseTarget && mouseTarget !== fromElem && mouseTarget.tagName === 'circle' && mouseTarget.getAttribute('class') === 'point') {
               fromElem = mouseTarget;
-              fromElem.orignRadis = fromElem.getAttribute('r');
-              fromElem.setAttribute('r', fromElem.orignRadis * 3);
+              fromElemOrignRadis = fromElem.getAttribute('r');
+              fromElem.setAttribute('r', fromElemOrignRadis * 3);
             } else if (fromElem && mouseTarget && mouseTarget.tagName === 'svg') {
-              fromElem.setAttribute('r', fromElem.orignRadis);
-              fromElem.orignRadis = null;
+              fromElem.setAttribute('r', fromElemOrignRadis);
+              fromElemOrignRadis = null;
               fromElem = null;
             }
           } else {
@@ -289,11 +288,15 @@ export default {
              */
             if (mouseTarget && mouseTarget !== toElem && mouseTarget.tagName === 'circle' && mouseTarget.getAttribute('class') === 'point') {
               toElem = mouseTarget;
-              toElem.orignRadis = toElem.getAttribute('r');
-              toElem.setAttribute('r', toElem.orignRadis * 3);
+              if (toElem !== fromElem) {
+                toElemOrignRadis = toElem.getAttribute('r');
+              } else {
+                toElemOrignRadis = fromElemOrignRadis;
+              }
+              toElem.setAttribute('r', toElemOrignRadis * 3);
             } else if (toElem && mouseTarget && mouseTarget.tagName === 'svg') {
-              toElem.setAttribute('r', toElem.orignRadis);
-              toElem.orignRadis = null;
+              toElem.setAttribute('r', toElemOrignRadis);
+              toElemOrignRadis = null;
               toElem = null;
             }
           }
@@ -332,16 +335,14 @@ export default {
 
     function clearDrawing () {
       if (IsDrawing) {
-        IsDrawing = false;
-
         if (toElem) {
-          toElem.setAttribute('r', toElem.orignRadis);
-          toElem.orignRadis = null;
+          toElem.setAttribute('r', toElemOrignRadis);
+          toElemOrignRadis = null;
           toElem = null;
         }
         if (fromElem) {
-          fromElem.setAttribute('r', fromElem.orignRadis);
-          fromElem.orignRadis = null;
+          fromElem.setAttribute('r', fromElemOrignRadis);
+          fromElemOrignRadis = null;
           fromElem = null;
         }
         if (currentRoute) {
@@ -356,6 +357,8 @@ export default {
         if (endElem) {
           endElem = null;
         }
+
+        IsDrawing = false;
       }
     }
 

@@ -736,7 +736,7 @@ export default {
     function routeChanged (route) {
       const strokeWidth = route.getAttribute('stroke-width');
       const pattr = route.getAttributeNS(seNs, 'points');
-      if (pattr) {
+      if (strokeWidth & pattr) {
         const points = pattr.trim().split(' ');
         points.forEach(function (id) {
           const point = getElem(id);
