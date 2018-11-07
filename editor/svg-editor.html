@@ -32,10 +32,8 @@
   <script defer="defer" src="../svgedit-config-iife.js"></script>
 
   <!-- FEEDS -->
-  <link rel="alternate" type="application/atom+xml" title="SVG-edit General Discussion" href="https://groups.google.com/group/svg-edit/feed/atom_v1_0_msgs.xml"
-  />
-  <link rel="alternate" type="application/atom+xml" title="SVG-edit Updates (Commits)" href="https://github.com/SVG-Edit/svgedit/commits/master.atom"
-  />
+  <link rel="alternate" type="application/atom+xml" title="SVG-edit General Discussion" href="https://groups.google.com/group/svg-edit/feed/atom_v1_0_msgs.xml" />
+  <link rel="alternate" type="application/atom+xml" title="SVG-edit Updates (Commits)" href="https://github.com/SVG-Edit/svgedit/commits/master.atom" />
   <title>WCS Map Editor</title>
 </head>
 
@@ -129,13 +127,14 @@
         </a>
       </p> -->
           <button id="tool_prefs_option">
-            Editor Options
+            选项
           </button>
         </div>
       </div>
       <div id="tools_top" class="tools_panel">
         <div id="editor_panel">
           <div class="tool_sep"></div>
+          <div class="tool_button" id="tool_mapsave" title="Save Map [S]"></div>
           <div class="push_button" id="tool_source" title="Edit Source [U]"></div>
           <div class="tool_button" id="tool_wireframe" title="Wireframe Mode [F]"></div>
         </div>
@@ -149,29 +148,29 @@
         <div id="selected_panel">
           <div class="toolset">
             <div class="tool_sep"></div>
-            <div class="push_button" id="tool_clone" title="Duplicate Element [D]"></div>
+            <!-- <div class="push_button" id="tool_clone" title="Duplicate Element [D]"></div> -->
             <div class="push_button" id="tool_delete" title="Delete Element [Delete/Backspace]"></div>
-            <div class="tool_sep"></div>
+            <!-- <div class="tool_sep"></div>
             <div class="push_button" id="tool_move_top" title="Bring to Front [ Ctrl+Shift+] ]"></div>
-            <div class="push_button" id="tool_move_bottom" title="Send to Back [ Ctrl+Shift+[ ]"></div>
-            <div class="push_button" id="tool_topath" title="Convert to Path"></div>
-            <div class="push_button" id="tool_reorient" title="Reorient path"></div>
-            <div class="push_button" id="tool_make_link" title="Make (hyper)link"></div>
-            <div class="tool_sep"></div>
-            <label id="idLabel" title="Identify the element">
+            <div class="push_button" id="tool_move_bottom" title="Send to Back [ Ctrl+Shift+[ ]"></div> -->
+            <!-- <div class="push_button" id="tool_topath" title="Convert to Path"></div> -->
+            <!-- <div class="push_button" id="tool_reorient" title="Reorient path"></div> -->
+            <!-- <div class="push_button" id="tool_make_link" title="Make (hyper)link"></div> -->
+            <!-- <div class="tool_sep"></div> -->
+            <!-- <label id="idLabel" title="Identify the element">
               <span>id:</span>
               <input id="elem_id" class="attr_changer" data-attr="id" size="10" type="text" />
-            </label>
-            <label id="classLabel" title="Element class">
+            </label> -->
+            <!-- <label id="classLabel" title="Element class">
               <span>class:</span>
               <input id="elem_class" class="attr_changer" data-attr="class" size="10" type="text" />
-            </label>
+            </label> -->
           </div>
-          <label id="tool_angle" title="Change rotation angle" class="toolset">
+          <!-- <label id="tool_angle" title="Change rotation angle" class="toolset">
             <span id="angleLabel" class="icon_label"></span>
             <input id="angle" size="2" value="0" type="text" />
-          </label>
-          <div class="toolset" id="tool_blur" title="Change gaussian blur value">
+          </label> -->
+          <!-- <div class="toolset" id="tool_blur" title="Change gaussian blur value">
             <label>
               <span id="blurLabel" class="icon_label"></span>
               <input id="blur" size="2" value="0" type="text" />
@@ -184,11 +183,11 @@
                 </li>
               </ul>
             </div>
-          </div>
-          <div class="dropdown toolset" id="tool_position" title="Align Element to Page">
+          </div> -->
+          <!-- <div class="dropdown toolset" id="tool_position" title="Align Element to Page">
             <div id="cur_position" class="icon_label"></div>
             <button></button>
-          </div>
+          </div> -->
           <div id="xy_panel" class="toolset">
             <label>
               x:
@@ -201,7 +200,7 @@
           </div>
         </div>
         <!-- Buttons when multiple elements are selected -->
-        <div id="multiselected_panel">
+        <!-- <div id="multiselected_panel">
           <div class="tool_sep"></div>
           <div class="push_button" id="tool_clone_multi" title="Clone Elements [C]"></div>
           <div class="push_button" id="tool_delete_multi" title="Delete Selected Elements [Delete/Backspace]"></div>
@@ -224,8 +223,8 @@
             </select>
           </label>
           <div class="tool_sep"></div>
-        </div>
-        <div id="rect_panel">
+        </div> -->
+        <!-- <div id="rect_panel">
           <div class="toolset">
             <label id="rect_width_tool" title="Change rectangle width">
               <span id="rwidthLabel" class="icon_label"></span>
@@ -240,7 +239,7 @@
             <span class="icon_label"></span>
             <input id="rect_rx" size="3" value="0" type="text" data-attr="Corner Radius" />
           </label>
-        </div>
+        </div> -->
         <div id="image_panel">
           <div class="toolset">
             <label>
@@ -277,7 +276,7 @@
             </label>
           </div>
         </div>
-        <div id="ellipse_panel">
+        <!-- <div id="ellipse_panel">
           <div class="toolset">
             <label id="tool_ellipse_cx">cx:
               <input id="ellipse_cx" class="attr_changer" title="Change ellipse's cx coordinate" size="3" data-attr="cx" />
@@ -312,7 +311,7 @@
               <input id="line_y2" class="attr_changer" title="Change line's ending y coordinate" size="3" data-attr="y2" />
             </label>
           </div>
-        </div>
+        </div> -->
         <div id="text_panel">
           <div class="toolset">
             <div class="tool_button" id="tool_bold" title="Bold Text [B]">
@@ -344,28 +343,28 @@
           <input id="text" type="text" size="35" />
         </div>
         <!-- formerly gsvg_panel -->
-        <div id="container_panel">
-          <div class="tool_sep"></div>
-          <!-- Add viewBox field here? -->
-          <label id="group_title" title="Group identification label">
+        <!-- <div id="container_panel">
+          <div class="tool_sep"></div> -->
+        <!-- Add viewBox field here? -->
+        <!-- <label id="group_title" title="Group identification label">
             <span>label:</span>
             <input id="g_title" data-attr="title" size="10" type="text" />
           </label>
-        </div>
-        <div id="use_panel">
+        </div> -->
+        <!-- <div id="use_panel">
           <div class="push_button" id="tool_unlink_use" title="Break link to reference element (make unique)"></div>
-        </div>
-        <div id="g_panel">
+        </div> -->
+        <!-- <div id="g_panel">
           <div class="push_button" id="tool_ungroup" title="Ungroup Elements [G]"></div>
-        </div>
+        </div> -->
         <!-- For anchor elements -->
-        <div id="a_panel">
+        <!-- <div id="a_panel">
           <label id="tool_link_url" title="Set link URL (leave empty to remove)">
             <span id="linkLabel" class="icon_label"></span>
             <input id="link_url" type="text" size="35" />
           </label>
-        </div>
-        <div id="path_node_panel">
+        </div> -->
+        <!-- <div id="path_node_panel">
           <div class="tool_sep"></div>
           <div id="tool_node_link" class="tool_button push_button_pressed" title="Link Control Points"></div>
           <div class="tool_sep"></div>
@@ -383,35 +382,33 @@
           <div class="tool_button" id="tool_node_delete" title="Delete Node"></div>
           <div class="tool_button" id="tool_openclose_path" title="Open/close sub-path"></div>
           <div class="tool_button" id="tool_add_subpath" title="Add sub-path"></div>
-        </div>
+        </div> -->
       </div>
       <!-- tools_top -->
       <div id="cur_context_panel">
       </div>
       <div id="tools_left" class="tools_panel">
         <div class="tool_button" id="tool_select" title="Select Tool"></div>
-        <!-- <div class="tool_button" id="tool_fhpath" title="Pencil Tool"></div>
-    <div class="tool_button" id="tool_line" title="Line Tool"></div>
-    <div id="tools_rect_show" class="tool_button flyout_current"
-      title="Square/Rect Tool">
-      <div class="flyout_arrow_horiz"></div>
-    </div>
-    <div id="tools_ellipse_show" class="tool_button flyout_current"
-      title="Ellipse/Circle Tool">
-      <div class="flyout_arrow_horiz"></div>
-    </div>
-    <div class="tool_button" id="tool_path" title="Path Tool"></div>
-    <div class="tool_button" id="tool_text" title="Text Tool"></div>
-    <div class="tool_button" id="tool_image" title="Image Tool"></div> -->
+        <!-- <div class="tool_button" id="tool_fhpath" title="Pencil Tool"></div> -->
+        <div class="tool_button" id="tool_line" title="Line Tool"></div>
+        <div id="tools_rect_show" class="tool_button flyout_current" title="Square/Rect Tool">
+          <div class="flyout_arrow_horiz"></div>
+        </div>
+        <!-- <div id="tools_ellipse_show" class="tool_button flyout_current" title="Ellipse/Circle Tool">
+          <div class="flyout_arrow_horiz"></div>
+        </div> -->
+        <!-- <div class="tool_button" id="tool_path" title="Path Tool"></div> -->
+        <div class="tool_button" id="tool_text" title="Text Tool"></div>
+        <!-- <div class="tool_button" id="tool_image" title="Image Tool"></div> -->
         <div class="tool_button" id="tool_zoom" title="Zoom Tool [Ctrl+Up/Down]"></div>
-        <!-- <div style="display: none;">
-      <div id="tool_rect" title="Rectangle"></div>
-      <div id="tool_square" title="Square"></div>
-      <div id="tool_fhrect" title="Free-Hand Rectangle"></div>
-      <div id="tool_ellipse" title="Ellipse"></div>
-      <div id="tool_circle" title="Circle"></div>
-      <div id="tool_fhellipse" title="Free-Hand Ellipse"></div>
-    </div> -->
+        <div style="display: none;">
+          <div id="tool_rect" title="Rectangle"></div>
+          <!-- <div id="tool_square" title="Square"></div>
+          <div id="tool_fhrect" title="Free-Hand Rectangle"></div>           -->
+          <div id="tool_circle" title="Circle"></div>
+          <!-- <div id="tool_ellipse" title="Ellipse"></div>
+          <div id="tool_fhellipse" title="Free-Hand Ellipse"></div> -->
+        </div>
       </div>
       <!-- tools_left -->
       <div id="tools_bottom" class="tools_panel">
@@ -455,8 +452,8 @@
                 <div id="stroke_color" class="color_block" title="Change stroke color"></div>
               </div>
               <label class="stroke_label">
-                <input id="stroke_width" title="Change stroke width by 1, shift-click to change by 0.1" size="2" value="5" type="text" data-attr="Stroke Width"
-                />
+                <input id="stroke_width" title="Change stroke width by 1, shift-click to change by 0.1" size="2" value="5"
+                  type="text" data-attr="Stroke Width" />
               </label>
               <div id="toggle_stroke_tools" title="Show/hide more stroke tools"></div>
               <label class="stroke_tool">
@@ -498,12 +495,12 @@
             </div>
           </div>
         </div>
-        <div id="tools_bottom_3">
+        <!-- <div id="tools_bottom_3">
           <div id="palette_holder">
             <div id="palette" title="Click to change fill color, shift-click to change stroke color">
             </div>
           </div>
-        </div>
+        </div> -->
         <div id="tools_bottom_4">
           <div id="currentxy">
             X:
@@ -586,6 +583,7 @@
                 <option>1024x768</option>
                 <option>1280x960</option>
                 <option>1600x1200</option>
+                <option>1920x1080</option>
                 <option id="fitToContent" value="content">Fit to Content</option>
               </select>
             </label>
@@ -601,6 +599,7 @@
               <span id="image_opt_ref">Use file reference</span>
             </label>
           </fieldset>
+        </fieldset>
         </fieldset>
       </div>
     </div>
@@ -657,62 +656,71 @@
             </label>
             <p id="svginfo_bg_note">Note: Background will not be saved with image.</p>
           </fieldset>
-          <fieldset id="change_grid">
-            <legend id="svginfo_grid_settings">Grid</legend>
+          <fieldset id="default_stroke_width">
+            <legend id="svginfo_default_stroke_width">默认线宽</legend>
             <label>
-              <span id="svginfo_snap_onoff">Snapping on/off</span>
-              <input type="checkbox" value="snapping_on" id="grid_snapping_on" />
-            </label>
-            <label>
-              <span id="svginfo_snap_step">Snapping Step-Size:</span>
-              <input type="text" id="grid_snapping_step" size="3" value="10" />
-            </label>
-            <label>
-              <span id="svginfo_grid_color">Grid color:</span>
-              <input type="text" id="grid_color" size="3" value="#000" />
+              <input type="text" name="default_stroke_width" value="4" />
             </label>
           </fieldset>
-          <fieldset id="units_rulers">
-            <legend id="svginfo_units_rulers">Units &amp; Rulers</legend>
-            <label>
-              <span id="svginfo_rulers_onoff">Show rulers</span>
-              <input id="show_rulers" type="checkbox" value="show_rulers" checked="checked" />
-            </label>
-            <label>
-              <span id="svginfo_unit">Base Unit:</span>
-              <select id="base_unit">
-                <option value="px">Pixels</option>
-                <option value="cm">Centimeters</option>
-                <option value="mm">Millimeters</option>
-                <option value="in">Inches</option>
-                <option value="pt">Points</option>
-                <option value="pc">Picas</option>
-                <option value="em">Ems</option>
-                <option value="ex">Exs</option>
-              </select>
-            </label>
-            <!-- Should this be an export option instead? -->
-            <!--
-        <span id="svginfo_unit_system">Unit System:</span>
-        <label>
-          <input type="radio" name="unit_system" value="single" checked="checked"/>
-          <span id="svginfo_single_type_unit">Single type unit</span>
-          <small id="svginfo_single_type_unit_sub">
-            CSS unit type is set on root element.
-            If a different unit type is entered in a text
-            field, it is converted back to user units on export.
-          </small>
-        </label>
-        <label>
-          <input type="radio" name="unit_system" value="multi"/>
-          <span id="svginfo_multi_units">Multiple CSS units</span>
-          <small id="svginfo_single_type_unit_sub">
-            Attributes can be given different CSS units, which may
-            lead to inconsistant results among viewers.
-          </small>
-        </label>
-        -->
+          <fieldset>
+            <fieldset id="change_grid">
+              <legend id="svginfo_grid_settings">Grid</legend>
+              <label>
+                <span id="svginfo_snap_onoff">Snapping on/off</span>
+                <input type="checkbox" value="snapping_on" id="grid_snapping_on" />
+              </label>
+              <label>
+                <span id="svginfo_snap_step">Snapping Step-Size:</span>
+                <input type="text" id="grid_snapping_step" size="3" value="10" />
+              </label>
+              <label>
+                <span id="svginfo_grid_color">Grid color:</span>
+                <input type="text" id="grid_color" size="3" value="#000" />
+              </label>
+            </fieldset>
+            <fieldset id="units_rulers">
+              <legend id="svginfo_units_rulers">Units &amp; Rulers</legend>
+              <label>
+                <span id="svginfo_rulers_onoff">Show rulers</span>
+                <input id="show_rulers" type="checkbox" value="show_rulers" checked="checked" />
+              </label>
+              <label>
+                <span id="svginfo_unit">Base Unit:</span>
+                <select id="base_unit">
+                  <option value="px">Pixels</option>
+                  <option value="cm">Centimeters</option>
+                  <option value="mm">Millimeters</option>
+                  <option value="in">Inches</option>
+                  <option value="pt">Points</option>
+                  <option value="pc">Picas</option>
+                  <option value="em">Ems</option>
+                  <option value="ex">Exs</option>
+                </select>
+              </label>
+              <!-- Should this be an export option instead? -->
+              <!--
+          <span id="svginfo_unit_system">Unit System:</span>
+          <label>
+            <input type="radio" name="unit_system" value="single" checked="checked"/>
+            <span id="svginfo_single_type_unit">Single type unit</span>
+            <small id="svginfo_single_type_unit_sub">
+              CSS unit type is set on root element.
+              If a different unit type is entered in a text
+              field, it is converted back to user units on export.
+            </small>
+          </label>
+          <label>
+            <input type="radio" name="unit_system" value="multi"/>
+            <span id="svginfo_multi_units">Multiple CSS units</span>
+            <small id="svginfo_single_type_unit_sub">
+              Attributes can be given different CSS units, which may
+              lead to inconsistant results among viewers.
+            </small>
+          </label>
+          -->
+            </fieldset>
           </fieldset>
+
         </fieldset>
       </div>
     </div>
@@ -733,13 +741,13 @@
       <li>
         <a href="#paste">Paste</a>
       </li>
-      <li>
+      <!-- <li>
         <a href="#paste_in_place">Paste in Place</a>
-      </li>
+      </li> -->
       <li class="separator">
         <a href="#delete">Delete</a>
       </li>
-      <li class="separator">
+      <!-- <li class="separator">
         <a href="#group">Group
           <span class="shortcut">G</span>
         </a>
@@ -748,7 +756,7 @@
         <a href="#ungroup">Ungroup
           <span class="shortcut">G</span>
         </a>
-      </li>
+      </li> -->
       <li class="separator">
         <a href="#move_front">Bring to Front
           <span class="shortcut">SHFT+CTRL+]</span>
