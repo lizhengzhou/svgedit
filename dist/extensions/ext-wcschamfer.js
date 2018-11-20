@@ -1,4 +1,4 @@
-const svgEditorExtension_wcschamfer = (function () {
+var svgEditorExtension_wcschamfer = (function () {
   'use strict';
   /* globals jQuery */
   /*

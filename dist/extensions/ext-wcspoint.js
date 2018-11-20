@@ -1,4 +1,4 @@
-const svgEditorExtension_wcspoint = (function () {
+var svgEditorExtension_wcspoint = (function () {
   'use strict';
   /* globals jQuery */
   /*

@@ -1,4 +1,4 @@
-const svgEditorExtension_wcsroutesplit = (function () {
+var svgEditorExtension_wcsroutesplit = (function () {
   'use strict';
   // /* globals jQuery */
   /*

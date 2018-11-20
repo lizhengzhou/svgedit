@@ -1,4 +1,4 @@
-const svgEditorExtension_wcsfindpath = (function () {
+var svgEditorExtension_wcsfindpath = (function () {
   'use strict';
   /* globals jQuery */
   /*

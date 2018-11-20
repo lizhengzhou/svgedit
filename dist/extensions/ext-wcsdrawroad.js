@@ -1,4 +1,4 @@
-const svgEditorExtension_wcsdrawroad = (function () {
+var svgEditorExtension_wcsdrawroad = (function () {
   'use strict';
   /* globals jQuery */
   /*

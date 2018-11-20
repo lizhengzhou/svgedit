@@ -2223,7 +2223,7 @@ editor.init = function () {
         populateLayers();
         // if the element changed was the svg, then it could be a resolution change
         if (isSvgElem) {
-          updateCanvas();
+          updateCanvas(true);
         }
       // Update selectedElement if element is no longer part of the image.
       // This occurs for the text elements in Firefox

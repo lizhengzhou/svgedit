@@ -1,4 +1,4 @@
-const svgEditorExtension_wcsdrawlegend = (function () {
+var svgEditorExtension_wcsdrawlegend = (function () {
   'use strict';
   // /* globals jQuery */
   /*

@@ -11,7 +11,7 @@ export default {
   name: 'overview_window',
   init ({isChrome, isIE}) {
     const $ = jQuery;
-    const dims = this.curConfig.dimensions; 
+    const dims = this.curConfig.dimensions;
     const overviewWindowGlobals = {};
     // Disabled in Chrome 48-, see https://github.com/SVG-Edit/svgedit/issues/26 and
     // https://code.google.com/p/chromium/issues/detail?id=565120.
@@ -23,9 +23,6 @@ export default {
       }
     }
 
-    $("#workarea").scrollLeft(dims[0]||640);
-    $("#workarea").scrollTop(dims[1]||480);
-    
     // Define and insert the base html element.
     const propsWindowHtml =
       '<div id="overview_window_content_pane" style="width:100%; word-wrap:break-word;  display:inline-block; margin-top:20px;">' +
@@ -75,8 +72,8 @@ export default {
       const viewWidth = $('#svgroot').attr('width');
       const viewHeight = $('#svgroot').attr('height');
 
-      let viewX = dims[0]||640;
-      let viewY = dims[1]||480;
+      let viewX = dims[0] || 640;
+      let viewY = dims[1] || 480;
       if (isIE()) {
         // This has only been tested with Firefox 10 and IE 9 (without chrome frame).
         // I am not sure if if is Firefox or IE that is being non compliant here.
